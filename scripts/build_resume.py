@@ -107,8 +107,8 @@ CONTENT = {
         "summary": (
             "Senior Python engineer with 4+ years delivering production systems end to end, from architecture to deployment, "
             "across AI agents, DevOps and embedded automotive software. At KPIT I lead the design of AI agent automation "
-            "and built the company's <b>AI harness</b>: 150 skills, 150 agents and 62 commands shared across four AI coding "
-            "assistants, and a library of <b>549 MCP tools</b> that connects agents to CI, ALM, artifact and diagnostic systems. "
+            "and built the company's <b>AI harness</b>: 170 skills, 163 agents, 40 rules and 62 commands shared across four AI coding "
+            "assistants, and a library of <b>639 MCP tools</b> across 29 servers that connects agents to CI, ALM, artifact and diagnostic systems. "
             "Hands-on with LLM integration (Claude, OpenAI), RAG, multi-agent orchestration and safe autonomy "
             "(human approval, risk-gated tools). Owner of CI/CD from commit to production, and a trainer of 100+ engineers in "
             "generative AI."
@@ -134,8 +134,8 @@ CONTENT = {
                 "KPIT Technologies · Sfax, Tunisia · 07/2024 – Present",
                 [
                     "Lead the design and delivery of AI agent automation in Python, setting the technical direction for how the team automates repetitive engineering work.",
-                    "Built <b>Anvil</b>, the company-wide AI harness: <b>150 skills, 150 agents and 62 commands</b> installed from one registry into Claude Code, OpenCode, Beacon and GitHub Copilot, with zero npm dependencies and tag-gated releases.",
-                    "Architected <b>ai-tools-library</b>: <b>25 MCP server packages exposing 549 tools</b> for GitLab, Jenkins, Jira, Confluence, Grafana and automotive diagnostics, shipped through a <b>7-stage CI pipeline</b> with per-package coverage gates up to 98%.",
+                    "Built <b>Anvil</b>, the company-wide AI harness: <b>170 skills, 163 agents, 40 rules and 62 commands</b> installed from one registry into Claude Code, OpenCode, Beacon and GitHub Copilot, with zero npm dependencies and tag-gated releases.",
+                    "Architected <b>ai-tools-library</b>: <b>29 MCP servers exposing 639 tools</b> for GitLab, Jenkins, Jira, Confluence, Grafana and automotive diagnostics, shipped through a <b>7-stage CI pipeline</b> with per-package coverage gates up to 98%.",
                     "Built <b>MTF Assistant</b>, a RAG chatbot (Django, React, LangChain, pgvector) answering questions on the internal test framework, used by <b>~600 testers and developers</b>.",
                     "Built <b>opencode-autodev</b>: agents collect tickets from GitLab, GitHub, Jira and Microsoft To Do, work them in a configurable agent squad, and open pull requests that merge only after <b>human approval</b>; 513 tests, 85% coverage floor.",
                     "Own CI/CD (Jenkins, Zuul, GitLab CI/CD) from commit to production, with Nexus/Artifactory artifact management, TestGuide test orchestration, Docker and AWS deployment.",
@@ -203,8 +203,8 @@ CONTENT = {
         "summary": (
             "Ingénieur Python senior, plus de 4 ans d'expérience à livrer des systèmes en production de bout en bout, de "
             "l'architecture au déploiement, sur les agents IA, le DevOps et le logiciel embarqué automobile. Chez KPIT, je pilote "
-            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise : 150 skills, "
-            "150 agents et 62 commandes partagés entre quatre assistants de code IA, et une bibliothèque de <b>549 outils MCP</b> "
+            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise : 170 skills, "
+            "163 agents, 40 règles et 62 commandes partagés entre quatre assistants de code IA, et une bibliothèque de <b>639 outils MCP</b> répartis sur 29 serveurs "
             "qui connecte les agents aux systèmes de CI, d'ALM, d'artefacts et de diagnostic. Maîtrise de l'intégration de LLM "
             "(Claude, OpenAI), du RAG, de l'orchestration multi-agents et de l'autonomie encadrée (validation humaine, outils "
             "filtrés par niveau de risque). Responsable de la CI/CD du commit à la production et formateur de plus de 100 "
@@ -231,8 +231,8 @@ CONTENT = {
                 "KPIT Technologies · Sfax, Tunisie · 07/2024 – aujourd'hui",
                 [
                     "Pilote la conception et la livraison de l'automatisation par agents IA en Python et définit la direction technique de l'équipe pour automatiser le travail d'ingénierie répétitif.",
-                    "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>150 skills, 150 agents et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot, sans aucune dépendance npm, avec des releases déclenchées par tag.",
-                    "Architecture d'<b>ai-tools-library</b> : <b>25 paquets de serveurs MCP exposant 549 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98 %.",
+                    "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>170 skills, 163 agents, 40 règles et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot, sans aucune dépendance npm, avec des releases déclenchées par tag.",
+                    "Architecture d'<b>ai-tools-library</b> : <b>29 serveurs MCP exposant 639 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98 %.",
                     "Conception de <b>MTF Assistant</b>, un chatbot RAG (Django, React, LangChain, pgvector) qui répond aux questions sur le framework de test interne, utilisé par <b>environ 600 testeurs et développeurs</b>.",
                     "Conception d'<b>opencode-autodev</b> : les agents collectent les tickets depuis GitLab, GitHub, Jira et Microsoft To Do, les traitent en équipe d'agents configurable et ouvrent des pull requests qui ne sont fusionnées qu'après <b>validation humaine</b> ; 513 tests, couverture minimale de 85 %.",
                     "Responsable de la CI/CD (Jenkins, Zuul, GitLab CI/CD) du commit à la production : gestion des artefacts Nexus/Artifactory, orchestration des tests TestGuide, déploiement Docker et AWS.",
