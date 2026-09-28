@@ -31,6 +31,7 @@ export interface Project {
   harness?: Harness;
   harnessLayer?: HarnessLayer;
   flow?: FlowStep[];
+  flowHeading?: { label: string; title: string };
 }
 
 export const projects: Project[] = [
@@ -223,6 +224,7 @@ export const projects: Project[] = [
       'GitLab / GitHub / Jira / Microsoft Graph REST APIs (multi-vendor Tracker/Forge adapters)',
       'Slack / Microsoft Teams (Adaptive Cards via Power Automate) / webhook / desktop notifications',
     ],
+    flowHeading: { label: 'How a ticket moves', title: 'From backlog to merged change: agents do the work, a human approves it' },
     flow: [
       { title: 'Collect', body: 'New tickets and issues are picked up from GitLab, GitHub, Jira or Microsoft To Do, and each one is claimed with a lease.' },
       { title: 'Assemble', body: 'A specialist developer agent is picked for the ticket from the configured agents (Anvil\'s or a team\'s own) and paired with a reviewer agent.' },
@@ -266,6 +268,60 @@ export const projects: Project[] = [
       "Where work comes from and where it gets merged are deliberately two different interfaces (ADR-007): GitLab and GitHub implement both Tracker and Forge, while Jira and Microsoft To Do implement Tracker only. The TypeScript compiler itself blocks a tracker-only source from being asked to gate, report on, or merge a change, and all four adapters run through the same contract-test suite (test/contract/tracker.ts, forge.ts) so no vendor's behavior can quietly drift from the spec.",
       "A load-time capability probe (ADR-005, src/caps.ts) resolves the real OpenCode SDK surface once at startup and wraps every call except session.prompt and app.log in a tested fallback chain. A shared withTimeout helper then bounds every one of those plugin-to-SDK calls, including app.log itself, after three separate production hangs made it clear that an unbounded call to anything is a hang waiting to happen.",
       "A shared HTTP retry core (src/net/http.ts) parses Retry-After in both integer-seconds and HTTP-date form and clamps it to a 1–30s window sized to stay inside a task's lease, while also telling a terminal credential failure apart from a merely-missing environment variable. On top of that sits the safety envelope: a four-way fail-closed merge gate (src/gates.ts), the ADR-011 bounded-non-terminal-state invariant enforced by the test that enumerates every TaskState, and a three-pass secret redactor that strips configured env values, known vendor token shapes, and generic key=value secrets from every log line, error, and outbound Teams/Slack/webhook field before it leaves the process.",
+    ],
+  },
+  {
+    slug: 'testcase-generation-agents',
+    name: 'Automotive Test Case Generation Agents',
+    tagline: 'AI agents that read automotive specifications and write the test cases for them: grounded in the specs through RAG and a knowledge graph, equipped with MCP tools, and fanned out across parallel GitLab CI workers so a whole specification is covered in one pipeline run.',
+    summary: "Writing test cases from automotive specifications is slow, repetitive expert work: every requirement has to be read, its signals, conditions and dependencies understood, and a traceable test case written for it. This project turns that into a pipeline of AI agents. Specifications are ingested and indexed twice: as embeddings for retrieval-augmented generation (RAG), so an agent always works from the actual requirement text, and as a knowledge graph that links requirements to the functions, signals, interfaces and other requirements they depend on, so an agent sees the context around a requirement and not just the paragraph itself. Generation agents then use tools, exposed through MCP servers, to look up what they need while they write: related requirements, signal and interface definitions, and existing test cases. The work is split into independent batches and run as parallel GitLab CI jobs, so the whole specification is processed at once instead of one requirement at a time, and the results are merged back into a single test suite where every test case traces to the requirement it verifies.",
+    role: 'I designed and built the generation pipeline: specification ingestion, the RAG index and knowledge graph, the agents and their MCP tools, and the parallel GitLab CI orchestration.',
+    ownership: 'Automotive AI agents',
+    stack: [
+      'Python',
+      'LLM agents with tool / function calling',
+      'RAG: embeddings + vector retrieval over specifications',
+      'Knowledge graph of requirements, signals and dependencies',
+      'Model Context Protocol (MCP) servers as the agents\' tools',
+      'GitLab CI parallel jobs as generation workers',
+    ],
+    flowHeading: { label: 'How a specification becomes a test suite', title: 'From requirement text to traceable test cases, in one parallel pipeline run' },
+    flow: [
+      { title: 'Ingest', body: 'Specifications are parsed and split into individual requirements, keeping their IDs so every generated test can trace back.' },
+      { title: 'Ground', body: 'Each requirement is embedded for RAG and linked into a knowledge graph of the signals, functions and requirements it depends on.' },
+      { title: 'Fan out', body: 'The requirements are split into batches and handed to parallel GitLab CI jobs, each running its own generation agents.' },
+      { title: 'Generate', body: 'Agents write test cases from the retrieved text and graph context, calling MCP tools to look up definitions and existing tests.' },
+      { title: 'Assemble', body: 'The CI jobs\' results are collected into one test suite, with every test case linked to the requirement it verifies.' },
+    ],
+    stats: [
+      { value: 'RAG + KG', label: 'grounded in the real specification' },
+      { value: 'MCP', label: 'tools the agents call while writing' },
+      { value: 'Parallel', label: 'GitLab CI generation workers' },
+    ],
+    valueProps: [
+      { headline: 'From specification to test cases, automatically', body: 'The slowest part of automotive validation is turning a specification into test cases by hand. The agents do the first draft for the whole specification, so test engineers review and refine instead of writing every case from a blank page.' },
+      { headline: 'Grounded in the spec, not in the model\'s memory', body: 'Every test case is written from retrieved requirement text, never from what the model thinks a requirement probably says. That keeps expected values, conditions and wording tied to the actual specification.' },
+      { headline: 'Context a single paragraph can\'t give', body: 'Requirements rarely stand alone. The knowledge graph gives an agent the neighbourhood of a requirement: the signals it reads, the functions it belongs to and the requirements it depends on, so the generated test covers the conditions that actually matter.' },
+      { headline: 'Agents that look things up', body: 'Through MCP servers the agents can query what a test writer would check: related requirements, signal and interface definitions, and existing tests. The same MCP tool approach used across the company\'s AI harness.' },
+      { headline: 'A whole specification in one pipeline run', body: 'Generation is fanned out over parallel GitLab CI jobs, so throughput scales with the number of workers instead of the size of the specification, on the CI infrastructure the team already runs.' },
+      { headline: 'Traceable by construction', body: 'Requirement IDs travel with each batch from ingestion to output, so every test case links back to the requirement it verifies. That is what reviewers, coverage reports and automotive process audits ask for.' },
+    ],
+    highlights: [
+      { headline: 'Two kinds of retrieval, used together', body: 'Vector search finds the requirement text that is semantically closest; the knowledge graph adds what is structurally connected to it. Together they give an agent both the words of a requirement and its context.' },
+      { headline: 'CI as the worker pool', body: 'Instead of a separate job scheduler, the generation workers are GitLab CI parallel jobs: each takes its own batch of requirements, runs its agents independently, and hands back its results as pipeline artifacts.' },
+      { headline: 'Tools, not guesses', body: 'When an agent needs a signal definition or wants to know whether a test already exists, it calls an MCP tool instead of inventing an answer.' },
+      { headline: 'Built for the automotive domain', body: 'Specifications, signals and requirement traceability are first-class concepts in the pipeline, not generic document chunks.' },
+    ],
+    engineeringRigor: [
+      'Generation runs inside GitLab CI, so every run is reproducible, logged and tied to a pipeline, with the specification version and the generated suite kept together.',
+      'Work is split into independent batches so parallel jobs never depend on each other; a failed worker can be retried on its own without regenerating the rest of the specification.',
+      'Requirement IDs are carried through every stage, from ingestion to the assembled suite, so traceability does not depend on the model remembering it.',
+      'Agents reach external data only through MCP tools, which keeps what they can see and do explicit and reviewable.',
+    ],
+    architecture: [
+      'The pipeline has three stages. Ingestion parses the specifications into individual requirements and builds two indexes over them: an embedding index for retrieval-augmented generation, and a knowledge graph that connects each requirement to the signals, functions, interfaces and other requirements it references.',
+      'Generation runs as parallel GitLab CI jobs. Each job receives a batch of requirements, and for each one an agent retrieves the requirement text and its graph neighbourhood, calls MCP tools for anything else it needs (related requirements, signal and interface definitions, existing test cases), and writes structured test cases with the requirement ID attached.',
+      'A final stage collects the jobs\' artifacts and assembles them into a single test suite, where every test case traces to the requirement it verifies, ready for engineers to review.',
     ],
   },
   {
