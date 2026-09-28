@@ -1,0 +1,51 @@
+---
+import { profile } from '../data/profile';
+import CornerMarks from './CornerMarks.astro';
+---
+
+<div class="teaching-grid">
+  {profile.teaching.map((entry) => (
+    <article class="teaching-card blueprint-panel">
+      <CornerMarks />
+      <p class="period">{entry.period}</p>
+      <h3>{entry.role}</h3>
+      <p class="org">{entry.org}</p>
+      <p class="desc">{entry.description}</p>
+    </article>
+  ))}
+</div>
+
+<style>
+  .teaching-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .teaching-card {
+    padding: var(--space-md);
+  }
+
+  .period {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.6rem;
+  }
+
+  .teaching-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .org {
+    color: var(--color-cyan);
+    font-size: 0.88rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .desc {
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+  }
+</style>

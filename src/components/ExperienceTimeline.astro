@@ -1,0 +1,106 @@
+---
+import { profile } from '../data/profile';
+
+function formatRange(start: string, end: string) {
+  const fmt = (d: string) => {
+    if (d === 'present') return 'Present';
+    const [y, m] = d.split('-');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[Number(m) - 1]} ${y}`;
+  };
+  return `${fmt(start)} — ${fmt(end)}`;
+}
+---
+
+<div class="timeline">
+  {profile.experience.map((job) => (
+    <article class="entry">
+      <div class="entry-meta">
+        <span class="range">{formatRange(job.start, job.end)}</span>
+        <span class="loc">{job.location}</span>
+      </div>
+      <div class="entry-body">
+        <h3>{job.role}</h3>
+        <p class="org">{job.org}</p>
+        <ul>
+          {job.bullets.map((bullet) => (
+            <li>{bullet}</li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .entry {
+    display: grid;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .entry-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink-faint);
+  }
+
+  .entry-body h3 {
+    font-size: 1.2rem;
+  }
+
+  .org {
+    color: var(--color-cyan);
+    font-size: 0.92rem;
+    margin-top: 0.25rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .entry-body ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .entry-body li {
+    color: var(--color-ink-muted);
+    font-size: 0.94rem;
+    padding-left: 1.1rem;
+    position: relative;
+  }
+
+  .entry-body li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 5px;
+    height: 1px;
+    background: var(--color-cyan);
+  }
+
+  @media (min-width: 780px) {
+    .entry {
+      grid-template-columns: 180px 1fr;
+    }
+
+    .entry-meta {
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+  }
+</style>

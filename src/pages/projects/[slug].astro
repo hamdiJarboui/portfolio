@@ -1,0 +1,313 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import CornerMarks from '../../components/CornerMarks.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: { project, index },
+  }));
+}
+
+const { project, index } = Astro.props;
+const num = String(index + 1).padStart(2, '0');
+---
+
+<Layout title={`${project.name} — Hamdi Jarboui`} description={project.tagline}>
+  <Header />
+  <main>
+    <section class="section hero-section">
+      <div class="wrap">
+        <a class="back" href="/#work">&larr; All work</a>
+        <p class="sheet-label">Fig. {num} — {project.ownership}</p>
+        <h1>{project.name}</h1>
+        <p class="tagline">{project.tagline}</p>
+        <p class="role-line">{project.role}</p>
+        <div class="hero-stats">
+          {project.stats.map((stat) => (
+            <div class="hero-stat">
+              <span class="hero-stat-value">{stat.value}</span>
+              <span class="hero-stat-label">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+        <div class="stack">
+          {project.stack.map((tech) => (
+            <span class="tag">{tech}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section value-section">
+      <div class="wrap">
+        <p class="sheet-label">Why it matters</p>
+        <div class="value-grid">
+          {project.valueProps.map((item) => (
+            <div class="value-card blueprint-panel">
+              <CornerMarks />
+              <h3 class="value-headline">{item.headline}</h3>
+              <p class="value-body">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section rigor-section">
+      <div class="wrap">
+        <p class="sheet-label">From commit to production</p>
+        <h2>Built and released the way production software should be</h2>
+        <p class="rigor-intro">Not just written and demoed — architected, tested, gated, and shipped through a real CI/CD and release process.</p>
+        <ol class="rigor-list">
+          {project.engineeringRigor.map((item, i) => (
+            <li class="rigor-row">
+              <span class="rigor-index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="rigor-text">{item}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap overview-block">
+        <h2>Overview</h2>
+        <p class="body-text">{project.summary}</p>
+
+        <h2>Architecture</h2>
+        {project.architecture.map((para) => (
+          <p class="body-text architecture-para">{para}</p>
+        ))}
+      </div>
+    </section>
+
+    <section class="section highlights-section">
+      <div class="wrap">
+        <p class="sheet-label">Engineering highlights</p>
+        <h2>What makes this one worth a closer look</h2>
+        <div class="highlight-grid">
+          {project.highlights.map((item, i) => (
+            <div class="highlight-card blueprint-panel">
+              <CornerMarks />
+              <span class="highlight-index">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="highlight-headline">{item.headline}</h3>
+              <p class="highlight-body">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .hero-section {
+    padding-block: var(--space-xl) var(--space-lg);
+    border-top: none;
+  }
+
+  .back {
+    display: block;
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-ink-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .back:hover {
+    color: var(--color-cyan);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    margin-block: var(--space-xs) var(--space-sm);
+  }
+
+  .tagline {
+    color: var(--color-ink-muted);
+    font-size: 1.1rem;
+    max-width: 60ch;
+    margin-bottom: var(--space-sm);
+  }
+
+  .role-line {
+    font-family: var(--font-mono);
+    color: var(--color-ink-faint);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    max-width: 68ch;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    padding: var(--space-md) 0;
+    margin-bottom: var(--space-lg);
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .hero-stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--color-cyan);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 0.8rem;
+    color: var(--color-ink-faint);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .value-section {
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+
+  .value-card {
+    padding: var(--space-md);
+    border-left: 2px solid var(--color-cyan);
+  }
+
+  .value-headline {
+    font-size: 1rem;
+    color: var(--color-ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .value-body {
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .rigor-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+  }
+
+  .rigor-intro {
+    color: var(--color-ink-muted);
+    font-size: 0.98rem;
+    max-width: 62ch;
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
+  .rigor-list {
+    display: flex;
+    flex-direction: column;
+    counter-reset: none;
+  }
+
+  .rigor-row {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .rigor-row:last-child {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .rigor-index {
+    font-family: var(--font-mono);
+    color: var(--color-cyan);
+    font-size: 0.85rem;
+    padding-top: 0.15rem;
+  }
+
+  .rigor-text {
+    color: var(--color-ink-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .overview-block h2 {
+    font-size: 1.1rem;
+    color: var(--color-cyan);
+    margin-bottom: var(--space-sm);
+  }
+
+  .overview-block h2:not(:first-child) {
+    margin-top: var(--space-lg);
+  }
+
+  .body-text {
+    color: var(--color-ink-muted);
+    font-size: 1rem;
+    max-width: 72ch;
+  }
+
+  .architecture-para + .architecture-para {
+    margin-top: var(--space-sm);
+  }
+
+  .highlights-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
+  }
+
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .highlight-card {
+    padding: var(--space-md);
+    border-top: 2px solid var(--color-cyan);
+  }
+
+  .highlight-index {
+    display: block;
+    font-family: var(--font-mono);
+    color: var(--color-ink-faint);
+    font-size: 0.78rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .highlight-headline {
+    font-size: 1.02rem;
+    color: var(--color-ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .highlight-body {
+    color: var(--color-ink-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+</style>

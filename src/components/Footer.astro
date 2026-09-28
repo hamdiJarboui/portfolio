@@ -1,0 +1,66 @@
+---
+import { profile } from '../data/profile';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" id="contact">
+  <div class="wrap footer-inner">
+    <div class="footer-main">
+      <p class="sheet-label">Sheet 07 — Get in touch</p>
+      <h2>Building something that needs a senior Python &amp; AI-agents engineer?</h2>
+      <div class="footer-links">
+        <a class="btn btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a class="btn" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <p>{profile.location}</p>
+      <p>&copy; {year} {profile.name}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+  }
+
+  .footer-main h2 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    max-width: 620px;
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .footer-meta {
+    text-align: right;
+    color: var(--color-ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  @media (max-width: 640px) {
+    .footer-meta {
+      text-align: left;
+    }
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import TeachingList from '../components/TeachingList.astro';
+import Credentials from '../components/Credentials.astro';
+import AnvilHarness from '../components/AnvilHarness.astro';
+import { projects } from '../data/projects';
+import { harness } from '../data/harness';
+---
+
+<Layout
+  title="Hamdi Jarboui — Senior Python Engineer, AI Agents & DevOps"
+  description="Senior Python engineer building AI-agent automation, DevOps pipelines, and full-stack systems — from AgileForge to a 549-tool MCP library."
+>
+  <Header />
+  <main>
+    <Hero />
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 01 — Capabilities</p>
+          <h2>A full stack, from LLM agent to production pipeline</h2>
+          <p>4+ years of Python depth applied to full-stack development, DevOps, and now AI-agent orchestration.</p>
+        </div>
+        <SkillsGrid />
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 02 — Selected work</p>
+          <h2>Five systems, one thread: AI built to remove real engineering friction, without adding risk</h2>
+          <p>I worked alone on every one of these, from the first architecture decision to the production system running today — each one solving a real blocker to AI-assisted engineering adoption: safety, cost, integration friction, tool lock-in, or plain knowledge friction.</p>
+        </div>
+        <div class="featured-slot">
+          <ProjectCard project={projects[0]} index={0} featured={true} />
+        </div>
+        <div class="project-grid">
+          {projects.slice(1).map((project, i) => (
+            <ProjectCard project={project} index={i + 1} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="harness">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 03 — {harness.eyebrow}</p>
+          <h2>{harness.headline}</h2>
+        </div>
+        <AnvilHarness />
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 04 — Experience</p>
+          <h2>Where this was built</h2>
+        </div>
+        <ExperienceTimeline />
+      </div>
+    </section>
+
+    <section class="section" id="teaching">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 05 — Teaching &amp; mentorship</p>
+          <h2>5 years training engineers in Python and agentic AI</h2>
+          <p>20-person cohorts, 10–30 hour programmes, 100% PCEP pass rate, students placing 3 times at national AI competitions.</p>
+        </div>
+        <TeachingList />
+      </div>
+    </section>
+
+    <section class="section" id="credentials">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="sheet-label">Sheet 06 — Credentials</p>
+          <h2>Certifications, education &amp; languages</h2>
+        </div>
+        <Credentials />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .featured-slot {
+    margin-bottom: var(--space-md);
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  @media (max-width: 760px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

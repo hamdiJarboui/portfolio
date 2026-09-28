@@ -1,0 +1,222 @@
+---
+import type { Project } from '../data/projects';
+import CornerMarks from './CornerMarks.astro';
+
+interface Props {
+  project: Project;
+  index: number;
+  featured?: boolean;
+}
+
+const { project, index, featured = false } = Astro.props;
+const num = String(index + 1).padStart(2, '0');
+const tagCount = featured ? 8 : 5;
+---
+
+<a class={`project-card blueprint-panel${featured ? ' featured' : ''}`} href={`/projects/${project.slug}/`}>
+  <CornerMarks />
+  <div class="card-head">
+    <span class="dwg-tag">FIG. {num}</span>
+    <span class="dwg-tag">{featured ? 'FLAGSHIP PROJECT' : project.slug}</span>
+  </div>
+
+  <h3>{project.name}</h3>
+  <p class="tagline">{project.tagline}</p>
+
+  <div class="dim-divider card-rule"></div>
+
+  <div class="stats">
+    {project.stats.map((stat) => (
+      <div class="stat">
+        <span class="stat-value">{stat.value}</span>
+        <span class="stat-label">{stat.label}</span>
+      </div>
+    ))}
+  </div>
+
+  <p class="impact">{project.valueProps[0].body}</p>
+
+  <div class="stack">
+    {project.stack.slice(0, tagCount).map((tech) => (
+      <span class="tag">{tech}</span>
+    ))}
+  </div>
+
+  <div class="card-foot">
+    <span class="ownership">{project.ownership}</span>
+    <span class="open-cta">
+      <span class="open-label">Open specification</span>
+      <span class="open-arrow" aria-hidden="true">→</span>
+    </span>
+  </div>
+</a>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-md);
+    transition: background 0.2s ease, border-color 0.2s ease;
+    height: 100%;
+  }
+
+  .project-card:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-line-strong);
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+  }
+
+  .project-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tagline {
+    color: var(--color-ink);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .card-rule {
+    margin-block: var(--space-md);
+  }
+
+  .stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-cyan);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--color-ink-faint);
+    line-height: 1.3;
+  }
+
+  .impact {
+    color: var(--color-ink-muted);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: var(--space-md);
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink-faint);
+  }
+
+  .ownership {
+    letter-spacing: 0.02em;
+  }
+
+  .open-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    flex-shrink: 0;
+  }
+
+  .open-arrow {
+    color: var(--color-cyan);
+    transition: transform 0.2s ease;
+  }
+
+  .project-card:hover .open-arrow {
+    transform: translateX(4px);
+  }
+
+  .project-card:hover .open-label {
+    color: var(--color-cyan);
+  }
+
+  .project-card.featured {
+    padding: var(--space-lg);
+    background: var(--color-bg-raised);
+  }
+
+  .project-card.featured h3 {
+    font-size: 2rem;
+  }
+
+  .project-card.featured .tagline {
+    font-size: 1.05rem;
+    max-width: 56ch;
+  }
+
+  .project-card.featured .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .project-card.featured .impact {
+    -webkit-line-clamp: 4;
+  }
+
+  @media (min-width: 761px) {
+    .project-card.featured {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      column-gap: var(--space-xl);
+      grid-template-areas:
+        'head    head'
+        'title   title'
+        'tagline tagline'
+        'rule    rule'
+        'stats   impact'
+        'stack   stack'
+        'foot    foot';
+    }
+
+    .project-card.featured .card-head { grid-area: head; }
+    .project-card.featured h3 { grid-area: title; }
+    .project-card.featured .tagline { grid-area: tagline; max-width: none; }
+    .project-card.featured .card-rule { grid-area: rule; }
+    .project-card.featured .stats { grid-area: stats; flex-direction: column; gap: var(--space-sm); margin-bottom: 0; }
+    .project-card.featured .impact {
+      grid-area: impact;
+      margin-bottom: 0;
+      padding-left: var(--space-lg);
+      border-left: 1px solid var(--color-line);
+      -webkit-line-clamp: 6;
+    }
+    .project-card.featured .stack { grid-area: stack; margin-top: var(--space-sm); }
+    .project-card.featured .card-foot { grid-area: foot; }
+  }
+</style>

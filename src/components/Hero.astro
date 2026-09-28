@@ -1,0 +1,186 @@
+---
+import { profile } from '../data/profile';
+import CornerMarks from './CornerMarks.astro';
+
+const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', 'Reviewed PR'];
+---
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="sheet-label">Sfax, Tunisia — available for senior roles</p>
+      <h1>
+        Hamdi Jarboui builds <span class="accent">AI-agent systems</span> that ship real software, under human supervision.
+      </h1>
+      <p class="lede">{profile.summary}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#work">See the work</a>
+        <a class="btn" href="/hamdi-jarboui-resume.pdf" download>Download resume</a>
+      </div>
+    </div>
+
+    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: Jira ticket flows through a Scrum Master and Dev, DevOps, and Test agents to a reviewed pull request">
+      <CornerMarks />
+      <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through AgileForge</p>
+      <div class="pipeline-track">
+        {stages.map((stage, i) => (
+          <>
+            <div class="node" style={`animation-delay: ${220 + i * 260}ms`}>
+              <span class="node-dot"></span>
+              <span class="node-label">{stage}</span>
+            </div>
+            {i < stages.length - 1 && (
+              <span class="connector" style={`animation-delay: ${380 + i * 260}ms`}>
+                <span class="pulse"></span>
+              </span>
+            )}
+          </>
+        ))}
+      </div>
+      <div class="dim-divider pipeline-rule"></div>
+      <p class="pipeline-caption">Agents never merge — a human approves every step.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 8vw, var(--space-2xl)) var(--space-xl);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin-block: var(--space-sm) var(--space-md);
+    max-width: 19ch;
+  }
+
+  .accent {
+    color: var(--color-cyan);
+  }
+
+  .lede {
+    color: var(--color-ink-muted);
+    font-size: 1.08rem;
+    max-width: 60ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-xs);
+    margin-top: var(--space-lg);
+    flex-wrap: wrap;
+  }
+
+  .pipeline {
+    padding: var(--space-md);
+  }
+
+  .pipeline-label {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-md);
+  }
+
+  .pipeline-track {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .node {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.65em 0.9em;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg-raised);
+    font-size: 0.85rem;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: node-in 0.5s ease forwards;
+  }
+
+  .node-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-cyan);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--color-cyan);
+  }
+
+  .connector {
+    position: relative;
+    width: 28px;
+    height: 1px;
+    background: var(--color-line-strong);
+    flex-shrink: 0;
+    overflow: hidden;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: connector-in 0.4s ease forwards;
+  }
+
+  .pulse {
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--color-cyan), transparent);
+    animation: travel 2.6s linear infinite;
+    animation-delay: 1.6s;
+  }
+
+  @keyframes node-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes connector-in {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes travel {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
+
+  .pipeline-rule {
+    margin-block: var(--space-md);
+  }
+
+  .pipeline-caption {
+    color: var(--color-ink-faint);
+    font-size: 0.85rem;
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse,
+    .node,
+    .connector {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

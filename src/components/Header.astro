@@ -1,0 +1,100 @@
+---
+import { profile } from '../data/profile';
+
+const nav = [
+  { href: '#about', label: 'Skills' },
+  { href: '#work', label: 'Work' },
+  { href: '#harness', label: 'Anvil' },
+  { href: '#experience', label: 'Experience' },
+  { href: '#teaching', label: 'Teaching' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="mark">
+      <span class="mark-glyph" aria-hidden="true">[HJ]</span>
+      <span class="mark-text">Hamdi Jarboui</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      {nav.map((item, i) => (
+        <a href={item.href}><span class="nav-index">{String(i + 1).padStart(2, '0')}</span>{item.label}</a>
+      ))}
+    </nav>
+    <a class="btn btn-primary cta" href={`mailto:${profile.email}`}>Get in touch</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(10px);
+    background: rgba(11, 20, 32, 0.78);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-block: 1.1rem;
+  }
+
+  .mark {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .mark-glyph {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--color-cyan);
+    letter-spacing: 0.02em;
+  }
+
+  .nav {
+    display: flex;
+    gap: var(--space-lg);
+    font-size: 0.88rem;
+    color: var(--color-ink-muted);
+  }
+
+  .nav a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+  }
+
+  .nav a:hover {
+    color: var(--color-ink);
+  }
+
+  .nav a:hover .nav-index {
+    color: var(--color-cyan);
+  }
+
+  .nav-index {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-ink-faint);
+  }
+
+  .cta {
+    font-size: 0.82rem;
+    padding: 0.6em 1.1em;
+  }
+
+  @media (max-width: 760px) {
+    .nav {
+      display: none;
+    }
+  }
+</style>
