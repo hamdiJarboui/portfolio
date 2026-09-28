@@ -1,6 +1,7 @@
 ---
 import type { Project } from '../data/projects';
 import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
 
 interface Props {
   project: Project;
@@ -13,7 +14,7 @@ const num = String(index + 1).padStart(2, '0');
 const tagCount = featured ? 8 : 5;
 ---
 
-<a class={`project-card blueprint-panel${featured ? ' featured' : ''}`} href={`/projects/${project.slug}/`}>
+<a class={`project-card blueprint-panel${featured ? ' featured' : ''}`} href={withBase(`/projects/${project.slug}/`)}>
   <CornerMarks />
   <div class="card-head">
     <span class="dwg-tag">FIG. {num}</span>

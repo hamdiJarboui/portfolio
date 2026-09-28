@@ -8,14 +8,19 @@ import ProjectCard from '../components/ProjectCard.astro';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import TeachingList from '../components/TeachingList.astro';
 import Credentials from '../components/Credentials.astro';
-import AnvilHarness from '../components/AnvilHarness.astro';
-import { projects } from '../data/projects';
-import { harness } from '../data/harness';
+import HarnessStack from '../components/HarnessStack.astro';
+import { projects, type Project } from '../data/projects';
+
+const harnessLayers = projects
+  .filter((p) => p.harnessLayer)
+  .sort((a, b) => a.harnessLayer!.order - b.harnessLayer!.order);
+const otherWork = projects.filter((p) => !p.harnessLayer);
+const figIndex = (project: Project) => projects.indexOf(project);
 ---
 
 <Layout
   title="Hamdi Jarboui — Senior Python Engineer, AI Agents & DevOps"
-  description="Senior Python engineer building AI-agent automation, DevOps pipelines, and full-stack systems — from AgileForge to a 549-tool MCP library."
+  description="Senior Python engineer building AI-agent automation, DevOps pipelines, and full-stack systems — from autonomous agent squads to a 549-tool MCP library."
 >
   <Header />
   <main>
@@ -36,34 +41,35 @@ import { harness } from '../data/harness';
       <div class="wrap">
         <div class="section-head">
           <p class="sheet-label">Sheet 02 — Selected work</p>
-          <h2>Five systems, one thread: AI built to remove real engineering friction, without adding risk</h2>
-          <p>I worked alone on every one of these, from the first architecture decision to the production system running today — each one solving a real blocker to AI-assisted engineering adoption: safety, cost, integration friction, tool lock-in, or plain knowledge friction.</p>
+          <h2>An AI harness for the whole company, and the agentic systems around it</h2>
+          <p>Every project here removes a real blocker to AI-assisted engineering: safety, cost, integration friction, tool lock-in or plain knowledge friction. I led each one from the first architecture decision to the running system, three of them as the only engineer.</p>
+        </div>
+
+        <div class="group-slot">
+          <HarnessStack layers={harnessLayers} figIndex={figIndex} />
+        </div>
+
+        <div class="group-head">
+          <span class="dwg-tag">GROUP B</span>
+          <h3>Agentic delivery &amp; knowledge</h3>
+          <p>Systems that put agents to work on real tickets, merge requests and documentation, with guardrails that keep the autonomy safe.</p>
         </div>
         <div class="featured-slot">
-          <ProjectCard project={projects[0]} index={0} featured={true} />
+          <ProjectCard project={otherWork[0]} index={figIndex(otherWork[0])} featured={true} />
         </div>
-        <div class="project-grid">
-          {projects.slice(1).map((project, i) => (
-            <ProjectCard project={project} index={i + 1} />
+        <div class={otherWork.length === 2 ? 'project-grid single' : 'project-grid'}>
+          {otherWork.slice(1).map((project) => (
+            <ProjectCard project={project} index={figIndex(project)} />
           ))}
         </div>
       </div>
     </section>
 
-    <section class="section" id="harness">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="sheet-label">Sheet 03 — {harness.eyebrow}</p>
-          <h2>{harness.headline}</h2>
-        </div>
-        <AnvilHarness />
-      </div>
-    </section>
 
     <section class="section" id="experience">
       <div class="wrap">
         <div class="section-head">
-          <p class="sheet-label">Sheet 04 — Experience</p>
+          <p class="sheet-label">Sheet 03 — Experience</p>
           <h2>Where this was built</h2>
         </div>
         <ExperienceTimeline />
@@ -73,7 +79,7 @@ import { harness } from '../data/harness';
     <section class="section" id="teaching">
       <div class="wrap">
         <div class="section-head">
-          <p class="sheet-label">Sheet 05 — Teaching &amp; mentorship</p>
+          <p class="sheet-label">Sheet 04 — Teaching &amp; mentorship</p>
           <h2>5 years training engineers in Python and agentic AI</h2>
           <p>20-person cohorts, 10–30 hour programmes, 100% PCEP pass rate, students placing 3 times at national AI competitions.</p>
         </div>
@@ -84,7 +90,7 @@ import { harness } from '../data/harness';
     <section class="section" id="credentials">
       <div class="wrap">
         <div class="section-head">
-          <p class="sheet-label">Sheet 06 — Credentials</p>
+          <p class="sheet-label">Sheet 05 — Credentials</p>
           <h2>Certifications, education &amp; languages</h2>
         </div>
         <Credentials />
@@ -95,6 +101,29 @@ import { harness } from '../data/harness';
 </Layout>
 
 <style>
+  .group-slot {
+    margin-bottom: var(--space-xl);
+  }
+
+  .group-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .group-head h3 {
+    font-size: 1.5rem;
+  }
+
+  .group-head p {
+    color: var(--color-ink-muted);
+    font-size: 0.92rem;
+    max-width: 70ch;
+  }
+
   .featured-slot {
     margin-bottom: var(--space-md);
   }
@@ -103,6 +132,10 @@ import { harness } from '../data/harness';
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
+  }
+
+  .project-grid.single {
+    grid-template-columns: 1fr;
   }
 
   @media (max-width: 760px) {

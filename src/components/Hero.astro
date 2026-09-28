@@ -1,8 +1,9 @@
 ---
 import { profile } from '../data/profile';
 import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
 
-const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', 'Reviewed PR'];
+const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR', 'Merged & notified'];
 ---
 
 <section class="hero">
@@ -15,13 +16,13 @@ const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', '
       <p class="lede">{profile.summary}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#work">See the work</a>
-        <a class="btn" href="/hamdi-jarboui-resume.pdf" download>Download resume</a>
+        <a class="btn" href={withBase('/hamdi-jarboui-resume.pdf')} download>Download resume</a>
       </div>
     </div>
 
-    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: Jira ticket flows through a Scrum Master and Dev, DevOps, and Test agents to a reviewed pull request">
+    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only after a human approves the pull request">
       <CornerMarks />
-      <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through AgileForge</p>
+      <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through opencode-autodev</p>
       <div class="pipeline-track">
         {stages.map((stage, i) => (
           <>
@@ -38,7 +39,7 @@ const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', '
         ))}
       </div>
       <div class="dim-divider pipeline-rule"></div>
-      <p class="pipeline-caption">Agents never merge — a human approves every step.</p>
+      <p class="pipeline-caption">Agents do the work; nothing merges until a human approves the pull request.</p>
     </div>
   </div>
 </section>

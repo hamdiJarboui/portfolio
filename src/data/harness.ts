@@ -9,11 +9,15 @@ export interface HarnessGuardrail {
   body: string;
 }
 
-export const harness = {
-  eyebrow: 'Anvil — the company AI harness',
-  headline: 'One harness between the AI coding hosts and every tool the company runs',
+export interface Harness {
+  intro: string;
+  groups: ToolGroup[];
+  guardrails: HarnessGuardrail[];
+}
+
+export const harness: Harness = {
   intro:
-    "Anvil is the layer that turns a general-purpose AI coding assistant into one that works inside the company's real engineering stack. It packages 150 skills, 150 agents and 62 slash commands, installs them into Claude Code, OpenCode, Beacon and GitHub Copilot from one registry, and connects them through MCP servers to the source control, CI, artifact, test, ALM, observability and automotive-diagnostic tools the teams already use. The agent reads live evidence from those systems; it does not guess.",
+    "Anvil sits between the AI coding hosts engineers already use and the tools the company already runs. MCP servers wire every agent into source control, CI, artifact stores, test benches, ALM, observability and automotive diagnostics, so an agent answering a question about a failed build reads the actual pipeline log, the actual trace and the actual ticket instead of guessing.",
   groups: [
     {
       category: 'Source control & code review',
@@ -55,7 +59,7 @@ export const harness = {
       blurb: 'Target state from the rig and metrics from production, without write access.',
       tools: ['Lauterbach TRACE32', 'Grafana / Prometheus', 'Elastic', 'Kibana'],
     },
-  ] satisfies ToolGroup[],
+  ],
   guardrails: [
     {
       headline: 'Read-only by default',
@@ -73,5 +77,21 @@ export const harness = {
       headline: 'One registry, four hosts',
       body: 'Skills and agents are written once and adapted to each host at install time, so teams do not maintain four toolchains.',
     },
-  ] satisfies HarnessGuardrail[],
+  ],
+};
+
+export interface HarnessLayer {
+  order: number;
+  label: string;
+  question: string;
+  role: string;
+}
+
+export const harnessGroup = {
+  name: 'The AI Harness',
+  headline: 'Three layers that turn a general-purpose model into an engineer that works inside the company',
+  intro:
+    'A model on its own can write code, but it cannot see your pipelines, does not know your standards and has nowhere safe to run. A harness supplies those three things. I built one project for each layer: an agent runtime that plans, acts and checks its own work; a shared library of skills and agents that carries the company\'s know-how; and a tool layer that connects agents to the systems the company actually runs.',
+  note: 'Each layer is its own codebase and can be used on its own. They meet at open interfaces (skill folders, agent definitions and the Model Context Protocol) rather than being locked into one product.',
+  connectors: ['skills & agents', 'tools over MCP'],
 };

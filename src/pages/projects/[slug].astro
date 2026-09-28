@@ -3,7 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import CornerMarks from '../../components/CornerMarks.astro';
+import AnvilHarness from '../../components/AnvilHarness.astro';
 import { projects } from '../../data/projects';
+import { harnessGroup } from '../../data/harness';
+import { withBase } from '../../utils/url';
 
 export function getStaticPaths() {
   return projects.map((project, index) => ({
@@ -14,6 +17,9 @@ export function getStaticPaths() {
 
 const { project, index } = Astro.props;
 const num = String(index + 1).padStart(2, '0');
+const harnessLayers = projects
+  .filter((p) => p.harnessLayer)
+  .sort((a, b) => a.harnessLayer!.order - b.harnessLayer!.order);
 ---
 
 <Layout title={`${project.name} — Hamdi Jarboui`} description={project.tagline}>
@@ -21,8 +27,28 @@ const num = String(index + 1).padStart(2, '0');
   <main>
     <section class="section hero-section">
       <div class="wrap">
-        <a class="back" href="/#work">&larr; All work</a>
+        <a class="back" href={withBase('/#work')}>&larr; All work</a>
         <p class="sheet-label">Fig. {num} — {project.ownership}</p>
+        {project.harnessLayer && (
+          <nav class="harness-strip" aria-label={harnessGroup.name}>
+            <span class="strip-title">Part of {harnessGroup.name} · Layer {project.harnessLayer.order} of {harnessLayers.length}</span>
+            <ol class="strip-layers">
+              {harnessLayers.map((layer) => (
+                <li>
+                  <a
+                    href={withBase(`/projects/${layer.slug}/`)}
+                    class={layer.slug === project.slug ? 'strip-layer current' : 'strip-layer'}
+                    aria-current={layer.slug === project.slug ? 'page' : undefined}
+                  >
+                    <span class="strip-num">L{layer.harnessLayer!.order}</span>
+                    <span class="strip-label">{layer.harnessLayer!.label}</span>
+                    <span class="strip-name">{layer.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
         <h1>{project.name}</h1>
         <p class="tagline">{project.tagline}</p>
         <p class="role-line">{project.role}</p>
@@ -42,6 +68,25 @@ const num = String(index + 1).padStart(2, '0');
       </div>
     </section>
 
+    {project.flow && (
+      <section class="section flow-section">
+        <div class="wrap">
+          <p class="sheet-label">How a ticket moves</p>
+          <h2>From backlog to merged change: agents do the work, a human approves it</h2>
+          <ol class="flow">
+            {project.flow.map((step, i) => (
+              <li class="flow-step blueprint-panel">
+                <CornerMarks />
+                <span class="flow-num">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="flow-title">{step.title}</h3>
+                <p class="flow-body">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
+
     <section class="section value-section">
       <div class="wrap">
         <p class="sheet-label">Why it matters</p>
@@ -56,6 +101,16 @@ const num = String(index + 1).padStart(2, '0');
         </div>
       </div>
     </section>
+
+    {project.harness && (
+      <section class="section harness-section">
+        <div class="wrap">
+          <p class="sheet-label">Wired into the company stack</p>
+          <h2>One harness between the AI hosts and every tool the company runs</h2>
+          <AnvilHarness harness={project.harness} />
+        </div>
+      </section>
+    )}
 
     <section class="section rigor-section">
       <div class="wrap">
@@ -124,6 +179,77 @@ const num = String(index + 1).padStart(2, '0');
     color: var(--color-cyan);
   }
 
+  .harness-strip {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .strip-title {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--color-amber);
+    margin-bottom: 0.5rem;
+  }
+
+  .strip-layers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    max-width: 760px;
+  }
+
+  .strip-layer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    height: 100%;
+    padding: 0.6rem 0.8rem;
+    background: var(--color-surface);
+    transition: background 0.2s ease;
+  }
+
+  .strip-layer:hover {
+    background: var(--color-surface-hover);
+  }
+
+  .strip-layer.current {
+    background: var(--color-cyan-soft);
+    box-shadow: inset 0 -2px 0 var(--color-cyan);
+  }
+
+  .strip-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-cyan);
+  }
+
+  .strip-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-faint);
+  }
+
+  .strip-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 560px) {
+    .strip-layers {
+      grid-template-columns: 1fr;
+    }
+  }
+
   h1 {
     font-size: clamp(2rem, 4.5vw, 3rem);
     margin-block: var(--space-xs) var(--space-sm);
@@ -180,6 +306,73 @@ const num = String(index + 1).padStart(2, '0');
     gap: 0.5rem;
   }
 
+  .flow-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
+  }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: none;
+  }
+
+  .flow-step {
+    position: relative;
+    padding: var(--space-md) var(--space-sm);
+    border-top: 2px solid var(--color-cyan);
+  }
+
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: calc(-1 * var(--space-sm) + 0.1rem);
+    top: 1.4rem;
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    z-index: 1;
+  }
+
+  .flow-num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-amber);
+    margin-bottom: 0.4rem;
+  }
+
+  .flow-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .flow-body {
+    color: var(--color-ink-muted);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 900px) {
+    .flow {
+      grid-template-columns: 1fr;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '↓';
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -1.1rem;
+    }
+  }
+
   .value-section {
     padding-block: var(--space-lg) var(--space-xl);
   }
@@ -206,6 +399,13 @@ const num = String(index + 1).padStart(2, '0');
     color: var(--color-ink-muted);
     font-size: 0.9rem;
     line-height: 1.55;
+  }
+
+  .harness-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-md);
   }
 
   .rigor-section h2 {
