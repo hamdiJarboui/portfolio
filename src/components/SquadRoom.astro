@@ -1,0 +1,839 @@
+---
+/**
+ * "Squad room": a scripted, video-like replay of an opencode-autodev squad
+ * channel. The developer agent, the reviewer agent and the human operator talk
+ * in the ticket's channel while the facilitator wakes whoever is addressed and
+ * the merge gates fill in. Built from real DOM text (readable, indexable), not
+ * a video file. The scenario is illustrative and labelled "simulated".
+ */
+import CornerMarks from './CornerMarks.astro';
+
+const members = [
+  { id: 'dev', name: 'python-developer', role: 'Developer agent', initials: 'PD' },
+  { id: 'rev', name: 'reviewer', role: 'Reviewer agent', initials: 'RV' },
+  { id: 'human', name: 'you', role: 'Human operator', initials: 'HJ' },
+  { id: 'fac', name: 'facilitator', role: 'Plain code, no LLM', initials: 'FX' },
+];
+
+const gates = ['reviewer', 'approvals', 'pipeline', 'security'];
+
+const chapters = [
+  { at: 0, label: 'Claim' },
+  { at: 6500, label: 'Ask' },
+  { at: 15500, label: 'Build' },
+  { at: 24000, label: 'Review' },
+  { at: 30500, label: 'Human' },
+  { at: 40000, label: 'Merge' },
+];
+---
+
+<figure class="squad-room blueprint-panel" data-squad-room aria-labelledby="squad-room-title">
+  <CornerMarks />
+  <div class="room-head">
+    <span class="rec" aria-hidden="true"><span class="rec-dot"></span>REC</span>
+    <p class="room-title" id="squad-room-title">
+      Squad channel · <span class="ticket">PROJ-1482</span> "Handle CAN timeout on brake signal"
+    </p>
+    <span class="dwg-tag">simulated replay</span>
+  </div>
+
+  <div class="room-body">
+    <ul class="members" aria-label="Squad members">
+      {members.map((m) => (
+        <li class={`member member-${m.id}`} data-member={m.id}>
+          <span class="avatar" aria-hidden="true">
+            <span class="ring"></span>
+            {m.initials}
+          </span>
+          <span class="member-text">
+            <span class="member-name">@{m.name}</span>
+            <span class="member-role">{m.role}</span>
+            <span class="member-status" data-status>idle</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <div class="channel" data-channel>
+      <ol class="messages" data-messages aria-live="off"></ol>
+      <div class="typing" data-typing hidden>
+        <span class="typing-who" data-typing-who></span> is typing
+        <span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gates" aria-label="Merge gates">
+    <span class="gates-label">merge gate</span>
+    {gates.map((g) => (
+      <span class="gate" data-gate={g}><span class="gate-dot" aria-hidden="true"></span>{g}</span>
+    ))}
+    <span class="gate-result" data-gate-result>waiting</span>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="ctl" data-play aria-label="Play">
+      <svg class="i-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor" /></svg>
+      <svg class="i-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z" fill="currentColor" /></svg>
+    </button>
+    <button type="button" class="ctl" data-replay aria-label="Replay from the start">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4" /><path d="M2.5 2.5v3h3" /></svg>
+    </button>
+    <div class="track" data-track>
+      <div class="track-bar"><div class="track-fill" data-fill></div></div>
+      <div class="chapters">
+        {chapters.map((c) => (
+          <button type="button" class="chapter" data-seek={c.at} style={`left: ${(c.at / 46000) * 100}%`}>
+            {c.label}
+          </button>
+        ))}
+      </div>
+    </div>
+    <span class="time" data-time>0:00</span>
+  </div>
+</figure>
+
+<script>
+  type Who = 'dev' | 'rev' | 'human' | 'fac';
+  type Ev =
+    | { at: number; kind: 'sys'; text: string }
+    | { at: number; kind: 'msg'; from: Who; tool: 'team_post' | 'team_ask'; to?: string; text: string }
+    | { at: number; kind: 'call'; from: Who; call: string; result: string }
+    | { at: number; kind: 'wake'; who: Who; text: string }
+    | { at: number; kind: 'gate'; gate: string }
+    | { at: number; kind: 'done'; text: string };
+
+  const DURATION = 46000;
+  const TYPING_MS = 1300;
+  const NAMES: Record<Who, string> = { dev: 'python-developer', rev: 'reviewer', human: 'you', fac: 'facilitator' };
+
+  const SCRIPT: Ev[] = [
+    { at: 400, kind: 'sys', text: 'PROJ-1482 claimed · lease taken · worktree autodev/PROJ-1482 · squad channel opened' },
+    { at: 2600, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Picking this up. Plan: add a timeout watchdog on BrakePressure and fall back safely when frames stop arriving.' },
+    { at: 4600, kind: 'call', from: 'dev', call: 'mcp.dbc.get_signal("BrakePressure")', result: 'cycle 10 ms · 12-bit · Brake_ECU' },
+    { at: 8200, kind: 'msg', from: 'dev', tool: 'team_ask', to: '@reviewer', text: 'The signal cycles every 10 ms. Is 5 missed frames (50 ms) the right threshold, or should it be configurable?' },
+    { at: 9000, kind: 'wake', who: 'rev', text: 'facilitator woke @reviewer · wake 1/4' },
+    { at: 11800, kind: 'msg', from: 'rev', tool: 'team_post', to: '@python-developer', text: 'Configurable, default 50 ms. And test the recovery path: the signal comes back after a timeout.' },
+    { at: 16800, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Done: timeout in config, 3 new tests including recovery. All green locally.' },
+    { at: 18400, kind: 'sys', text: 'merge request !231 opened · pipeline running' },
+    { at: 20800, kind: 'gate', gate: 'pipeline' },
+    { at: 21800, kind: 'gate', gate: 'security' },
+    { at: 25400, kind: 'msg', from: 'rev', tool: 'team_post', text: 'Verdict: approve. Recovery test covers the edge I asked for.' },
+    { at: 26000, kind: 'gate', gate: 'reviewer' },
+    { at: 31600, kind: 'msg', from: 'human', tool: 'team_ask', to: '@python-developer', text: 'Why hold the last value instead of switching to a safe default straight away?' },
+    { at: 32200, kind: 'wake', who: 'dev', text: 'facilitator woke @python-developer · wake 2/4' },
+    { at: 35600, kind: 'msg', from: 'dev', tool: 'team_post', to: '@you', text: 'The requirement says hold the last valid value for up to 200 ms, then switch to the safe default. Both steps are implemented and tested.' },
+    { at: 39600, kind: 'msg', from: 'human', tool: 'team_post', text: 'Makes sense. Approved on the MR.' },
+    { at: 40400, kind: 'gate', gate: 'approvals' },
+    { at: 42200, kind: 'done', text: 'all 4 gates green · merged · team notified on Teams' },
+  ];
+
+  function mmss(ms: number) {
+    const s = Math.floor(ms / 1000);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  function setup(root: HTMLElement) {
+    const list = root.querySelector<HTMLOListElement>('[data-messages]')!;
+    const channel = root.querySelector<HTMLElement>('[data-channel]')!;
+    const typing = root.querySelector<HTMLElement>('[data-typing]')!;
+    const typingWho = root.querySelector<HTMLElement>('[data-typing-who]')!;
+    const fill = root.querySelector<HTMLElement>('[data-fill]')!;
+    const time = root.querySelector<HTMLElement>('[data-time]')!;
+    const playBtn = root.querySelector<HTMLButtonElement>('[data-play]')!;
+    const result = root.querySelector<HTMLElement>('[data-gate-result]')!;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let t = 0;
+    let next = 0;
+    let playing = false;
+    let last = 0;
+    let raf = 0;
+    let userPaused = false;
+
+    const member = (w: Who) => root.querySelector<HTMLElement>(`[data-member="${w}"]`)!;
+    const status = (w: Who, text: string, cls?: string) => {
+      const el = member(w);
+      el.querySelector<HTMLElement>('[data-status]')!.textContent = text;
+      el.classList.remove('is-typing', 'is-speaking', 'is-woken', 'is-working');
+      if (cls) el.classList.add(cls);
+    };
+
+    function el(tag: string, cls: string, text?: string) {
+      const node = document.createElement(tag);
+      node.className = cls;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function apply(ev: Ev, animate: boolean) {
+      let li: HTMLElement | null = null;
+      if (ev.kind === 'sys' || ev.kind === 'done') {
+        li = el('li', `line line-sys${ev.kind === 'done' ? ' line-done' : ''}`, ev.text);
+        if (ev.kind === 'done') {
+          result.textContent = 'merged';
+          root.classList.add('is-merged');
+        }
+      } else if (ev.kind === 'wake') {
+        li = el('li', 'line line-wake', ev.text);
+        status(ev.who, 'woken by facilitator', 'is-woken');
+        status('fac', 'waking a teammate', 'is-working');
+      } else if (ev.kind === 'call') {
+        li = el('li', `line line-call from-${ev.from}`);
+        li.append(el('span', 'call-fn', ev.call), el('span', 'call-arrow', ' → '), el('span', 'call-res', ev.result));
+        status(ev.from, 'calling an MCP tool', 'is-working');
+      } else if (ev.kind === 'gate') {
+        root.querySelector(`[data-gate="${ev.gate}"]`)?.classList.add('is-ok');
+      } else if (ev.kind === 'msg') {
+        li = el('li', `line line-msg from-${ev.from}`);
+        const meta = el('div', 'msg-meta');
+        meta.append(el('span', 'msg-from', `@${NAMES[ev.from]}`), el('span', 'msg-tool', ev.tool));
+        if (ev.to) meta.append(el('span', 'msg-to', `→ ${ev.to}`));
+        li.append(meta, el('p', 'msg-text', ev.text));
+        (Object.keys(NAMES) as Who[]).forEach((w) => {
+          if (w === ev.from) return;
+          if (w === 'fac') status(w, 'watching budgets');
+          else status(w, 'listening');
+        });
+        status(ev.from, ev.tool === 'team_ask' ? 'asking a question' : 'posting', 'is-speaking');
+      }
+      if (li) {
+        if (animate) li.classList.add('enter');
+        list.append(li);
+        channel.scrollTop = channel.scrollHeight;
+      }
+    }
+
+    function reset() {
+      list.replaceChildren();
+      root.querySelectorAll('.gate').forEach((g) => g.classList.remove('is-ok'));
+      root.classList.remove('is-merged');
+      result.textContent = 'waiting';
+      (Object.keys(NAMES) as Who[]).forEach((w) => status(w, w === 'fac' ? 'watching budgets' : 'idle'));
+      next = 0;
+    }
+
+    function updateTyping() {
+      const upcoming = SCRIPT[next];
+      if (upcoming && upcoming.kind === 'msg' && upcoming.at - t <= TYPING_MS && upcoming.at > t) {
+        typing.hidden = false;
+        typingWho.textContent = `@${NAMES[upcoming.from]}`;
+        const m = member(upcoming.from);
+        if (!m.classList.contains('is-typing')) status(upcoming.from, 'typing…', 'is-typing');
+      } else {
+        typing.hidden = true;
+      }
+    }
+
+    function render() {
+      fill.style.width = `${Math.min(100, (t / DURATION) * 100)}%`;
+      time.textContent = `${mmss(t)} / ${mmss(DURATION)}`;
+      root.querySelectorAll<HTMLElement>('.chapter').forEach((c) => {
+        c.classList.toggle('is-past', Number(c.dataset.seek) <= t);
+      });
+      updateTyping();
+    }
+
+    function advance(animate: boolean) {
+      while (next < SCRIPT.length && SCRIPT[next].at <= t) {
+        apply(SCRIPT[next], animate);
+        next++;
+      }
+      render();
+    }
+
+    function seek(ms: number) {
+      reset();
+      t = Math.max(0, Math.min(ms, DURATION));
+      advance(false);
+    }
+
+    function tick(now: number) {
+      if (!playing) return;
+      t += Math.min(now - last, 100);
+      last = now;
+      if (t >= DURATION) {
+        t = 0;
+        reset();
+      }
+      advance(true);
+      raf = requestAnimationFrame(tick);
+    }
+
+    function play() {
+      if (playing) return;
+      playing = true;
+      root.classList.add('is-playing');
+      playBtn.setAttribute('aria-label', 'Pause');
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+
+    function pause() {
+      playing = false;
+      root.classList.remove('is-playing');
+      playBtn.setAttribute('aria-label', 'Play');
+      cancelAnimationFrame(raf);
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (playing) {
+        userPaused = true;
+        pause();
+      } else {
+        userPaused = false;
+        if (t >= SCRIPT[SCRIPT.length - 1].at + 3000) seek(0);
+        play();
+      }
+    });
+    root.querySelector('[data-replay]')!.addEventListener('click', () => {
+      userPaused = false;
+      seek(0);
+      play();
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-seek]').forEach((b) =>
+      b.addEventListener('click', () => {
+        seek(Number(b.dataset.seek) + 1);
+        if (!userPaused) play();
+      }),
+    );
+    root.querySelector<HTMLElement>('[data-track]')!.addEventListener('click', (e) => {
+      if ((e.target as Element).closest('.chapter')) return;
+      const bar = root.querySelector<HTMLElement>('.track-bar')!.getBoundingClientRect();
+      seek(((e.clientX - bar.left) / bar.width) * DURATION);
+    });
+
+    reset();
+    if (reduce) {
+      // No autoplay: show the whole conversation, still.
+      seek(DURATION - 1);
+      return;
+    }
+    render();
+
+    // Autoplay while on screen, like a muted video; respect a manual pause.
+    new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !userPaused && !document.hidden) play();
+        else pause();
+      },
+      { threshold: 0.35 },
+    ).observe(root);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pause();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-squad-room]').forEach(setup);
+</script>
+
+<style>
+  .squad-room {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 60% at 100% 0%, rgba(167, 139, 250, 0.1), transparent 70%),
+      var(--color-bg-raised);
+    box-shadow: 0 30px 80px -40px rgba(122, 168, 255, 0.5);
+  }
+
+  .room-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.8rem var(--space-md);
+    border-bottom: 1px solid var(--color-line);
+    background: rgba(6, 13, 23, 0.6);
+  }
+
+  .rec {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    color: #ff6b81;
+  }
+
+  .rec-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff6b81;
+    box-shadow: 0 0 8px #ff6b81;
+  }
+
+  .is-playing .rec-dot {
+    animation: rec 1.2s ease-in-out infinite;
+  }
+
+  @keyframes rec {
+    50% { opacity: 0.2; }
+  }
+
+  .room-title {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ticket {
+    color: var(--color-ink);
+  }
+
+  .room-body {
+    display: grid;
+    grid-template-columns: 15rem 1fr;
+    min-height: 23rem;
+  }
+
+  .members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: var(--space-sm);
+    border-right: 1px solid var(--color-line);
+  }
+
+  .member {
+    --tone: var(--color-cyan);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .member-rev { --tone: var(--color-violet); }
+  .member-human { --tone: var(--color-amber); }
+  .member-fac { --tone: var(--color-ink-faint); }
+
+  .avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--tone);
+    background: color-mix(in srgb, var(--tone) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  }
+
+  .member-fac .avatar {
+    border-radius: 6px;
+  }
+
+  .ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 2px solid var(--tone);
+    opacity: 0;
+  }
+
+  .member.is-speaking,
+  .member.is-typing,
+  .member.is-woken,
+  .member.is-working {
+    background: color-mix(in srgb, var(--tone) 8%, transparent);
+    border-color: color-mix(in srgb, var(--tone) 30%, transparent);
+  }
+
+  .member.is-speaking .ring,
+  .member.is-typing .ring {
+    animation: ring 1.4s ease-out infinite;
+  }
+
+  .member.is-woken .ring {
+    opacity: 1;
+    animation: ring 0.9s ease-out 2;
+  }
+
+  @keyframes ring {
+    0% { transform: scale(0.9); opacity: 0.9; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  .member-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+  }
+
+  .member-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink);
+  }
+
+  .member-role {
+    font-size: 0.7rem;
+    color: var(--color-ink-faint);
+  }
+
+  .member-status {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--tone);
+    margin-top: 0.1rem;
+  }
+
+  .channel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 23rem;
+    overflow-y: auto;
+    padding: var(--space-sm) var(--space-md);
+    scroll-behavior: smooth;
+  }
+
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: auto;
+  }
+
+  .messages :global(.line.enter) {
+    animation: enter 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(8px); }
+  }
+
+  .messages :global(.line-sys),
+  .messages :global(.line-wake) {
+    align-self: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-ink-faint);
+    padding: 0.3em 0.8em;
+    border: 1px dashed var(--color-line-strong);
+    border-radius: 999px;
+    text-align: center;
+  }
+
+  .messages :global(.line-wake) {
+    color: var(--color-violet);
+    border-color: rgba(167, 139, 250, 0.4);
+  }
+
+  .messages :global(.line-done) {
+    color: #5eead4;
+    border: 1px solid rgba(94, 234, 212, 0.5);
+    background: rgba(94, 234, 212, 0.08);
+  }
+
+  .messages :global(.line-call) {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.45em 0.7em;
+    border-left: 2px solid #7aa8ff;
+    background: rgba(122, 168, 255, 0.06);
+    color: var(--color-ink-muted);
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .messages :global(.call-fn) { color: #7aa8ff; }
+  .messages :global(.call-arrow) { color: var(--color-ink-faint); }
+
+  .messages :global(.line-msg) {
+    --tone: var(--color-cyan);
+    max-width: 88%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--tone) 28%, transparent);
+    border-left: 2px solid var(--tone);
+    background: color-mix(in srgb, var(--tone) 6%, var(--color-surface));
+    border-radius: 2px var(--radius-md) var(--radius-md) 2px;
+  }
+
+  .messages :global(.from-rev) { --tone: var(--color-violet); }
+  .messages :global(.from-human) {
+    --tone: var(--color-amber);
+    align-self: flex-end;
+  }
+
+  .messages :global(.msg-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    align-items: baseline;
+    margin-bottom: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .messages :global(.msg-from) { color: var(--tone); }
+  .messages :global(.msg-tool) {
+    color: var(--color-ink-faint);
+    padding: 0 0.4em;
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+  }
+  .messages :global(.msg-to) { color: var(--color-ink-muted); }
+
+  .messages :global(.msg-text) {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .typing {
+    margin-top: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-ink-faint);
+  }
+
+  .typing-who {
+    color: var(--color-ink-muted);
+  }
+
+  .typing-dots {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: 0.3em;
+  }
+
+  .typing-dots i {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-ink-muted);
+    animation: dot 1s ease-in-out infinite;
+  }
+
+  .typing-dots i:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots i:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-3px); opacity: 1; }
+  }
+
+  .gates {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem var(--space-md);
+    border-top: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .gates-label {
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 0.3rem;
+  }
+
+  .gate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.25em 0.6em;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    color: var(--color-ink-faint);
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .gate-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-line-strong);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .gate.is-ok {
+    color: #5eead4;
+    border-color: rgba(94, 234, 212, 0.5);
+    background: rgba(94, 234, 212, 0.06);
+  }
+
+  .gate.is-ok .gate-dot {
+    background: #5eead4;
+    box-shadow: 0 0 6px #5eead4;
+  }
+
+  .gate-result {
+    margin-left: auto;
+    color: var(--color-amber);
+  }
+
+  .is-merged .gate-result {
+    color: #5eead4;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem var(--space-md) 1.6rem;
+    border-top: 1px solid var(--color-line);
+    background: rgba(6, 13, 23, 0.6);
+  }
+
+  .ctl {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-line-strong);
+    background: transparent;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .ctl:hover,
+  .ctl:focus-visible {
+    border-color: var(--color-cyan);
+    color: var(--color-cyan);
+  }
+
+  .ctl .i-pause,
+  .is-playing .ctl .i-play {
+    display: none;
+  }
+
+  .is-playing .ctl .i-pause {
+    display: block;
+  }
+
+  .track {
+    position: relative;
+    flex: 1;
+    cursor: pointer;
+    padding-block: 0.5rem;
+  }
+
+  .track-bar {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--color-line-strong);
+    overflow: hidden;
+  }
+
+  .track-fill {
+    height: 100%;
+    width: 0;
+    background: var(--gradient-ai);
+  }
+
+  .chapters {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.95rem;
+  }
+
+  .chapter {
+    position: absolute;
+    transform: translateX(-10%);
+    padding: 0.1rem 0.15rem;
+    border: none;
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-ink-faint);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .chapter::before {
+    content: '';
+    position: absolute;
+    left: 10%;
+    top: -0.55rem;
+    width: 1px;
+    height: 7px;
+    background: var(--color-line-strong);
+  }
+
+  .chapter.is-past {
+    color: var(--color-ink-muted);
+  }
+
+  .chapter:hover,
+  .chapter:focus-visible {
+    color: var(--color-cyan);
+  }
+
+  .time {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-ink-faint);
+    min-width: 5.5em;
+    text-align: right;
+  }
+
+  @media (max-width: 760px) {
+    .room-body {
+      grid-template-columns: 1fr;
+    }
+
+    .members {
+      flex-direction: row;
+      flex-wrap: wrap;
+      border-right: none;
+      border-bottom: 1px solid var(--color-line);
+    }
+
+    .member {
+      flex: 1 1 45%;
+      padding: 0.4rem;
+    }
+
+    .member-role {
+      display: none;
+    }
+
+    .channel {
+      max-height: 22rem;
+      min-height: 18rem;
+    }
+
+    .room-title {
+      white-space: normal;
+    }
+
+    .chapter {
+      font-size: 0.55rem;
+    }
+
+    .chapter:nth-child(even) {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rec-dot,
+    .ring,
+    .typing-dots i,
+    .messages :global(.line.enter) {
+      animation: none !important;
+    }
+  }
+</style>
