@@ -71,8 +71,8 @@ const harnessLayers = projects
     {project.flow && (
       <section class="section flow-section">
         <div class="wrap">
-          <p class="sheet-label">How a ticket moves</p>
-          <h2>From backlog to merged change: agents do the work, a human approves it</h2>
+          <p class="sheet-label">{project.flowHeading?.label ?? 'How it works'}</p>
+          {project.flowHeading && <h2>{project.flowHeading.title}</h2>}
           <ol class="flow">
             {project.flow.map((step, i) => (
               <li class="flow-step blueprint-panel">
