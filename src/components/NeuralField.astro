@@ -25,11 +25,11 @@
 </style>
 
 <script>
-  type Node = { x: number; y: number; vx: number; vy: number; r: number; violet: boolean };
+  type Node = { x: number; y: number; vx: number; vy: number; r: number; blue: boolean };
   type Signal = { a: number; b: number; t: number; speed: number };
 
   const CYAN = '72, 215, 255';
-  const VIOLET = '167, 139, 250';
+  const BLUE = '61, 139, 255';
   const LINK = 140;
 
   function start(canvas: HTMLCanvasElement) {
@@ -61,7 +61,7 @@
         vx: (Math.random() - 0.5) * 0.28,
         vy: (Math.random() - 0.5) * 0.28,
         r: 0.8 + Math.random() * 1.6,
-        violet: Math.random() < 0.35,
+        blue: Math.random() < 0.35,
       }));
       signals = [];
     }
@@ -120,7 +120,7 @@
           if (d > LINK) continue;
           const near = pointer.active && Math.hypot(pointer.x - (a.x + b.x) / 2, pointer.y - (a.y + b.y) / 2) < 150;
           const alpha = (1 - d / LINK) * (near ? 0.6 : 0.28);
-          ctx!.strokeStyle = `rgba(${a.violet && b.violet ? VIOLET : CYAN}, ${alpha})`;
+          ctx!.strokeStyle = `rgba(${a.blue && b.blue ? BLUE : CYAN}, ${alpha})`;
           ctx!.beginPath();
           ctx!.moveTo(a.x, a.y);
           ctx!.lineTo(b.x, b.y);
@@ -134,15 +134,15 @@
         const x = a.x + (b.x - a.x) * s.t;
         const y = a.y + (b.y - a.y) * s.t;
         const g = ctx!.createRadialGradient(x, y, 0, x, y, 7);
-        g.addColorStop(0, `rgba(${VIOLET}, 0.95)`);
-        g.addColorStop(1, `rgba(${VIOLET}, 0)`);
+        g.addColorStop(0, `rgba(${BLUE}, 0.95)`);
+        g.addColorStop(1, `rgba(${BLUE}, 0)`);
         ctx!.fillStyle = g;
         ctx!.beginPath();
         ctx!.arc(x, y, 7, 0, Math.PI * 2);
         ctx!.fill();
       }
       for (const n of nodes) {
-        ctx!.fillStyle = `rgba(${n.violet ? VIOLET : CYAN}, 0.85)`;
+        ctx!.fillStyle = `rgba(${n.blue ? BLUE : CYAN}, 0.85)`;
         ctx!.beginPath();
         ctx!.arc(n.x, n.y, n.r, 0, Math.PI * 2);
         ctx!.fill();

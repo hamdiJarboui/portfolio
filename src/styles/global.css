@@ -19,10 +19,10 @@
   --color-cyan-soft: rgba(72, 215, 255, 0.12);
   --color-cyan-dim: #1f7fa3;
 
-  /* Neural violet — the "AI" accent, paired with cyan in gradients */
-  --color-violet: #a78bfa;
-  --color-violet-soft: rgba(167, 139, 250, 0.14);
-  --gradient-ai: linear-gradient(100deg, var(--color-cyan) 0%, #7aa8ff 45%, var(--color-violet) 100%);
+  /* Signal blue — the "AI" accent, paired with cyan in gradients */
+  --color-blue: #3d8bff;
+  --color-blue-soft: rgba(61, 139, 255, 0.14);
+  --gradient-ai: linear-gradient(100deg, var(--color-cyan) 0%, var(--color-blue) 100%);
 
   /* Redline amber — secondary accent, used sparingly for flags/emphasis */
   --color-amber: #ffb454;
@@ -294,7 +294,7 @@ img {
   background-position: 100% 0;
   color: #04161d;
   border-color: transparent;
-  box-shadow: 0 6px 28px -6px rgba(122, 168, 255, 0.55);
+  box-shadow: 0 6px 28px -6px rgba(61, 139, 255, 0.55);
 }
 
 @media (max-width: 640px) {
@@ -325,8 +325,8 @@ img {
   opacity: 0;
   background: radial-gradient(
     420px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(122, 168, 255, 0.1),
-    rgba(167, 139, 250, 0.05) 35%,
+    rgba(61, 139, 255, 0.1),
+    rgba(61, 139, 255, 0.05) 35%,
     transparent 65%
   );
   transition: opacity 0.3s ease;
@@ -337,7 +337,7 @@ img {
 }
 
 .blueprint-panel:hover {
-  border-color: rgba(122, 168, 255, 0.35);
+  border-color: rgba(61, 139, 255, 0.35);
 }
 
 /* Scroll reveal: only armed once JS has added .js to <html>. */
@@ -356,7 +356,7 @@ img {
 /* The sheet-label rule carries a slow signal pulse. */
 .sheet-label::after {
   background:
-    linear-gradient(90deg, transparent, rgba(122, 168, 255, 0.9), transparent) no-repeat,
+    linear-gradient(90deg, transparent, rgba(61, 139, 255, 0.9), transparent) no-repeat,
     var(--color-line-strong);
   background-size: 18% 100%, 100% 100%;
   animation: label-signal 6s linear infinite;
