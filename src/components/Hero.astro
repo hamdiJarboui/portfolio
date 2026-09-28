@@ -2,16 +2,18 @@
 import { profile } from '../data/profile';
 import CornerMarks from './CornerMarks.astro';
 import ResumeDownloads from './ResumeDownloads.astro';
+import NeuralField from './NeuralField.astro';
 
 const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR', 'Merged & notified'];
 ---
 
 <section class="hero">
+  <NeuralField />
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="sheet-label">Sfax, Tunisia — available for senior roles</p>
       <h1>
-        Hamdi Jarboui builds <span class="accent">AI-agent systems</span> that ship real software, under human supervision.
+        Hamdi Jarboui builds <span class="ai-text">AI-agent systems</span> that ship real software, under human supervision.
       </h1>
       <p class="lede">{profile.summary}</p>
       <div class="hero-actions">
@@ -20,8 +22,9 @@ const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR'
       </div>
     </div>
 
-    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only after a human approves the pull request">
+    <div class="pipeline blueprint-panel">
       <CornerMarks />
+      <div role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only after a human approves the pull request">
       <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through opencode-autodev</p>
       <div class="pipeline-track">
         {stages.map((stage, i) => (
@@ -38,15 +41,194 @@ const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR'
           </>
         ))}
       </div>
+      </div>
+
+      <div class="terminal" aria-hidden="true">
+        <div class="terminal-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="terminal-title">agent session · simulated</span>
+          <span class="live"><span class="live-dot"></span>live</span>
+        </div>
+        <pre class="terminal-body"><code data-trace></code><span class="caret"></span></pre>
+      </div>
+
       <div class="dim-divider pipeline-rule"></div>
       <p class="pipeline-caption">Agents do the work; nothing merges until a human approves the pull request.</p>
     </div>
   </div>
 </section>
 
+<script>
+  // A simulated agent session typed out line by line, looping while visible.
+  type Seg = [text: string, cls?: string];
+  const TRACE: Seg[][] = [
+    [['$ ', 'p'], ['opencode autodev_tick']],
+    [['› ', 'p'], ['discover  ', 'k'], ['PROJ-1482 ', 'id'], ['"Handle CAN timeout on brake signal"']],
+    [['› ', 'p'], ['lease     ', 'k'], ['claimed · worktree autodev/PROJ-1482']],
+    [['› ', 'p'], ['agent     ', 'k'], ['python-developer ', 'id'], ['(routing table)', 'dim']],
+    [['› ', 'p'], ['tool      ', 'k'], ['mcp.dbc.get_signal', 'fn'], ['("BrakePressure")']],
+    [['› ', 'p'], ['squad     ', 'k'], ['@reviewer ', 'id'], ['is the 50 ms timeout covered?']],
+    [['› ', 'p'], ['squad     ', 'k'], ['reviewer → ', 'dim'], ['added test_timeout_50ms']],
+    [['› ', 'p'], ['gate      ', 'k'], ['reviewer ✓  pipeline ✓  security ✓  ', 'ok'], ['human …', 'wait']],
+    [['✓ ', 'ok'], ['human approved · merged · team notified', 'ok']],
+  ];
+
+  const out = document.querySelector<HTMLElement>('[data-trace]');
+  if (out) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const render = (lines: Seg[][]) => {
+      out.replaceChildren();
+      lines.forEach((line, i) => {
+        for (const [text, cls] of line) {
+          const span = document.createElement('span');
+          if (cls) span.className = cls;
+          span.textContent = text;
+          out.append(span);
+        }
+        if (i < lines.length - 1) out.append('\n');
+      });
+    };
+
+    if (reduce) {
+      render(TRACE);
+    } else {
+      let visible = true;
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+      }).observe(out);
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+      const waitVisible = async () => {
+        while (!visible || document.hidden) await sleep(400);
+      };
+      (async () => {
+        await sleep(1400);
+        for (;;) {
+          out.replaceChildren();
+          for (let li = 0; li < TRACE.length; li++) {
+            if (li > 0) out.append('\n');
+            for (const [text, cls] of TRACE[li]) {
+              const span = document.createElement('span');
+              if (cls) span.className = cls;
+              out.append(span);
+              for (const ch of text) {
+                await waitVisible();
+                span.textContent += ch;
+                await sleep(li === 0 ? 45 : 14);
+              }
+            }
+            await sleep(li === 0 ? 500 : 380);
+          }
+          await sleep(3800);
+        }
+      })();
+    }
+  }
+</script>
+
 <style>
   .hero {
+    position: relative;
+    overflow: hidden;
     padding-block: clamp(3rem, 8vw, var(--space-2xl)) var(--space-xl);
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+  }
+
+  .terminal {
+    margin-top: var(--space-md);
+    border: 1px solid var(--color-line-strong);
+    background: #060d17;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 18px 50px -24px rgba(122, 168, 255, 0.45);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+    background: rgba(18, 32, 51, 0.8);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-ink-faint);
+  }
+
+  .dots {
+    display: inline-flex;
+    gap: 5px;
+  }
+
+  .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-line-strong);
+  }
+
+  .terminal-title {
+    flex: 1;
+    letter-spacing: 0.04em;
+  }
+
+  .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--color-violet);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-violet);
+    box-shadow: 0 0 8px var(--color-violet);
+    animation: live 1.6s ease-in-out infinite;
+  }
+
+  @keyframes live {
+    50% { opacity: 0.25; }
+  }
+
+  .terminal-body {
+    margin: 0;
+    padding: 0.85rem 0.9rem 1rem;
+    min-height: 13.2em;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .terminal-body :global(.p) { color: var(--color-cyan); }
+  .terminal-body :global(.k) { color: var(--color-violet); }
+  .terminal-body :global(.id) { color: var(--color-ink); }
+  .terminal-body :global(.fn) { color: #7aa8ff; }
+  .terminal-body :global(.dim) { color: var(--color-ink-faint); }
+  .terminal-body :global(.ok) { color: #5eead4; }
+  .terminal-body :global(.wait) { color: var(--color-amber); }
+
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    background: var(--color-cyan);
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
   }
 
   .hero-grid {
@@ -132,7 +314,7 @@ const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR'
     position: absolute;
     inset: 0;
     width: 40%;
-    background: linear-gradient(90deg, transparent, var(--color-cyan), transparent);
+    background: linear-gradient(90deg, transparent, var(--color-violet), var(--color-cyan), transparent);
     animation: travel 2.6s linear infinite;
     animation-delay: 1.6s;
   }
@@ -176,6 +358,8 @@ const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR'
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .live-dot,
+    .caret,
     .pulse,
     .node,
     .connector {
