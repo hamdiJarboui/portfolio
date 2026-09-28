@@ -1,0 +1,81 @@
+---
+import { withBase } from '../utils/url';
+
+interface Props {
+  /** "compact" is the EN | FR switch in the header; "buttons" is two full buttons. */
+  variant?: 'compact' | 'buttons';
+}
+
+const { variant = 'buttons' } = Astro.props;
+
+const resumes = [
+  { lang: 'en', short: 'EN', label: 'Resume (English)', href: withBase('/hamdi-jarboui-resume-en.pdf') },
+  { lang: 'fr', short: 'FR', label: 'CV (Français)', href: withBase('/hamdi-jarboui-cv-fr.pdf') },
+];
+---
+
+{variant === 'compact' ? (
+  <div class="resume-switch" role="group" aria-label="Download resume">
+    <span class="switch-label" aria-hidden="true">
+      <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10" /></svg>
+      CV
+    </span>
+    {resumes.map((r) => (
+      <a href={r.href} download hreflang={r.lang} lang={r.lang} aria-label={`Download ${r.label}`}>{r.short}</a>
+    ))}
+  </div>
+) : (
+  <>
+    {resumes.map((r) => (
+      <a class="btn" href={r.href} download hreflang={r.lang} lang={r.lang}>
+        <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10" /></svg>
+        {r.label}
+      </a>
+    ))}
+  </>
+)}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .resume-switch {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    overflow: hidden;
+  }
+
+  .switch-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.5em 0.7em;
+    color: var(--color-ink-muted);
+    border-right: 1px solid var(--color-line-strong);
+  }
+
+  .resume-switch a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5em 0.75em;
+    color: var(--color-ink);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .resume-switch a + a {
+    border-left: 1px solid var(--color-line);
+  }
+
+  .resume-switch a:hover,
+  .resume-switch a:focus-visible {
+    background: var(--color-cyan-soft);
+    color: var(--color-cyan);
+  }
+</style>

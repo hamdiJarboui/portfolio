@@ -1,5 +1,6 @@
 ---
 import { profile } from '../data/profile';
+import ResumeDownloads from './ResumeDownloads.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -13,6 +14,9 @@ const year = new Date().getFullYear();
         <a class="btn btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
         <a class="btn" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
         <a class="btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+      <div class="footer-links resume-links">
+        <ResumeDownloads />
       </div>
     </div>
     <div class="footer-meta">
@@ -46,6 +50,10 @@ const year = new Date().getFullYear();
     display: flex;
     gap: var(--space-xs);
     flex-wrap: wrap;
+  }
+
+  .resume-links {
+    margin-top: var(--space-xs);
   }
 
   .footer-meta {
