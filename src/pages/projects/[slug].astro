@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import CornerMarks from '../../components/CornerMarks.astro';
 import AnvilHarness from '../../components/AnvilHarness.astro';
 import { projects } from '../../data/projects';
+import { harnessGroup } from '../../data/harness';
 
 export function getStaticPaths() {
   return projects.map((project, index) => ({
@@ -15,6 +16,9 @@ export function getStaticPaths() {
 
 const { project, index } = Astro.props;
 const num = String(index + 1).padStart(2, '0');
+const harnessLayers = projects
+  .filter((p) => p.harnessLayer)
+  .sort((a, b) => a.harnessLayer!.order - b.harnessLayer!.order);
 ---
 
 <Layout title={`${project.name} — Hamdi Jarboui`} description={project.tagline}>
@@ -24,6 +28,26 @@ const num = String(index + 1).padStart(2, '0');
       <div class="wrap">
         <a class="back" href="/#work">&larr; All work</a>
         <p class="sheet-label">Fig. {num} — {project.ownership}</p>
+        {project.harnessLayer && (
+          <nav class="harness-strip" aria-label={harnessGroup.name}>
+            <span class="strip-title">Part of {harnessGroup.name} · Layer {project.harnessLayer.order} of {harnessLayers.length}</span>
+            <ol class="strip-layers">
+              {harnessLayers.map((layer) => (
+                <li>
+                  <a
+                    href={`/projects/${layer.slug}/`}
+                    class={layer.slug === project.slug ? 'strip-layer current' : 'strip-layer'}
+                    aria-current={layer.slug === project.slug ? 'page' : undefined}
+                  >
+                    <span class="strip-num">L{layer.harnessLayer!.order}</span>
+                    <span class="strip-label">{layer.harnessLayer!.label}</span>
+                    <span class="strip-name">{layer.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
         <h1>{project.name}</h1>
         <p class="tagline">{project.tagline}</p>
         <p class="role-line">{project.role}</p>
@@ -133,6 +157,77 @@ const num = String(index + 1).padStart(2, '0');
 
   .back:hover {
     color: var(--color-cyan);
+  }
+
+  .harness-strip {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .strip-title {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    color: var(--color-amber);
+    margin-bottom: 0.5rem;
+  }
+
+  .strip-layers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    max-width: 760px;
+  }
+
+  .strip-layer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    height: 100%;
+    padding: 0.6rem 0.8rem;
+    background: var(--color-surface);
+    transition: background 0.2s ease;
+  }
+
+  .strip-layer:hover {
+    background: var(--color-surface-hover);
+  }
+
+  .strip-layer.current {
+    background: var(--color-cyan-soft);
+    box-shadow: inset 0 -2px 0 var(--color-cyan);
+  }
+
+  .strip-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-cyan);
+  }
+
+  .strip-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-faint);
+  }
+
+  .strip-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 560px) {
+    .strip-layers {
+      grid-template-columns: 1fr;
+    }
   }
 
   h1 {

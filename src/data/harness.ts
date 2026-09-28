@@ -79,3 +79,19 @@ export const harness: Harness = {
     },
   ],
 };
+
+export interface HarnessLayer {
+  order: number;
+  label: string;
+  question: string;
+  role: string;
+}
+
+export const harnessGroup = {
+  name: 'The AI Harness',
+  headline: 'Three layers that turn a general-purpose model into an engineer that works inside the company',
+  intro:
+    'A model on its own can write code, but it cannot see your pipelines, does not know your standards and has nowhere safe to run. A harness supplies those three things. I built one project for each layer: an agent runtime that plans, acts and checks its own work; a shared library of skills and agents that carries the company\'s know-how; and a tool layer that connects agents to the systems the company actually runs.',
+  note: 'Each layer is its own codebase and can be used on its own. They meet at open interfaces (skill folders, agent definitions and the Model Context Protocol) rather than being locked into one product.',
+  connectors: ['skills & agents', 'tools over MCP'],
+};
