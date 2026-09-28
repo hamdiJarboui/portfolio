@@ -7,6 +7,16 @@
  * a video file. The scenario is illustrative and labelled "simulated".
  */
 import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
+
+interface Props {
+  /** Stacked layout for narrow columns (the homepage hero). */
+  compact?: boolean;
+  /** Link the "real project" banner to the case study. */
+  caseStudyLink?: boolean;
+}
+
+const { compact = false, caseStudyLink = false } = Astro.props;
 
 const members = [
   { id: 'dev', name: 'python-developer', role: 'Developer agent', initials: 'PD' },
@@ -17,24 +27,36 @@ const members = [
 
 const gates = ['reviewer', 'approvals', 'pipeline', 'security'];
 
+const DURATION = 42000;
+
 const chapters = [
   { at: 0, label: 'Claim' },
-  { at: 6500, label: 'Ask' },
-  { at: 15500, label: 'Build' },
-  { at: 24000, label: 'Review' },
-  { at: 30500, label: 'Human' },
-  { at: 40000, label: 'Merge' },
+  { at: 3000, label: 'Ask' },
+  { at: 11000, label: 'Build' },
+  { at: 19600, label: 'Review' },
+  { at: 26100, label: 'Human' },
+  { at: 35600, label: 'Merge' },
 ];
 ---
 
-<figure class="squad-room blueprint-panel" data-squad-room aria-labelledby="squad-room-title">
+<figure class={`squad-room blueprint-panel${compact ? ' compact' : ''}`} data-squad-room aria-labelledby="squad-room-title">
   <CornerMarks />
+  <div class="real-banner">
+    <span class="real-chip">
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5" /></svg>
+      Real, working project
+    </span>
+    <span class="real-text"><strong>opencode-autodev</strong> · 669 tests passing · 96% coverage</span>
+    {caseStudyLink && (
+      <a class="real-link" href={withBase('/projects/opencode-autodev/')}>Case study <span aria-hidden="true">→</span></a>
+    )}
+  </div>
   <div class="room-head">
     <span class="rec" aria-hidden="true"><span class="rec-dot"></span>REC</span>
     <p class="room-title" id="squad-room-title">
       Squad channel · <span class="ticket">PROJ-1482</span> "Handle CAN timeout on brake signal"
     </p>
-    <span class="dwg-tag">simulated replay</span>
+    <span class="dwg-tag replay-tag">replay · example ticket</span>
   </div>
 
   <div class="room-body">
@@ -83,7 +105,7 @@ const chapters = [
       <div class="track-bar"><div class="track-fill" data-fill></div></div>
       <div class="chapters">
         {chapters.map((c) => (
-          <button type="button" class="chapter" data-seek={c.at} style={`left: ${(c.at / 46000) * 100}%`}>
+          <button type="button" class="chapter" data-seek={c.at} style={`left: ${(c.at / DURATION) * 100}%`}>
             {c.label}
           </button>
         ))}
@@ -103,29 +125,29 @@ const chapters = [
     | { at: number; kind: 'gate'; gate: string }
     | { at: number; kind: 'done'; text: string };
 
-  const DURATION = 46000;
+  const DURATION = 42000;
   const TYPING_MS = 1300;
   const NAMES: Record<Who, string> = { dev: 'python-developer', rev: 'reviewer', human: 'you', fac: 'facilitator' };
 
   const SCRIPT: Ev[] = [
-    { at: 400, kind: 'sys', text: 'PROJ-1482 claimed · lease taken · worktree autodev/PROJ-1482 · squad channel opened' },
-    { at: 2600, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Picking this up. Plan: add a timeout watchdog on BrakePressure and fall back safely when frames stop arriving.' },
-    { at: 4600, kind: 'call', from: 'dev', call: 'mcp.dbc.get_signal("BrakePressure")', result: 'cycle 10 ms · 12-bit · Brake_ECU' },
-    { at: 8200, kind: 'msg', from: 'dev', tool: 'team_ask', to: '@reviewer', text: 'The signal cycles every 10 ms. Is 5 missed frames (50 ms) the right threshold, or should it be configurable?' },
-    { at: 9000, kind: 'wake', who: 'rev', text: 'facilitator woke @reviewer · wake 1/4' },
-    { at: 11800, kind: 'msg', from: 'rev', tool: 'team_post', to: '@python-developer', text: 'Configurable, default 50 ms. And test the recovery path: the signal comes back after a timeout.' },
-    { at: 16800, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Done: timeout in config, 3 new tests including recovery. All green locally.' },
-    { at: 18400, kind: 'sys', text: 'merge request !231 opened · pipeline running' },
-    { at: 20800, kind: 'gate', gate: 'pipeline' },
-    { at: 21800, kind: 'gate', gate: 'security' },
-    { at: 25400, kind: 'msg', from: 'rev', tool: 'team_post', text: 'Verdict: approve. Recovery test covers the edge I asked for.' },
-    { at: 26000, kind: 'gate', gate: 'reviewer' },
-    { at: 31600, kind: 'msg', from: 'human', tool: 'team_ask', to: '@python-developer', text: 'Why hold the last value instead of switching to a safe default straight away?' },
-    { at: 32200, kind: 'wake', who: 'dev', text: 'facilitator woke @python-developer · wake 2/4' },
-    { at: 35600, kind: 'msg', from: 'dev', tool: 'team_post', to: '@you', text: 'The requirement says hold the last valid value for up to 200 ms, then switch to the safe default. Both steps are implemented and tested.' },
-    { at: 39600, kind: 'msg', from: 'human', tool: 'team_post', text: 'Makes sense. Approved on the MR.' },
-    { at: 40400, kind: 'gate', gate: 'approvals' },
-    { at: 42200, kind: 'done', text: 'all 4 gates green · merged · team notified on Teams' },
+    { at: 300, kind: 'sys', text: 'PROJ-1482 claimed · lease taken · worktree autodev/PROJ-1482 · squad channel opened' },
+    { at: 1400, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Picking this up. Plan: add a timeout watchdog on BrakePressure and fall back safely when frames stop arriving.' },
+    { at: 2700, kind: 'call', from: 'dev', call: 'mcp.dbc.get_signal("BrakePressure")', result: 'cycle 10 ms · 12-bit · Brake_ECU' },
+    { at: 4300, kind: 'msg', from: 'dev', tool: 'team_ask', to: '@reviewer', text: 'The signal cycles every 10 ms. Is 5 missed frames (50 ms) the right threshold, or should it be configurable?' },
+    { at: 4900, kind: 'wake', who: 'rev', text: 'facilitator woke @reviewer · wake 1/4' },
+    { at: 7400, kind: 'msg', from: 'rev', tool: 'team_post', to: '@python-developer', text: 'Configurable, default 50 ms. And test the recovery path: the signal comes back after a timeout.' },
+    { at: 12400, kind: 'msg', from: 'dev', tool: 'team_post', text: 'Done: timeout in config, 3 new tests including recovery. All green locally.' },
+    { at: 14000, kind: 'sys', text: 'merge request !231 opened · pipeline running' },
+    { at: 16400, kind: 'gate', gate: 'pipeline' },
+    { at: 17400, kind: 'gate', gate: 'security' },
+    { at: 21000, kind: 'msg', from: 'rev', tool: 'team_post', text: 'Verdict: approve. Recovery test covers the edge I asked for.' },
+    { at: 21600, kind: 'gate', gate: 'reviewer' },
+    { at: 27200, kind: 'msg', from: 'human', tool: 'team_ask', to: '@python-developer', text: 'Why hold the last value instead of switching to a safe default straight away?' },
+    { at: 27800, kind: 'wake', who: 'dev', text: 'facilitator woke @python-developer · wake 2/4' },
+    { at: 31200, kind: 'msg', from: 'dev', tool: 'team_post', to: '@you', text: 'The requirement says hold the last valid value for up to 200 ms, then switch to the safe default. Both steps are implemented and tested.' },
+    { at: 35200, kind: 'msg', from: 'human', tool: 'team_post', text: 'Makes sense. Approved on the MR.' },
+    { at: 36000, kind: 'gate', gate: 'approvals' },
+    { at: 37800, kind: 'done', text: 'all 4 gates green · merged · team notified on Teams' },
   ];
 
   function mmss(ms: number) {
@@ -329,6 +351,8 @@ const chapters = [
 
 <style>
   .squad-room {
+    min-width: 0;
+    max-width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -336,6 +360,55 @@ const chapters = [
       radial-gradient(ellipse 60% 60% at 100% 0%, rgba(167, 139, 250, 0.1), transparent 70%),
       var(--color-bg-raised);
     box-shadow: 0 30px 80px -40px rgba(122, 168, 255, 0.5);
+  }
+
+  .real-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    padding: 0.65rem var(--space-md);
+    border-bottom: 1px solid rgba(94, 234, 212, 0.25);
+    background: linear-gradient(90deg, rgba(94, 234, 212, 0.1), rgba(122, 168, 255, 0.06) 60%, transparent);
+    font-size: 0.78rem;
+  }
+
+  .real-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.25em 0.7em;
+    border-radius: 999px;
+    border: 1px solid rgba(94, 234, 212, 0.6);
+    background: rgba(94, 234, 212, 0.12);
+    color: #5eead4;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .real-text {
+    color: var(--color-ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .real-text strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .real-link {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-cyan);
+  }
+
+  .real-link:hover {
+    text-decoration: underline;
   }
 
   .room-head {
@@ -787,6 +860,92 @@ const chapters = [
     color: var(--color-ink-faint);
     min-width: 5.5em;
     text-align: right;
+  }
+
+  /* Compact: the stacked layout used in the homepage hero. */
+  .compact .room-head {
+    padding-inline: var(--space-sm);
+  }
+
+  .compact .room-head {
+    flex-wrap: wrap;
+    row-gap: 0.3rem;
+  }
+
+  .compact .room-title {
+    order: 3;
+    flex-basis: 100%;
+    min-width: 0;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .compact .replay-tag {
+    margin-left: auto;
+  }
+
+  .compact .room-body {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .compact .members {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.5rem var(--space-sm);
+    border-right: none;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .compact .member {
+    flex: 1 1 45%;
+    gap: 0.5rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  .compact .avatar {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.64rem;
+  }
+
+  .compact .member-role {
+    display: none;
+  }
+
+  .compact .member-name {
+    font-size: 0.72rem;
+  }
+
+  .compact .channel {
+    height: 18.5rem;
+    max-height: none;
+    padding: var(--space-sm);
+  }
+
+  .compact .messages :global(.line-msg) {
+    max-width: 94%;
+  }
+
+  .compact .messages :global(.msg-text) {
+    font-size: 0.8rem;
+  }
+
+  .compact .real-banner,
+  .compact .gates,
+  .compact .controls {
+    padding-inline: var(--space-sm);
+  }
+
+  .compact .gates-label {
+    display: none;
+  }
+
+  .compact .chapter:nth-child(even) {
+    display: none;
   }
 
   @media (max-width: 760px) {
