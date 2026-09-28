@@ -1,8 +1,9 @@
 ---
 import { profile } from '../data/profile';
 import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
 
-const stages = ['Ticket collected', 'Agent squad', 'Shared room', 'Gated merge'];
+const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR', 'Merged & notified'];
 ---
 
 <section class="hero">
@@ -15,11 +16,11 @@ const stages = ['Ticket collected', 'Agent squad', 'Shared room', 'Gated merge']
       <p class="lede">{profile.summary}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#work">See the work</a>
-        <a class="btn" href="/hamdi-jarboui-resume.pdf" download>Download resume</a>
+        <a class="btn" href={withBase('/hamdi-jarboui-resume.pdf')} download>Download resume</a>
       </div>
     </div>
 
-    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only through a fail-closed gate">
+    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only after a human approves the pull request">
       <CornerMarks />
       <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through opencode-autodev</p>
       <div class="pipeline-track">
@@ -38,7 +39,7 @@ const stages = ['Ticket collected', 'Agent squad', 'Shared room', 'Gated merge']
         ))}
       </div>
       <div class="dim-divider pipeline-rule"></div>
-      <p class="pipeline-caption">Nothing merges on a missing signal: every gate must be green.</p>
+      <p class="pipeline-caption">Agents do the work; nothing merges until a human approves the pull request.</p>
     </div>
   </div>
 </section>

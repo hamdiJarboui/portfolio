@@ -6,6 +6,7 @@ import CornerMarks from '../../components/CornerMarks.astro';
 import AnvilHarness from '../../components/AnvilHarness.astro';
 import { projects } from '../../data/projects';
 import { harnessGroup } from '../../data/harness';
+import { withBase } from '../../utils/url';
 
 export function getStaticPaths() {
   return projects.map((project, index) => ({
@@ -26,7 +27,7 @@ const harnessLayers = projects
   <main>
     <section class="section hero-section">
       <div class="wrap">
-        <a class="back" href="/#work">&larr; All work</a>
+        <a class="back" href={withBase('/#work')}>&larr; All work</a>
         <p class="sheet-label">Fig. {num} — {project.ownership}</p>
         {project.harnessLayer && (
           <nav class="harness-strip" aria-label={harnessGroup.name}>
@@ -35,7 +36,7 @@ const harnessLayers = projects
               {harnessLayers.map((layer) => (
                 <li>
                   <a
-                    href={`/projects/${layer.slug}/`}
+                    href={withBase(`/projects/${layer.slug}/`)}
                     class={layer.slug === project.slug ? 'strip-layer current' : 'strip-layer'}
                     aria-current={layer.slug === project.slug ? 'page' : undefined}
                   >
@@ -71,7 +72,7 @@ const harnessLayers = projects
       <section class="section flow-section">
         <div class="wrap">
           <p class="sheet-label">How a ticket moves</p>
-          <h2>From backlog to merged change, with no one assigning the work</h2>
+          <h2>From backlog to merged change: agents do the work, a human approves it</h2>
           <ol class="flow">
             {project.flow.map((step, i) => (
               <li class="flow-step blueprint-panel">

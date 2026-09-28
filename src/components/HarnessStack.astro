@@ -2,6 +2,7 @@
 import type { Project } from '../data/projects';
 import { harnessGroup } from '../data/harness';
 import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
 
 interface Props {
   layers: Project[];
@@ -25,7 +26,7 @@ const { layers, figIndex } = Astro.props;
   <ol class="layers">
     {layers.map((project, i) => (
       <li class="layer-item">
-        <a class="layer" href={`/projects/${project.slug}/`}>
+        <a class="layer" href={withBase(`/projects/${project.slug}/`)}>
           <div class="layer-id">
             <span class="layer-num">L{project.harnessLayer!.order}</span>
             <span class="layer-label">{project.harnessLayer!.label}</span>

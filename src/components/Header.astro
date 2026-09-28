@@ -1,5 +1,6 @@
 ---
 import { profile } from '../data/profile';
+import { withBase } from '../utils/url';
 
 const nav = [
   { href: '#about', label: 'Skills' },
@@ -12,13 +13,13 @@ const nav = [
 
 <header class="site-header">
   <div class="wrap bar">
-    <a href="/" class="mark">
+    <a href={withBase('/')} class="mark">
       <span class="mark-glyph" aria-hidden="true">[HJ]</span>
       <span class="mark-text">Hamdi Jarboui</span>
     </a>
     <nav class="nav" aria-label="Primary">
       {nav.map((item, i) => (
-        <a href={item.href}><span class="nav-index">{String(i + 1).padStart(2, '0')}</span>{item.label}</a>
+        <a href={withBase(`/${item.href}`)}><span class="nav-index">{String(i + 1).padStart(2, '0')}</span>{item.label}</a>
       ))}
     </nav>
     <a class="btn btn-primary cta" href={`mailto:${profile.email}`}>Get in touch</a>
