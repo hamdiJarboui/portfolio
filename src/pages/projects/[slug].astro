@@ -4,6 +4,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import CornerMarks from '../../components/CornerMarks.astro';
 import AnvilHarness from '../../components/AnvilHarness.astro';
+import NeuralField from '../../components/NeuralField.astro';
 import { projects } from '../../data/projects';
 import { harnessGroup } from '../../data/harness';
 import { withBase } from '../../utils/url';
@@ -26,7 +27,8 @@ const harnessLayers = projects
   <Header />
   <main>
     <section class="section hero-section">
-      <div class="wrap">
+      <div class="hero-field"><NeuralField /></div>
+      <div class="wrap hero-wrap">
         <a class="back" href={withBase('/#work')}>&larr; All work</a>
         <p class="sheet-label">Fig. {num} — {project.ownership}</p>
         {project.harnessLayer && (
@@ -164,6 +166,18 @@ const harnessLayers = projects
   .hero-section {
     padding-block: var(--space-xl) var(--space-lg);
     border-top: none;
+    overflow: hidden;
+  }
+
+  .hero-field {
+    position: absolute;
+    inset: 0;
+    opacity: 0.55;
+  }
+
+  .hero-wrap {
+    position: relative;
+    z-index: 1;
   }
 
   .back {

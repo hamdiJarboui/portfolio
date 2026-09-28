@@ -40,6 +40,27 @@ const nav = [
     border-bottom: 1px solid var(--color-line);
   }
 
+  /* A thin neural gradient along the bottom edge of the header. */
+  .site-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--gradient-ai);
+    opacity: 0.55;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+  }
+
+  .mark-glyph {
+    background: var(--gradient-ai);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
   .bar {
     display: flex;
     align-items: center;

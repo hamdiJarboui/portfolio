@@ -1,0 +1,203 @@
+---
+/**
+ * A drifting neural-network field drawn on a canvas: nodes, synapse lines
+ * between near neighbours, and signals that travel along the links. The
+ * cursor pulls nearby nodes and lights up their links.
+ *
+ * Decorative only (aria-hidden). Pauses when off screen or in a background
+ * tab, and draws a single still frame under prefers-reduced-motion.
+ */
+---
+
+<canvas class="neural-field" aria-hidden="true"></canvas>
+
+<style>
+  .neural-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 70% 45%, #000 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse 75% 70% at 70% 45%, #000 30%, transparent 80%);
+    opacity: 0.9;
+  }
+</style>
+
+<script>
+  type Node = { x: number; y: number; vx: number; vy: number; r: number; violet: boolean };
+  type Signal = { a: number; b: number; t: number; speed: number };
+
+  const CYAN = '72, 215, 255';
+  const VIOLET = '167, 139, 250';
+  const LINK = 140;
+
+  function start(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const host = canvas.parentElement ?? canvas;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = 0;
+    let h = 0;
+    let nodes: Node[] = [];
+    let signals: Signal[] = [];
+    const pointer = { x: -9999, y: -9999, active: false };
+    let running = false;
+    let visible = true;
+    let frame = 0;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(28, Math.min(90, Math.round((w * h) / 11500)));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        r: 0.8 + Math.random() * 1.6,
+        violet: Math.random() < 0.35,
+      }));
+      signals = [];
+    }
+
+    function spawnSignal() {
+      const a = Math.floor(Math.random() * nodes.length);
+      let best = -1;
+      let bestD = LINK;
+      for (let i = 0; i < nodes.length; i++) {
+        if (i === a) continue;
+        const d = Math.hypot(nodes[i].x - nodes[a].x, nodes[i].y - nodes[a].y);
+        if (d < bestD && Math.random() < 0.6) {
+          best = i;
+          bestD = d;
+        }
+      }
+      if (best >= 0) signals.push({ a, b: best, t: 0, speed: 0.012 + Math.random() * 0.018 });
+    }
+
+    function step() {
+      for (const n of nodes) {
+        if (pointer.active) {
+          const dx = pointer.x - n.x;
+          const dy = pointer.y - n.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 180 && d > 1) {
+            n.vx += (dx / d) * 0.012;
+            n.vy += (dy / d) * 0.012;
+          }
+        }
+        n.vx *= 0.985;
+        n.vy *= 0.985;
+        // Keep a gentle minimum drift so the field never freezes.
+        if (Math.abs(n.vx) < 0.05) n.vx += (Math.random() - 0.5) * 0.04;
+        if (Math.abs(n.vy) < 0.05) n.vy += (Math.random() - 0.5) * 0.04;
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < -20) n.x = w + 20;
+        if (n.x > w + 20) n.x = -20;
+        if (n.y < -20) n.y = h + 20;
+        if (n.y > h + 20) n.y = -20;
+      }
+      if (signals.length < 14 && Math.random() < 0.18) spawnSignal();
+      for (const s of signals) s.t += s.speed;
+      signals = signals.filter((s) => s.t < 1);
+    }
+
+    function draw() {
+      ctx!.clearRect(0, 0, w, h);
+      ctx!.lineWidth = 1;
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d > LINK) continue;
+          const near = pointer.active && Math.hypot(pointer.x - (a.x + b.x) / 2, pointer.y - (a.y + b.y) / 2) < 150;
+          const alpha = (1 - d / LINK) * (near ? 0.6 : 0.28);
+          ctx!.strokeStyle = `rgba(${a.violet && b.violet ? VIOLET : CYAN}, ${alpha})`;
+          ctx!.beginPath();
+          ctx!.moveTo(a.x, a.y);
+          ctx!.lineTo(b.x, b.y);
+          ctx!.stroke();
+        }
+      }
+      for (const s of signals) {
+        const a = nodes[s.a];
+        const b = nodes[s.b];
+        if (!a || !b) continue;
+        const x = a.x + (b.x - a.x) * s.t;
+        const y = a.y + (b.y - a.y) * s.t;
+        const g = ctx!.createRadialGradient(x, y, 0, x, y, 7);
+        g.addColorStop(0, `rgba(${VIOLET}, 0.95)`);
+        g.addColorStop(1, `rgba(${VIOLET}, 0)`);
+        ctx!.fillStyle = g;
+        ctx!.beginPath();
+        ctx!.arc(x, y, 7, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+      for (const n of nodes) {
+        ctx!.fillStyle = `rgba(${n.violet ? VIOLET : CYAN}, 0.85)`;
+        ctx!.beginPath();
+        ctx!.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+    }
+
+    function loop() {
+      if (!running) return;
+      step();
+      draw();
+      frame = requestAnimationFrame(loop);
+    }
+
+    function setRunning(on: boolean) {
+      if (reduce) return;
+      if (on && !running) {
+        running = true;
+        frame = requestAnimationFrame(loop);
+      } else if (!on && running) {
+        running = false;
+        cancelAnimationFrame(frame);
+      }
+    }
+
+    resize();
+    draw();
+
+    new ResizeObserver(() => {
+      resize();
+      draw();
+    }).observe(canvas);
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      setRunning(visible && !document.hidden);
+    }).observe(canvas);
+
+    document.addEventListener('visibilitychange', () => setRunning(visible && !document.hidden));
+
+    host.addEventListener(
+      'pointermove',
+      (e) => {
+        const r = canvas.getBoundingClientRect();
+        pointer.x = e.clientX - r.left;
+        pointer.y = e.clientY - r.top;
+        pointer.active = true;
+      },
+      { passive: true },
+    );
+    host.addEventListener('pointerleave', () => {
+      pointer.active = false;
+    });
+
+    setRunning(true);
+  }
+
+  document.querySelectorAll<HTMLCanvasElement>('canvas.neural-field').forEach(start);
+</script>
