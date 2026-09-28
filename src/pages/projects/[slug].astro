@@ -67,6 +67,25 @@ const harnessLayers = projects
       </div>
     </section>
 
+    {project.flow && (
+      <section class="section flow-section">
+        <div class="wrap">
+          <p class="sheet-label">How a ticket moves</p>
+          <h2>From backlog to merged change, with no one assigning the work</h2>
+          <ol class="flow">
+            {project.flow.map((step, i) => (
+              <li class="flow-step blueprint-panel">
+                <CornerMarks />
+                <span class="flow-num">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="flow-title">{step.title}</h3>
+                <p class="flow-body">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
+
     <section class="section value-section">
       <div class="wrap">
         <p class="sheet-label">Why it matters</p>
@@ -284,6 +303,73 @@ const harnessLayers = projects
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .flow-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
+  }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: none;
+  }
+
+  .flow-step {
+    position: relative;
+    padding: var(--space-md) var(--space-sm);
+    border-top: 2px solid var(--color-cyan);
+  }
+
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: calc(-1 * var(--space-sm) + 0.1rem);
+    top: 1.4rem;
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    z-index: 1;
+  }
+
+  .flow-num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-amber);
+    margin-bottom: 0.4rem;
+  }
+
+  .flow-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .flow-body {
+    color: var(--color-ink-muted);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 900px) {
+    .flow {
+      grid-template-columns: 1fr;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '↓';
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -1.1rem;
+    }
   }
 
   .value-section {

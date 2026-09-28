@@ -20,7 +20,7 @@ const figIndex = (project: Project) => projects.indexOf(project);
 
 <Layout
   title="Hamdi Jarboui — Senior Python Engineer, AI Agents & DevOps"
-  description="Senior Python engineer building AI-agent automation, DevOps pipelines, and full-stack systems — from AgileForge to a 549-tool MCP library."
+  description="Senior Python engineer building AI-agent automation, DevOps pipelines, and full-stack systems — from autonomous agent squads to a 549-tool MCP library."
 >
   <Header />
   <main>
@@ -42,7 +42,7 @@ const figIndex = (project: Project) => projects.indexOf(project);
         <div class="section-head">
           <p class="sheet-label">Sheet 02 — Selected work</p>
           <h2>An AI harness for the whole company, and the agentic systems around it</h2>
-          <p>Every project here removes a real blocker to AI-assisted engineering: safety, cost, integration friction, tool lock-in or plain knowledge friction. I led each one from the first architecture decision to the running system, five of them as the only engineer.</p>
+          <p>Every project here removes a real blocker to AI-assisted engineering: safety, cost, integration friction, tool lock-in or plain knowledge friction. I led each one from the first architecture decision to the running system, three of them as the only engineer.</p>
         </div>
 
         <div class="group-slot">
@@ -52,12 +52,12 @@ const figIndex = (project: Project) => projects.indexOf(project);
         <div class="group-head">
           <span class="dwg-tag">GROUP B</span>
           <h3>Agentic delivery &amp; knowledge</h3>
-          <p>Systems that put agents to work on real tickets, pull requests and documentation, with a human kept in control.</p>
+          <p>Systems that put agents to work on real tickets, merge requests and documentation, with guardrails that keep the autonomy safe.</p>
         </div>
         <div class="featured-slot">
           <ProjectCard project={otherWork[0]} index={figIndex(otherWork[0])} featured={true} />
         </div>
-        <div class="project-grid">
+        <div class={otherWork.length === 2 ? 'project-grid single' : 'project-grid'}>
           {otherWork.slice(1).map((project) => (
             <ProjectCard project={project} index={figIndex(project)} />
           ))}
@@ -132,6 +132,10 @@ const figIndex = (project: Project) => projects.indexOf(project);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
+  }
+
+  .project-grid.single {
+    grid-template-columns: 1fr;
   }
 
   @media (max-width: 760px) {

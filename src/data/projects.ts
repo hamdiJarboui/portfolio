@@ -10,6 +10,11 @@ export interface HeadlinePoint {
   body: string;
 }
 
+export interface FlowStep {
+  title: string;
+  body: string;
+}
+
 export interface Project {
   slug: string;
   name: string;
@@ -25,6 +30,7 @@ export interface Project {
   architecture: string[];
   harness?: Harness;
   harnessLayer?: HarnessLayer;
+  flow?: FlowStep[];
 }
 
 export const projects: Project[] = [
@@ -200,63 +206,10 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: 'agileforge',
-    name: 'AgileForge',
-    tagline: 'A multi-agent dev platform that opens real pull requests, with a human holding veto power at two separate points in the stack before any code lands.',
-    summary: "AgileForge is a human-supervised multi-agent development platform. A Python/FastAPI control plane orchestrates a configurable roster of AI agents — Scrum Master, Developers, DevOps Engineers, Test Engineers, scheduled PR Monitors — that pick up real Jira tickets and open real GitHub/GitLab pull requests, each ticket working in its own isolated git worktree, with a React/SSE dashboard giving live visibility into what's running. Every code-touching action passes through a two-plane human-in-the-loop approval model: a FastAPI interceptor on one side, OpenCode's own per-tool permission profiles on the other. After the core system was feature-complete, I ran a dedicated security-hardening pass on it myself (self-performed, AI-assisted, not third-party), which found and mostly fixed 1 CRITICAL, 3 HIGH, 4 MEDIUM and 2 LOW issues — the small remainder accepted as documented residual risk rather than dropped. Current state: 595 backend tests at 91.90% coverage, 132 frontend tests, all passing.",
-    role: 'I designed and built this alone, from the first architecture decision through the post-hardening security pass — control plane, agent orchestration, dashboard, and the audit/approval model that gates all of it.',
-    ownership: 'Solo personal project',
-    stack: [
-      'Python 3.11 + FastAPI control plane with native SSE (fastapi.sse.EventSourceResponse)',
-      'React 19 + TypeScript + Vite 7 SPA, TanStack Query 5 + Zustand 5, Tailwind CSS 4',
-      'OpenCode CLI execution plane, version-pinned (opencode-ai@1.18.4) and contract-tested against its live OpenAPI surface',
-      'Model Context Protocol (official mcp Python SDK) — Jira, GitHub, GitLab and Microsoft 365 integrations',
-      'SQLAlchemy 2.x async ORM + Alembic migrations over SQLite in WAL mode, with an opt-in async Postgres path',
-      'Playwright 1.62 full-stack E2E + pytest/pytest-cov (backend) + Vitest 4/coverage-v8 (frontend), each behind an 80% coverage gate',
-      'git worktrees — one per ticket — for filesystem-level workspace isolation',
-      'APScheduler (AsyncIOScheduler) driving PR-monitor sweeps',
-      'cryptography (Fernet) for at-rest secret and webhook encryption',
-      'ruff + eslint 9/typescript-eslint 8 as the lint/format gate',
-    ],
-    stats: [
-      { value: '595', label: 'backend tests' },
-      { value: '91.9%', label: 'test coverage' },
-      { value: '8', label: 'ADRs' },
-    ],
-    valueProps: [
-      { headline: 'Control without the bottleneck', body: "A two-plane HITL approval model — a FastAPI interceptor plus OpenCode's own per-tool allow/ask/deny profiles — lets a human stay in the loop without reviewing every keystroke: switch globally or per agent instance between Auto and Review/Accept depending on how much you trust that agent that day." },
-      { headline: "A budget an agent can't blow through", body: 'An optional per-role/per-instance LLM spend cap force-flips an over-budget agent into Review mode mid-run instead of killing the ticket outright.' },
-      { headline: 'Built for concurrent work from the start', body: 'One git worktree per ticket, a documented four-rung cleanup ladder, and a startup-time orphan sweep — this combination is what a 15-ticket, 5-way-concurrent soak test against 3 repos actually exercised, and what surfaced the one real race condition described below.' },
-      { headline: 'An append-only trail, encrypted secrets', body: 'The audit_events table has no UPDATE or DELETE path at the schema level. Secrets are Fernet-encrypted at rest, and any MCP tool whose risk level can\'t be determined gets gated as high-risk by default.' },
-      { headline: 'GitHub and GitLab on equal footing', body: 'Dispatch, PR/MR creation, monitoring, and human actions are all implemented against one abstraction, with GitHub/GitLab parity checked at the integration-test level rather than one provider being an afterthought.' },
-    ],
-    highlights: [
-      { headline: 'A self-run security pass: 1 critical, 3 high, 4 medium, 2 low found', body: 'After the feature work shipped, I ran a dedicated security-hardening pass over the repo myself, using an AI-assisted audit workflow (anvil:security-auditor) rather than a third-party or independent reviewer. It found 10 issues across the backend, frontend and dependency tree: 1 CRITICAL, 3 HIGH, 4 MEDIUM, 2 LOW. Every CRITICAL and HIGH finding got fixed with a failing test written first. Of the 4 MEDIUM findings, most were fixed the same way; one (spawned MCP subprocesses inheriting the full parent environment) was reviewed and explicitly accepted as residual risk for a single-operator, locally-run tool rather than silently left unmentioned. Both LOW findings were accepted on the same basis. Nothing here is independent verification — it\'s what a careful self-review turned up and how each item was disposed of, documented in docs/TASKS.md section 14.' },
-      { headline: 'Verified: 595 backend tests, 91.9% coverage', body: 'Post-hardening state, verified by re-running the suite: backend at 595 passing tests (1 skipped, 9 deselected contract tests) and 91.90% coverage against an 80% gate, ruff clean; frontend at 132 passing tests, tsc --noEmit clean.' },
-      { headline: 'The known-CVE dependency, specifically', body: 'One of the HIGH findings was a cryptography library version sitting on the credential-encryption path with a published vulnerability: PYSEC-2026-3552, present in cryptography 49.0.0. Bumped to 50.0.1 — confirmed against pyproject.toml and uv.lock — and pip-audit against the real project venv now reports clean.' },
-      { headline: 'A concurrency soak test found a real race, not a theoretical one', body: '15 tickets across 3 repos, 5 concurrently in flight, run against the real git worktree layer and a real single-writer SQLite queue. The first run failed once in six: a transient Windows git worktree add permission error under concurrent same-repo access. Fixed with a bounded retry; eight clean runs followed, with zero database-locked errors across any run before or after the fix.' },
-      { headline: 'Integration tests hit real wire protocols', body: 'The integration and E2E suites run against genuine protocol implementations — real MCP stdio servers, a real HTTP/SSE OpenCode server, a real OpenAI-compatible chat server — instead of in-process stubs. A separate contract-marker suite pins behavior against the actual pinned OpenCode binary\'s live OpenAPI surface, with a checked-in snapshot that has to be refreshed on any version bump.' },
-      { headline: "One health endpoint, the whole system's status", body: 'GET /api/health reports composite status across OpenCode supervisor liveness, SQLite WAL and Alembic schema version, per-MCP-server connection state, and the scheduler job list.' },
-      { headline: 'Eight ADRs, each one arguing against itself first', body: 'ADR-001 through ADR-008 document every major technical choice, and each one scores the rejected alternatives explicitly rather than just stating the conclusion.' },
-    ],
-    engineeringRigor: [
-      'A fail-fast local CI-gate script (scripts/ci.ps1) chains, in strict order: ruff check, ruff format --check, frontend eslint, backend pytest (80% coverage gate enforced in pyproject.toml), frontend Vitest with coverage (80% gate on lines/statements/functions/branches), a production build (tsc -b && vite build), and the full Playwright E2E suite.',
-      "A stricter pre-release gate (scripts/release_check.ps1) runs the full CI suite plus a contract marker test suite validated against the real pinned OpenCode binary's live OpenAPI surface, which is how silent upstream API drift in the execution-plane dependency gets caught before it ships rather than after.",
-      'Lint rules are explicit and scoped: ruff enforces E/W/F/I/N/UP/B/C4/SIM/RUF at 100-char line length, with per-file-ignores narrowly limited to Alembic-generated migration code.',
-      "Release status is tracked by hand rather than automated: the README's status banner states precisely which of 10 phases are complete and which scope was deliberately reduced, and docs/PHASE10_REVIEW.md plus docs/TASKS.md carry a per-phase, per-task decision record standing in for a formal changelog.",
-      'The OpenCode CLI dependency is pinned to an exact version (opencode-ai@1.18.4), with a written rule that any upgrade requires re-running the contract suite and refreshing the checked-in OpenAPI snapshot.',
-    ],
-    architecture: [
-      'Two supervised planes do the work. A Python 3.11/FastAPI control plane — SQLAlchemy 2.x async ORM over SQLite in WAL mode, Alembic migrations with render_as_batch, a single-writer Writer that serializes every DB write to keep concurrent dispatch out of lock contention — streams state to a React 19/Vite 7/TypeScript dashboard over native SSE. Underneath it, an OpenCode CLI execution plane (pinned to opencode-ai@1.18.4, supervised via httpx/httpx-sse) actually runs the agent work, with each ticket isolated in its own git worktree behind a four-rung cleanup ladder and a startup-time orphan sweep.',
-      "Human oversight sits on both planes at once: a FastAPI approval interceptor on one side, OpenCode's own per-tool allow/ask/deny permission profiles on the other, switchable globally or per agent instance between Auto and Review/Accept. That backs a configurable agent roster — Scrum Master, Developers, DevOps Engineers, Test Engineers, scheduled PR Monitors — with DB-versioned, immutable-history system prompts and a least-privilege MCP tool matrix scoped per role.",
-      'External systems integrate through the official MCP Python SDK over stdio: Jira for ticket intake, GitHub and GitLab for PR/MR creation and monitoring, with parity between the two providers verified at the integration-test level. APScheduler drives the PR-monitor sweeps plus an immediate post-creation check. Secrets and webhook credentials are Fernet-encrypted at rest and scanned for embedded literals at write time, and every backend restart runs a recovery sequence — worktree sweep, OpenCode session reconciliation, stale-approval expiry — against an append-only audit_events table with no UPDATE or DELETE path, which is what the E2E audit-trail assertions check against.',
-    ],
-  },
-  {
     slug: 'opencode-autodev',
     name: 'opencode-autodev',
-    tagline: 'Ships tickets end-to-end without a human clicking merge — an OpenCode plugin that discovers, implements, opens the change, polls, merges, and notifies on Bun, hardened by three real production hangs root-caused before its first stable release.',
-    summary: "opencode-autodev is an OpenCode plugin that runs a full autonomous delivery loop — discover, implement, open a change, poll for review/CI status, merge, and notify — on Bun, using bun:sqlite as a leased task store and a Tracker/Forge adapter split that lets GitLab, GitHub, Jira, and Microsoft To Do plug into one behavioral contract. The mechanical parts of shipping a fix — claiming a ticket, opening the MR, watching CI, merging once every gate is green — happen unattended; a fail-closed four-way merge gate and a compiler-enforced bounded-state invariant are what keep that unattended process honest, so it can't silently get stuck or merge on a signal that never showed up. It reached its first stable tag with 513 tests across 37 files behind an 85% coverage floor, three separate production hangs that got root-caused and fixed across five hardening prereleases, and a tag-gated, dual-path release pipeline that publishes into a private, internally-hosted GitLab npm registry.",
+    tagline: 'An autonomous delivery team: it collects tickets and issues on its own, hands each one to a squad of agents you configure from Anvil or any other source, lets them work it out together in a shared room until the task is done, and merges only when every gate is green.',
+    summary: "opencode-autodev turns a backlog into merged changes without anyone assigning the work. It watches GitLab, GitHub, Jira and Microsoft To Do, picks up new tickets and issues automatically, and claims each one with a lease so no two runs ever work the same ticket. Each ticket goes to an agent squad: the agents are configured, not hard-coded, so a team can plug in Anvil's specialist agents or bring its own. The squad works in a shared room where the agents talk to each other, split the job, review each other's output and keep going until the task is actually finished; then the plugin opens the merge request, watches CI and review, merges, and notifies the team on Slack, Teams or a webhook. Autonomy never means blind trust: a fail-closed four-way merge gate blocks anything with a missing signal, a bounded-state invariant guarantees no ticket can sit in any state forever, and every log line and notification is scrubbed of secrets before it leaves the process. The plugin reached its first stable tag with 513 tests across 37 files behind an enforced 85% coverage floor, after three real production hangs were root-caused and fixed across five hardening prereleases.",
     role: "I designed, built, and hardened this alone — every commit in the repo's history is mine. It started as an internal tool and stayed one: the code lives in a company-hosted GitLab group rather than a personal namespace, so I'm the sole engineer on it but not the sole stakeholder in what it publishes to.",
     ownership: 'Solo-built, on employer infrastructure',
     stack: [
@@ -270,19 +223,28 @@ export const projects: Project[] = [
       'GitLab / GitHub / Jira / Microsoft Graph REST APIs (multi-vendor Tracker/Forge adapters)',
       'Slack / Microsoft Teams (Adaptive Cards via Power Automate) / webhook / desktop notifications',
     ],
+    flow: [
+      { title: 'Collect', body: 'New tickets and issues are picked up from GitLab, GitHub, Jira or Microsoft To Do, and each one is claimed with a lease.' },
+      { title: 'Assemble', body: 'A squad is built from configured agents: Anvil specialists, a team\'s own agents, or a mix.' },
+      { title: 'Collaborate', body: 'The squad shares a room, splits the work, reviews each other and keeps going until the task is finished.' },
+      { title: 'Gate', body: 'A merge request opens; review verdict, approvals, pipeline and security jobs must all be green.' },
+      { title: 'Ship', body: 'The change merges and the team is notified on Slack, Teams or a webhook, with every field scrubbed of secrets.' },
+    ],
     stats: [
-      { value: '513', label: 'tests, 37 files' },
-      { value: '85%', label: 'coverage floor' },
-      { value: '4', label: 'vendor adapters' },
+      { value: '4', label: 'ticket & code sources, collected automatically' },
+      { value: '4-way', label: 'fail-closed merge gate' },
+      { value: '513', label: 'tests, 85% coverage floor' },
     ],
     valueProps: [
-      { headline: 'Ships tickets while you sleep', body: 'Runs the mechanical half of shipping software unattended: discover, implement, open the change, poll CI and review, merge, notify. Engineers stop babysitting a queue, and human review never leaves the loop — it just moves to the merge gate instead of the ticket board.' },
-      { headline: 'Defaults to blocked, not merged', body: "The four-way merge gate checks reviewer verdict, approvals, pipeline status, and required security jobs, and any one of them being missing or absent blocks the merge. Nothing here defaults to pass — for a tool that acts without a human watching, that's the direction the defaults have to point." },
-      { headline: 'One contract, four trackers and forges', body: "GitLab, GitHub, Jira, and Microsoft To Do all sit behind a single Tracker/Forge interface, and a shared test suite runs against every one of the four adapters. Swapping a client's tracker or forge doesn't touch the state machine that drives tickets through it." },
-      { headline: 'Three hangs found the hard way, then closed for good', body: 'Production surfaced three separate hangs after the plugin went live — a scheduler call, config.get(), and app.log() itself all had ways to block forever. Each one got root-caused and fixed across five prereleases (dev.1 through dev.6) before the first stable tag went out.' },
-      { headline: 'Every log line gets scrubbed before it leaves the process', body: 'A three-pass redaction pipeline runs over every log line, error, and outbound notification field, stripping configured secret values, known vendor token shapes, and generic key=value pairs. An accidental log dump or webhook payload doesn\'t turn into a credential leak.' },
+      { headline: 'The backlog feeds itself', body: 'Nobody assigns work. opencode-autodev watches GitLab, GitHub, Jira and Microsoft To Do, collects new tickets and issues as they appear, and claims each one with a lease so every ticket is worked exactly once, even with several runs going at the same time.' },
+      { headline: 'Bring your own agent squad', body: "The team working a ticket is configuration, not code. Plug in Anvil's specialist agents (the same skills and agents the rest of the company already uses) or any other agent definitions, and shape the squad to the kind of work the ticket needs." },
+      { headline: 'A squad that talks, not a script that runs', body: "Agents don't just take turns in a fixed pipeline. They share a room, discuss the task, split it up, review each other's work and hand problems back until the result is right. The room keeps going until the task is finished, not until a step counter runs out." },
+      { headline: 'Finished means merged, and merged means safe', body: 'When the squad is done, the plugin opens the merge request, polls CI and review, merges and notifies the team. The four-way merge gate checks reviewer verdict, approvals, pipeline status and required security jobs, and any missing signal blocks the merge. Nothing defaults to pass.' },
+      { headline: 'It can never get stuck quietly', body: 'A bounded-state invariant puts a wall-clock ceiling on every non-terminal state, and a test enumerates every state to enforce it. "Works until it\'s done" never turns into "works forever": a ticket that stops making progress is surfaced instead of silently hanging.' },
+      { headline: 'Every message leaves the process clean', body: "A three-pass redaction pipeline scrubs every log line, error and outbound Slack, Teams or webhook field of configured secrets, known vendor token shapes and generic key=value credentials, so an agent conversation or a notification can't leak a token." },
     ],
     highlights: [
+      { headline: 'From ticket to merge with no hand-offs', body: 'Intake, squad work, merge request, CI and review polling, merge and notification run as one loop. Each ticket moves through CLAIMED → IMPLEMENTING → VERIFYING → MR_OPEN → REVIEWING → IN_REVIEW → MERGED → DONE, driven by an I/O-free state machine that is tested on its own.' },
       { headline: '513 tests, four vendors, one contract', body: '513 test cases across 155 describe blocks in 37 files — roughly 13,045 lines of test code against 9,897 lines of source — including a shared Tracker/Forge contract suite that every one of the four vendor adapters has to pass.' },
       { headline: '85% coverage, and the build fails without it', body: "Bun's own coverage gate enforces the floor directly: bun test --coverage --coverage-threshold=0.85. There's no separate reporting step to skip." },
       { headline: 'Every SDK call now has a ceiling', body: 'A shared withTimeout helper wraps every plugin-to-SDK call, including client.app.log itself, in a hard timeout. That closed all three production hangs — in the scheduler call, in config.get(), and in app.log() — that surfaced across dev.1 through dev.6.' },
@@ -300,6 +262,7 @@ export const projects: Project[] = [
     ],
     architecture: [
       'opencode-autodev is a TypeScript/Bun OpenCode plugin built around an I/O-free state machine (src/dispatch.ts) that drives each task through CLAIMED → IMPLEMENTING → VERIFYING → MR_OPEN → REVIEWING → IN_REVIEW → MERGED → DONE. State lives in a bun:sqlite task store — WAL mode, file permissions forced to 0600, leases acquired through a real BEGIN IMMEDIATE compare-and-set transaction, and a versioned v1 → v2 → v3 migration ladder underneath it.',
+      "Work arrives on its own: tracker adapters poll the configured sources, and each new ticket or issue is claimed through the lease before anything else happens. The claimed ticket is handed to an agent squad assembled from configuration, so the same loop can run Anvil's agents, a team's own agents or a mix. The squad collaborates in a shared room, discussing, dividing and reviewing the work, and the state machine only moves the ticket forward once the room reports the task finished.",
       "Where work comes from and where it gets merged are deliberately two different interfaces (ADR-007): GitLab and GitHub implement both Tracker and Forge, while Jira and Microsoft To Do implement Tracker only. The TypeScript compiler itself blocks a tracker-only source from being asked to gate, report on, or merge a change, and all four adapters run through the same contract-test suite (test/contract/tracker.ts, forge.ts) so no vendor's behavior can quietly drift from the spec.",
       "A load-time capability probe (ADR-005, src/caps.ts) resolves the real OpenCode SDK surface once at startup and wraps every call except session.prompt and app.log in a tested fallback chain. A shared withTimeout helper then bounds every one of those plugin-to-SDK calls, including app.log itself, after three separate production hangs made it clear that an unbounded call to anything is a hang waiting to happen.",
       "A shared HTTP retry core (src/net/http.ts) parses Retry-After in both integer-seconds and HTTP-date form and clamps it to a 1–30s window sized to stay inside a task's lease, while also telling a terminal credential failure apart from a merely-missing environment variable. On top of that sits the safety envelope: a four-way fail-closed merge gate (src/gates.ts), the ADR-011 bounded-non-terminal-state invariant enforced by the test that enumerates every TaskState, and a three-pass secret redactor that strips configured env values, known vendor token shapes, and generic key=value secrets from every log line, error, and outbound Teams/Slack/webhook field before it leaves the process.",

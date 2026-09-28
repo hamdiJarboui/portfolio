@@ -2,7 +2,7 @@
 import { profile } from '../data/profile';
 import CornerMarks from './CornerMarks.astro';
 
-const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', 'Reviewed PR'];
+const stages = ['Ticket collected', 'Agent squad', 'Shared room', 'Gated merge'];
 ---
 
 <section class="hero">
@@ -19,9 +19,9 @@ const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', '
       </div>
     </div>
 
-    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: Jira ticket flows through a Scrum Master and Dev, DevOps, and Test agents to a reviewed pull request">
+    <div class="pipeline blueprint-panel" role="img" aria-label="Pipeline: a ticket is collected automatically, handed to an agent squad that works it out in a shared room, and merged only through a fail-closed gate">
       <CornerMarks />
-      <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through AgileForge</p>
+      <p class="dwg-tag pipeline-label">Fig. 00 — a ticket's path through opencode-autodev</p>
       <div class="pipeline-track">
         {stages.map((stage, i) => (
           <>
@@ -38,7 +38,7 @@ const stages = ['Jira ticket', 'Scrum master', 'Dev · DevOps · Test agents', '
         ))}
       </div>
       <div class="dim-divider pipeline-rule"></div>
-      <p class="pipeline-caption">Agents never merge — a human approves every step.</p>
+      <p class="pipeline-caption">Nothing merges on a missing signal: every gate must be green.</p>
     </div>
   </div>
 </section>
