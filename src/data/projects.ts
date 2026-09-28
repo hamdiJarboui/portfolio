@@ -32,6 +32,8 @@ export interface Project {
   harnessLayer?: HarnessLayer;
   flow?: FlowStep[];
   flowHeading?: { label: string; title: string };
+  /** Show the simulated squad-channel replay on this project's page. */
+  squadReplay?: boolean;
 }
 
 export const projects: Project[] = [
@@ -224,6 +226,7 @@ export const projects: Project[] = [
       'GitLab / GitHub / Jira / Microsoft Graph REST APIs (multi-vendor Tracker/Forge adapters)',
       'Slack / Microsoft Teams (Adaptive Cards via Power Automate) / webhook / desktop notifications',
     ],
+    squadReplay: true,
     flowHeading: { label: 'How a ticket moves', title: 'From backlog to merged change: agents do the work, a human approves it' },
     flow: [
       { title: 'Collect', body: 'New tickets and issues are picked up from GitLab, GitHub, Jira or Microsoft To Do, and each one is claimed with a lease.' },

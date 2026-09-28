@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import CornerMarks from '../../components/CornerMarks.astro';
 import AnvilHarness from '../../components/AnvilHarness.astro';
 import NeuralField from '../../components/NeuralField.astro';
+import SquadRoom from '../../components/SquadRoom.astro';
 import { projects } from '../../data/projects';
 import { harnessGroup } from '../../data/harness';
 import { withBase } from '../../utils/url';
@@ -85,6 +86,16 @@ const harnessLayers = projects
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+    )}
+
+    {project.squadReplay && (
+      <section class="section replay-section">
+        <div class="wrap">
+          <p class="sheet-label">Inside the squad channel</p>
+          <h2>Agents talk, the facilitator keeps order, a human has the last word</h2>
+          <SquadRoom />
         </div>
       </section>
     )}
@@ -385,6 +396,13 @@ const harnessLayers = projects
       top: auto;
       bottom: -1.1rem;
     }
+  }
+
+  .replay-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
   }
 
   .value-section {
