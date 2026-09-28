@@ -1,7 +1,7 @@
 ---
 import { profile } from '../data/profile';
 import CornerMarks from './CornerMarks.astro';
-import { withBase } from '../utils/url';
+import ResumeDownloads from './ResumeDownloads.astro';
 
 const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR', 'Merged & notified'];
 ---
@@ -16,8 +16,7 @@ const stages = ['Ticket collected', 'Agent squad in a room', 'Human approves PR'
       <p class="lede">{profile.summary}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#work">See the work</a>
-        <a class="btn" href={withBase('/hamdi-jarboui-resume-en.pdf')} download hreflang="en">Resume (EN)</a>
-        <a class="btn" href={withBase('/hamdi-jarboui-cv-fr.pdf')} download hreflang="fr" lang="fr">CV (FR)</a>
+        <ResumeDownloads />
       </div>
     </div>
 

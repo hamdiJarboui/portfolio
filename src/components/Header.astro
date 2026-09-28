@@ -1,6 +1,7 @@
 ---
 import { profile } from '../data/profile';
 import { withBase } from '../utils/url';
+import ResumeDownloads from './ResumeDownloads.astro';
 
 const nav = [
   { href: '#about', label: 'Skills' },
@@ -22,7 +23,10 @@ const nav = [
         <a href={withBase(`/${item.href}`)}><span class="nav-index">{String(i + 1).padStart(2, '0')}</span>{item.label}</a>
       ))}
     </nav>
-    <a class="btn btn-primary cta" href={`mailto:${profile.email}`}>Get in touch</a>
+    <div class="actions">
+      <ResumeDownloads variant="compact" />
+      <a class="btn btn-primary cta" href={`mailto:${profile.email}`}>Get in touch</a>
+    </div>
   </div>
 </header>
 
@@ -87,13 +91,31 @@ const nav = [
     color: var(--color-ink-faint);
   }
 
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
   .cta {
     font-size: 0.82rem;
     padding: 0.6em 1.1em;
   }
 
-  @media (max-width: 760px) {
+  @media (max-width: 1080px) {
     .nav {
+      gap: var(--space-md);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mark-text {
       display: none;
     }
   }
