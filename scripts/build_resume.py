@@ -137,7 +137,6 @@ CONTENT = {
                     "Built <b>Anvil</b>, the company-wide AI harness: <b>170 skills, 163 agents, 40 rules and 62 commands</b> installed from one registry into Claude Code, OpenCode, Beacon and GitHub Copilot, with zero npm dependencies and tag-gated releases.",
                     "Architected <b>ai-tools-library</b>: <b>29 MCP servers exposing 639 tools</b> for GitLab, Jenkins, Jira, Confluence, Grafana and automotive diagnostics, shipped through a <b>7-stage CI pipeline</b> with per-package coverage gates up to 98%.",
                     "Built <b>MTF Assistant</b>, a RAG chatbot (Django, React, LangChain, pgvector) answering questions on the internal test framework, used by <b>~600 testers and developers</b>.",
-                    "Built <b>opencode-autodev</b>: agents collect tickets from GitLab, GitHub, Jira and Microsoft To Do, work them in a configurable agent squad, and open pull requests that merge only after <b>human approval</b>; 513 tests, 85% coverage floor.",
                     "Own CI/CD (Jenkins, Zuul, GitLab CI/CD) from commit to production, with Nexus/Artifactory artifact management, TestGuide test orchestration, Docker and AWS deployment.",
                     "Work directly with customers to gather requirements and present technical solutions; delivered a generative AI workshop to the whole development department (~100 engineers).",
                 ],
@@ -155,6 +154,15 @@ CONTENT = {
             ),
         ],
         "projects": [
+            (
+                "opencode-autodev: autonomous ticket-to-merge delivery with AI agents (solo, built at KPIT)",
+                "TypeScript · Bun · SQLite · OpenCode SDK · GitLab, GitHub, Jira, Microsoft To Do · 669 tests, 96% coverage",
+                [
+                    "Collects eligible tickets from GitLab, GitHub, Jira and Microsoft To Do, picks a specialist developer agent per ticket (e.g. Anvil agents) and implements each one in an isolated git worktree, with many tickets in parallel under SQLite leases.",
+                    "Developer agent, reviewer agent and the human operator share a per-ticket squad channel (@-mentions, questions mid-run) run by a deterministic facilitator with hard message and wake-up budgets.",
+                    "Merges only through a fail-closed four-way gate (reviewer verdict, <b>human approval</b>, pipeline, security jobs); config validation refuses auto-merge without at least one human approval. 12 ADRs, 85% coverage gate.",
+                ],
+            ),
             (
                 "HCode: AI coding agent for the terminal (creator &amp; core author, team project)",
                 "Python · Anthropic &amp; OpenAI · MCP · 44k lines · 827 tests",
@@ -234,7 +242,6 @@ CONTENT = {
                     "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>170 skills, 163 agents, 40 règles et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot, sans aucune dépendance npm, avec des releases déclenchées par tag.",
                     "Architecture d'<b>ai-tools-library</b> : <b>29 serveurs MCP exposant 639 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98 %.",
                     "Conception de <b>MTF Assistant</b>, un chatbot RAG (Django, React, LangChain, pgvector) qui répond aux questions sur le framework de test interne, utilisé par <b>environ 600 testeurs et développeurs</b>.",
-                    "Conception d'<b>opencode-autodev</b> : les agents collectent les tickets depuis GitLab, GitHub, Jira et Microsoft To Do, les traitent en équipe d'agents configurable et ouvrent des pull requests qui ne sont fusionnées qu'après <b>validation humaine</b> ; 513 tests, couverture minimale de 85 %.",
                     "Responsable de la CI/CD (Jenkins, Zuul, GitLab CI/CD) du commit à la production : gestion des artefacts Nexus/Artifactory, orchestration des tests TestGuide, déploiement Docker et AWS.",
                     "Travail direct avec les clients pour recueillir les besoins et présenter les solutions techniques ; animation d'un atelier IA générative pour tout le département de développement (environ 100 ingénieurs).",
                 ],
@@ -252,6 +259,15 @@ CONTENT = {
             ),
         ],
         "projects": [
+            (
+                "opencode-autodev : livraison autonome du ticket au merge par agents IA (solo, réalisé chez KPIT)",
+                "TypeScript · Bun · SQLite · SDK OpenCode · GitLab, GitHub, Jira, Microsoft To Do · 669 tests, 96 % de couverture",
+                [
+                    "Collecte les tickets éligibles depuis GitLab, GitHub, Jira et Microsoft To Do, choisit un agent développeur spécialisé par ticket (par exemple les agents Anvil) et traite chaque ticket dans un worktree git isolé, avec de nombreux tickets en parallèle sous baux SQLite.",
+                    "L'agent développeur, l'agent relecteur et l'opérateur humain partagent un canal d'équipe par ticket (@-mentions, questions en cours d'exécution), piloté par un facilitateur déterministe avec des budgets stricts de messages et de réveils.",
+                    "Ne fusionne qu'à travers un contrôle bloquant à quatre critères (avis du relecteur, <b>validation humaine</b>, pipeline, jobs de sécurité) ; la validation de configuration refuse l'auto-merge sans au moins une approbation humaine. 12 ADR, seuil de couverture de 85 %.",
+                ],
+            ),
             (
                 "HCode : agent de code IA pour le terminal (créateur &amp; auteur principal, projet d'équipe)",
                 "Python · Anthropic &amp; OpenAI · MCP · 44 000 lignes · 827 tests",
