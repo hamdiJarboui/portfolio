@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import CornerMarks from '../../components/CornerMarks.astro';
+import AnvilHarness from '../../components/AnvilHarness.astro';
 import { projects } from '../../data/projects';
 
 export function getStaticPaths() {
@@ -56,6 +57,16 @@ const num = String(index + 1).padStart(2, '0');
         </div>
       </div>
     </section>
+
+    {project.harness && (
+      <section class="section harness-section">
+        <div class="wrap">
+          <p class="sheet-label">Wired into the company stack</p>
+          <h2>One harness between the AI hosts and every tool the company runs</h2>
+          <AnvilHarness harness={project.harness} />
+        </div>
+      </section>
+    )}
 
     <section class="section rigor-section">
       <div class="wrap">
@@ -206,6 +217,13 @@ const num = String(index + 1).padStart(2, '0');
     color: var(--color-ink-muted);
     font-size: 0.9rem;
     line-height: 1.55;
+  }
+
+  .harness-section h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    max-width: 46ch;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-md);
   }
 
   .rigor-section h2 {

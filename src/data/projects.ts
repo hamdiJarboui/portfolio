@@ -1,3 +1,5 @@
+import { harness, type Harness } from './harness';
+
 export interface Stat {
   value: string;
   label: string;
@@ -21,6 +23,7 @@ export interface Project {
   highlights: HeadlinePoint[];
   engineeringRigor: string[];
   architecture: string[];
+  harness?: Harness;
 }
 
 export const projects: Project[] = [
@@ -190,55 +193,59 @@ export const projects: Project[] = [
   {
     slug: 'anvil',
     name: 'Anvil',
-    tagline: 'One npm package, zero dependencies, 150 skills and 150 agents — installed across four AI coding hosts and published automatically the moment a version tag lands.',
-    summary: 'Anvil is a universal developer toolkit: 150 skills, 150 agents, and 62 slash commands, installable across Claude Code, OpenCode, Beacon, and GitHub Copilot from a single npm package, with a dependency-resolving CLI that handles selective installs, reverse-dependency lookups, and health checks in one pass. The point of it is that one canonical component registry drives every host-specific adapter, so a team standardizes its AI-assisted workflow once instead of maintaining four parallel toolchains. A three-stage GitLab CI pipeline backs every push — structural verification of every skill and agent, a 19-suite Node.js/Python test battery, and npm publishing gated behind a matching git tag — all running on zero npm runtime or dev dependencies.',
-    role: "Every commit in this repo's history is mine — I'm the sole developer on it — but it isn't a personal side project: it was built at KPIT, lives on KPIT's internal GitLab, and started as internal tooling before growing into what's described here. I designed and own the CLI, the CI/CD pipeline, and the component registry/design system end to end. I personally authored the large majority of the 150 skills and 150 agents; 21 of the skills are imported from external skill packs, which LICENSE-THIRD-PARTY.md tracks by exact origin commit and license status instead of folding them in as if they were original work.",
-    ownership: 'Solo author, built at KPIT',
+    tagline: "The company's AI harness: one package that gives every engineer the same 150 skills, 150 agents and 62 commands, in whichever AI coding host they use, wired into the tools the company actually runs.",
+    summary: "Anvil is the AI harness for the whole engineering organisation. Instead of every team prompting a general-purpose assistant from scratch, Anvil ships a shared, versioned layer of company knowledge and workflow: 150 skills, 150 agents and 62 slash commands, covering code review, CI failure diagnosis, requirements traceability, test analysis, MISRA/ISO 26262/ASPICE compliance and automotive diagnostics. One canonical registry installs that layer into Claude Code, OpenCode, Beacon and GitHub Copilot, so a developer on any of the four hosts gets the same capabilities and the same guardrails. Through MCP servers, the agents read live evidence from GitLab, GitHub, Jenkins, Zuul, Jira, Confluence, Nexus, Artifactory, TestGuide, TRACE32, Grafana and Elastic, plus DLT traces, CAN logs and ARXML/A2L/ODX files, instead of guessing. Every push runs a three-stage GitLab CI pipeline (structural verification of all 300 components, a 19-suite Node.js/Python test battery, tag-gated npm publishing), and the whole toolkit has zero npm runtime or dev dependencies.",
+    role: "I'm the sole developer: every commit in the repo's history is mine. It was built at KPIT, lives on KPIT's internal GitLab, and grew from internal tooling into the shared AI layer described here. I designed and own the CLI, the host adapters, the CI/CD pipeline, the guardrail model and the component registry end to end, and I wrote the large majority of the 150 skills and 150 agents. 21 skills come from external skill packs; LICENSE-THIRD-PARTY.md tracks each one by exact origin commit and license status rather than passing them off as original work.",
+    ownership: 'Company-wide AI harness, solo author at KPIT',
     stack: [
       'Node.js 18+ (ESM-only, zero runtime/dev dependencies)',
       'Python 3.11 (stdlib-only shared libraries)',
+      'Model Context Protocol (MCP): 25 server packages, 549 live tools',
+      '4 host adapters: Claude Code, OpenCode, Beacon, GitHub Copilot',
       'GitLab CI/CD (3-stage validate → test → publish pipeline)',
-      'Model Context Protocol (MCP) server integration',
       'Claude Code plugin manifest format (.claude-plugin/)',
-      '4 platform adapters — Claude Code, OpenCode, Beacon, GitHub Copilot',
-      'Node.js built-in test runner (node --test)',
-      'Python unittest',
+      'PreToolUse hooks + risk-tiered tool exposure (AI_TOOLS_MAX_RISK)',
+      'Node.js built-in test runner (node --test) + Python unittest',
       'GitLab self-hosted npm Package Registry',
     ],
     stats: [
-      { value: '300', label: 'skills + agents' },
-      { value: '4', label: 'AI hosts' },
+      { value: '362', label: 'skills, agents & commands' },
+      { value: '4', label: 'AI hosts, one registry' },
+      { value: '8', label: 'tool domains wired in' },
       { value: '0', label: 'npm dependencies' },
     ],
     valueProps: [
-      { headline: 'One registry, four AI hosts', body: 'A single component registry — .claude-plugin/components.json — drives adapters for four different coding hosts. Write a skill or agent once; every host gets it without hand-porting, so a team standardizes its AI-assisted workflow once instead of maintaining four parallel toolchains.' },
-      { headline: 'Zero npm dependencies to patch', body: "Runtime and dev dependencies are both empty — package-lock.json lists nothing but the package itself, which I confirmed by reading it directly. That's a real narrowing of the npm supply-chain surface specifically; the toolkit still depends on Node.js, Python's standard library, and the four host platforms/SDKs it integrates with, none of which npm audit will ever see." },
-      { headline: 'Spawn safety enforced by a runtime hook', body: "A PreToolUse hook blocks any agent spawn that isn't registered in the component manifest, and a risk-tiered model caps which live tools — CI systems, test benches, ALM trackers — an agent can even see before it runs." },
-      { headline: "Docs that can't drift from the truth", body: 'check-docs.mjs fails the CI build the moment README/docs component counts diverge from the real registry — a discipline the commit history shows had to be caught and fixed by hand before it got automated.' },
-      { headline: 'Real automotive-domain expertise, built in', body: 'MISRA C:2012, ISO 26262, ASPICE 4.0, and UDS/CAN/DBC/ARXML analysis are implemented as agent capabilities with the actual standards behind them, not just keyword coverage.' },
+      { headline: 'One AI layer for the whole company', body: "Every engineer gets the same skills, agents and guardrails whether they work in Claude Code, OpenCode, Beacon or GitHub Copilot. A single registry, .claude-plugin/components.json, drives all four host adapters, so the company standardises its AI-assisted workflow once instead of each team maintaining its own prompts and toolchain." },
+      { headline: 'Agents that read real evidence', body: 'Through MCP, agents query the systems the teams already run: forges, CI, artifact stores, ALM, test benches, debuggers, dashboards and raw ECU traces. A CI-failure agent reads the actual Jenkins or Zuul log; a requirements agent reads the actual Jira links; a diagnostics agent reads the actual DLT trace. Answers come with evidence attached.' },
+      { headline: 'Safe to roll out to hundreds of engineers', body: "Analysis agents are read-only by default. Anything with side effects (retriggering builds, posting reviews, publishing pages, sending mail) waits for a human. A LOW/MEDIUM/HIGH risk cap decides which tools an agent can see at all, and a PreToolUse hook blocks any agent spawn that isn't in the registry." },
+      { headline: 'Domain expertise, not keyword coverage', body: 'MISRA C:2012, ISO 26262, ASPICE 4.0, UDS/DoIP, CAN/DBC, AUTOSAR ARXML, A2L and ODX analysis are implemented as agent capabilities backed by the actual standards and file formats, so the harness is useful on automotive work where a generic assistant falls short.' },
+      { headline: 'Install what your team needs, nothing more', body: 'A dependency-resolving CLI handles full, profile-based or selective installs, pulls in transitive skill and agent requirements automatically, answers reverse-dependency questions, and runs health checks, so each team can adopt a slice of the harness without breaking anything.' },
+      { headline: 'Nothing on npm to patch', body: "Runtime and dev dependencies are both empty; package-lock.json lists nothing but the package itself. That shrinks the npm supply-chain surface for a tool installed on every engineer's machine. It still relies on Node.js, Python's standard library and the four host platforms, which npm audit doesn't cover." },
     ],
     highlights: [
-      { headline: '300 components, one source of truth', body: '150 skills + 150 agents + 62 slash commands, single source of truth in .claude-plugin/components.json, installed across 4 hosts via dedicated adapter modules (claude-code, opencode, beacon, copilot).' },
-      { headline: 'What you run locally is what gates CI', body: '19 explicit Node.js test files plus a Python unittest suite run as the exact same command locally (npm test) and in CI — no drift between what a developer runs and what gates the pipeline.' },
-      { headline: 'Every agent held to the same structural bar', body: 'scripts/verify.mjs structurally validates every skill and agent\'s frontmatter, requires an explicit "Autonomy level" and "## Hard limits" section on every agent, and confirms every MCP tool reference resolves to a declared server.' },
-      { headline: 'Every architectural choice has a written ADR', body: 'Two polyglot orchestrator agents (sw-developer, sw-reviewer) are formalized with full ADRs — Context/Decision/Alternatives-Considered/Consequences — covering a bounded 2-iteration self-healing test loop and a 38-agent parallel review fan-out.' },
-      { headline: "A version bump that can't half-fail", body: 'scripts/release.mjs bumps plugin.json and package.json atomically and rolls both back if the CHANGELOG write fails, rather than leaving version files silently inconsistent.' },
-      { headline: 'Uninstalls that only touch what they installed', body: 'Hash-verified install receipts back every uninstall/upgrade: sha256 of every installed file is checked against the receipt, and --force backs up locally-modified files before overwriting them.' },
+      { headline: '362 components, one source of truth', body: '150 skills, 150 agents and 62 slash commands live in a single host-agnostic registry and are translated into each host\'s own format at install time by dedicated adapter modules (claude-code, opencode, beacon, copilot).' },
+      { headline: 'Two orchestrators that route to the right specialist', body: 'sw-developer routes work to 15 language-specific orchestrators behind a bounded 2-iteration self-healing test loop. The read-only sw-reviewer fans a change out to up to 38 specialist review agents in parallel. Both are documented in full ADRs (Context / Decision / Alternatives Considered / Consequences).' },
+      { headline: 'Every agent held to the same bar', body: 'scripts/verify.mjs structurally validates every skill and agent\'s frontmatter, requires an explicit "Autonomy level" and "## Hard limits" section on every agent, and checks that every MCP tool reference resolves to a declared server. An agent without written limits doesn\'t ship.' },
+      { headline: 'Guardrails enforced where the host allows it, and gaps stated where it doesn\'t', body: "On Claude Code a PreToolUse hook blocks unregistered spawns; on OpenCode the same rule is compiled into its native permission.task map. Beacon and Copilot have no enforcement surface, and each adapter's header comments say so plainly instead of implying coverage that isn't there." },
+      { headline: 'What you run locally is what gates CI', body: '19 Node.js test files plus a Python unittest suite run as the same command locally (npm test) and in CI, so there is no gap between what a developer checks and what blocks the pipeline.' },
+      { headline: 'Upgrades and uninstalls you can trust', body: 'Every install writes a hash-verified receipt. Upgrades and uninstalls check the sha256 of each installed file against it, and --force backs up locally modified files before overwriting them. A release bump updates plugin.json and package.json atomically and rolls both back if the CHANGELOG write fails.' },
     ],
     engineeringRigor: [
-      '3-stage GitLab CI pipeline (validate → test → publish) runs on every push: structural verification, documentation-drift checks, and a full 19-file test suite must pass before anything ships.',
-      'Publishing only fires on a git tag: the publish_package job triggers off $CI_COMMIT_TAG, re-checks that plugin.json, package.json, and the tag agree, and authenticates to a self-hosted npm registry via CI_JOB_TOKEN scoped to the project, so no long-lived secret sits in CI variables.',
-      'plugin.json and package.json disagreeing is a hard build failure: the version_consistency CI job catches it, and scripts/release.mjs enforces the same invariant on every local version bump.',
-      'Real tagged releases — v2.13.0, v2.20.2, v2.21.6, current 2.22.0 — show the pipeline has actually run releases through it, beyond just being present in the YAML.',
-      'A manual backfill publish path (scripts/publish-to-gitlab-registry.sh/.bat) extracts the exact tagged commit into a throwaway temp directory with a --dry-run mode, never touching the working branch — a deliberate, re-verified fallback for retrying or backfilling a release.',
-      'Third-party provenance is tracked in the open: LICENSE-THIRD-PARTY.md audits all 21 imported skills by exact origin commit, and flags the ones missing an upstream license rather than quietly shipping them anyway.',
+      '3-stage GitLab CI pipeline (validate → test → publish) on every push: structural verification of all 300 skills and agents, documentation-drift checks and the full 19-file test suite must pass before anything ships.',
+      'Publishing only fires on a git tag: the publish_package job triggers off $CI_COMMIT_TAG, re-checks that plugin.json, package.json and the tag agree, and authenticates to the self-hosted npm registry with the project-scoped CI_JOB_TOKEN, so no long-lived secret sits in CI variables.',
+      'plugin.json and package.json disagreeing is a hard build failure: the version_consistency CI job catches it, and scripts/release.mjs enforces the same rule on every local bump.',
+      "check-docs.mjs fails the build the moment README or docs component counts drift from the real registry. The commit history shows this was once caught and fixed by hand, which is why it's automated now.",
+      'Real tagged releases (v2.13.0, v2.20.2, v2.21.6, current 2.22.0) show the pipeline has shipped actual versions to the company registry, not just sat in the YAML.',
+      'A manual backfill publish path (scripts/publish-to-gitlab-registry.sh/.bat) extracts the exact tagged commit into a throwaway temp directory, supports --dry-run, and never touches the working branch.',
+      'Third-party provenance is tracked in the open: LICENSE-THIRD-PARTY.md audits all 21 imported skills by exact origin commit and flags any missing an upstream license rather than quietly shipping them.',
     ],
     architecture: [
-      "Anvil is built around one canonical registry — .claude-plugin/components.json — that describes 150 skills, 150 agents, and 62 commands in a single host-agnostic format. Four adapter modules (adapters/claude-code.adapter.mjs, opencode.adapter.mjs, beacon.adapter.mjs, copilot.adapter.mjs) translate that format into each target host's own schema at install time.",
-      'The CLI (scripts/cli.mjs / scripts/install.mjs) resolves transitive requires-skills/requires-agents closures for selective, profile-based, or full installs, and writes a hash-verified receipt so upgrades and uninstalls can be reasoned about mechanically instead of guessed at.',
-      "Two write-capable polyglot orchestrator agents sit on top of that registry: sw-developer routes to 15 language-specific orchestrators behind a bounded 2-iteration self-healing test loop, and the read-only sw-reviewer fans out to up to 38 review agents. Both are constrained by a PreToolUse hook (hooks/validate-agent-spawn.mjs) that blocks any spawn target absent from the component registry, plus a risk-tiered MCP tool-exposure model (AI_TOOLS_MAX_RISK) that caps which live tools an agent can even see before it runs. The same restriction is compiled natively into OpenCode's permission.task allow/deny map; each adapter's own header comments say plainly which hosts — Beacon, Copilot — have no enforcement surface at all, instead of papering over the gap.",
-      'The whole toolkit runs on zero npm runtime or dev dependencies — plain Node.js 18+ ESM and Python 3.11 standard library. Structural correctness is treated as a CI-gated, testable artifact: scripts/verify.mjs checks frontmatter, the Autonomy-level/Hard-limits sections, and MCP reference resolution, while scripts/check-docs.mjs catches README/docs count drift against the registry before it ships.',
+      "Anvil has three layers. At the top are the AI coding hosts engineers already use: Claude Code, OpenCode, Beacon and GitHub Copilot. In the middle is the harness itself: one canonical registry (.claude-plugin/components.json) describing 150 skills, 150 agents and 62 commands in a host-agnostic format, translated into each host's schema at install time by four adapter modules (adapters/claude-code.adapter.mjs, opencode.adapter.mjs, beacon.adapter.mjs, copilot.adapter.mjs). At the bottom are the company's own systems, reached through MCP servers from the ai-tools-library: 25 packages exposing 549 tools across source control, CI, artifacts, ALM, test execution, debug, observability and automotive file formats.",
+      'The CLI (scripts/cli.mjs / scripts/install.mjs) resolves transitive requires-skills/requires-agents closures for selective, profile-based or full installs, and writes a hash-verified receipt so upgrades and uninstalls are mechanical rather than guesswork. That is what makes it practical to roll the harness out team by team instead of all at once.',
+      "Two write-capable orchestrators sit on top of the registry: sw-developer routes to 15 language-specific orchestrators behind a bounded 2-iteration self-healing test loop, and the read-only sw-reviewer fans out to up to 38 review agents. Both are constrained by a PreToolUse hook (hooks/validate-agent-spawn.mjs) that blocks any spawn target missing from the registry, plus a risk-tiered tool-exposure model (AI_TOOLS_MAX_RISK) that caps which live tools an agent can see before it runs. The same restriction is compiled into OpenCode's permission.task allow/deny map; the Beacon and Copilot adapters state in their headers that those hosts have no enforcement surface.",
+      'The toolkit runs on plain Node.js 18+ ESM and the Python 3.11 standard library, with no npm runtime or dev dependencies. Structural correctness is a CI-gated artifact: scripts/verify.mjs checks frontmatter, the Autonomy-level/Hard-limits sections and MCP reference resolution, and scripts/check-docs.mjs catches docs drift against the registry before it ships.',
     ],
+    harness,
   },
   {
     slug: 'mtf-assistant',

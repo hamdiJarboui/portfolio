@@ -1,5 +1,11 @@
 ---
-import { harness } from '../data/harness';
+import type { Harness } from '../data/harness';
+
+interface Props {
+  harness: Harness;
+}
+
+const { harness } = Astro.props;
 ---
 
 <div class="harness">
