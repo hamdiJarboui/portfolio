@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer" id="contact">
   <div class="wrap footer-inner">
     <div class="footer-main">
-      <p class="sheet-label">Sheet 07 — Get in touch</p>
+      <p class="sheet-label">Sheet 06 — Get in touch</p>
       <h2>Building something that needs a senior Python &amp; AI-agents engineer?</h2>
       <div class="footer-links">
         <a class="btn btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -22,6 +22,7 @@ const year = new Date().getFullYear();
     <div class="footer-meta">
       <p>{profile.location}</p>
       <p>&copy; {year} {profile.name}</p>
+      <p><a href="https://github.com/hamdiJarboui/portfolio" target="_blank" rel="noopener noreferrer">Site source on GitHub</a></p>
     </div>
   </div>
 </footer>
@@ -54,6 +55,13 @@ const year = new Date().getFullYear();
 
   .resume-links {
     margin-top: var(--space-xs);
+  }
+
+  .footer-meta a {
+    display: inline-block;
+    padding-block: 0.3rem;
+    color: var(--color-ink-muted);
+    text-decoration: underline;
   }
 
   .footer-meta {

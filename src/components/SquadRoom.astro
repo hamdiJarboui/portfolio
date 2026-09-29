@@ -4,7 +4,8 @@
  * channel. The developer agent, the reviewer agent and the human operator talk
  * in the ticket's channel while the facilitator wakes whoever is addressed and
  * the merge gates fill in. Built from real DOM text (readable, indexable), not
- * a video file. The scenario is illustrative and labelled "simulated".
+ * a video file. The dialogue is scripted and labelled as a replay; the
+ * workflow it walks through is the one autodev's end-to-end test runs.
  */
 import CornerMarks from './CornerMarks.astro';
 import { withBase } from '../utils/url';
@@ -46,7 +47,7 @@ const chapters = [
       <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5" /></svg>
       Real, working project
     </span>
-    <span class="real-text"><strong>opencode-autodev</strong> · 669 tests passing · 96% coverage</span>
+    <span class="real-text"><strong>opencode-autodev</strong> · 740 tests passing · 96% coverage</span>
     {caseStudyLink && (
       <a class="real-link" href={withBase('/projects/opencode-autodev/')}>Case study <span aria-hidden="true">→</span></a>
     )}
@@ -56,7 +57,7 @@ const chapters = [
     <p class="room-title" id="squad-room-title">
       Squad channel · <span class="ticket">PROJ-1482</span> "Handle CAN timeout on brake signal"
     </p>
-    <span class="dwg-tag replay-tag">replay · example ticket</span>
+    <span class="dwg-tag replay-tag">scripted replay · real workflow</span>
   </div>
 
   <div class="room-body">
@@ -402,6 +403,10 @@ const chapters = [
 
   .real-link {
     margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-inline: 0.2rem;
     font-family: var(--font-mono);
     font-size: 0.72rem;
     color: var(--color-cyan);
@@ -825,7 +830,9 @@ const chapters = [
   .chapter {
     position: absolute;
     transform: translateX(-10%);
-    padding: 0.1rem 0.15rem;
+    min-height: 24px;
+    margin-top: -0.3rem;
+    padding: 0.4rem 0.3rem 0.3rem;
     border: none;
     background: none;
     font-family: var(--font-mono);
@@ -839,7 +846,7 @@ const chapters = [
     content: '';
     position: absolute;
     left: 10%;
-    top: -0.55rem;
+    top: -0.25rem;
     width: 1px;
     height: 7px;
     background: var(--color-line-strong);
