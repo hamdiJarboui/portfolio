@@ -2,7 +2,6 @@
 import { profile } from '../data/profile';
 import ResumeDownloads from './ResumeDownloads.astro';
 import NeuralField from './NeuralField.astro';
-import SquadRoom from './SquadRoom.astro';
 ---
 
 <section class="hero">
@@ -16,16 +15,9 @@ import SquadRoom from './SquadRoom.astro';
       <p class="lede">{profile.summary}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#work">See the work</a>
+        <a class="btn" href="#squad-demo">Watch the agent demo</a>
         <ResumeDownloads />
       </div>
-    </div>
-
-    <div class="hero-replay">
-      <p class="replay-caption">
-        <span class="caption-dot" aria-hidden="true"></span>
-        Watch an agent squad work a ticket, from claim to human-approved merge
-      </p>
-      <SquadRoom compact caseStudyLink />
     </div>
   </div>
 </section>
@@ -63,56 +55,18 @@ import SquadRoom from './SquadRoom.astro';
     flex-wrap: wrap;
   }
 
-  .hero-copy,
-  .hero-replay {
+  .hero-copy {
     min-width: 0;
   }
 
-  .replay-caption {
-    display: flex;
-    align-items: center;
-    gap: 0.55em;
-    margin-bottom: 0.7rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    color: var(--color-ink-muted);
-  }
-
-  .caption-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--gradient-ai);
-    box-shadow: 0 0 10px rgba(61, 139, 255, 0.8);
-    flex-shrink: 0;
-  }
-
   @media (min-width: 1000px) {
-    .hero {
-      padding-block: clamp(2.5rem, 5vw, 4.5rem) var(--space-xl);
-    }
-
-    .hero-grid {
-      grid-template-columns: 1fr 1.05fr;
-      align-items: center;
-      gap: var(--space-lg);
-    }
-
     .hero-copy h1 {
-      font-size: clamp(2.2rem, 3.3vw, 3rem);
-      max-width: 22ch;
+      font-size: clamp(2.6rem, 4.2vw, 3.6rem);
+      max-width: 24ch;
     }
 
     .lede {
-      font-size: 1rem;
-    }
-
-    .hero-actions {
-      margin-top: var(--space-md);
-    }
-
-    .hero-replay :global(.compact .channel) {
-      height: 15.5rem;
+      font-size: 1.1rem;
     }
   }
 </style>
