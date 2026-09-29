@@ -9,6 +9,7 @@ import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import TeachingList from '../components/TeachingList.astro';
 import Credentials from '../components/Credentials.astro';
 import HarnessStack from '../components/HarnessStack.astro';
+import SquadRoom from '../components/SquadRoom.astro';
 import { projects, type Project } from '../data/projects';
 
 const harnessLayers = projects
@@ -53,6 +54,13 @@ const figIndex = (project: Project) => projects.indexOf(project);
           <span class="dwg-tag">GROUP B</span>
           <h3>Agentic delivery &amp; knowledge</h3>
           <p>Systems that put agents to work on real tickets, merge requests, test specifications and documentation, with guardrails that keep the autonomy safe.</p>
+        </div>
+        <div class="demo-slot" id="squad-demo">
+          <p class="replay-caption">
+            <span class="caption-dot" aria-hidden="true"></span>
+            Watch an opencode-autodev squad work a ticket, from claim to human-approved merge
+          </p>
+          <SquadRoom caseStudyLink />
         </div>
         <div class="featured-slot">
           <ProjectCard project={otherWork[0]} index={figIndex(otherWork[0])} featured={true} />
@@ -122,6 +130,30 @@ const figIndex = (project: Project) => projects.indexOf(project);
     color: var(--color-ink-muted);
     font-size: 0.92rem;
     max-width: 70ch;
+  }
+
+  .demo-slot {
+    margin-bottom: var(--space-md);
+    scroll-margin-top: 7.5rem;
+  }
+
+  .replay-caption {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    margin-bottom: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+  }
+
+  .caption-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gradient-ai);
+    box-shadow: 0 0 10px rgba(61, 139, 255, 0.8);
+    flex-shrink: 0;
   }
 
   .featured-slot {
