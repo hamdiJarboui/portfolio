@@ -32,13 +32,16 @@ export interface Project {
   harnessLayer?: HarnessLayer;
   flow?: FlowStep[];
   flowHeading?: { label: string; title: string };
-  /** Show the simulated squad-channel replay on this project's page. */
+  /** Where the code lives; no href when the repository is private. */
+  source: { label: string; href?: string };
+  /** Show the scripted squad-channel replay on this project's page. */
   squadReplay?: boolean;
 }
 
 export const projects: Project[] = [
   {
     slug: 'hcode',
+    source: { label: 'Private repository · code not public' },
     name: 'HCode',
     tagline: 'An AI pair programmer that plans before it edits, checks its own work, keeps going when an LLM provider goes down, and remembers your project between sessions. Available in the terminal, as a desktop app and inside VS Code.',
     summary: "HCode is the agent-runtime layer of the AI harness: an autonomous AI coding agent that runs in the terminal, built from the ground up rather than wrapped around an existing one. It reads and edits code, runs shell commands, works with git, searches the web and edits Jupyter notebooks, and it pushes every non-trivial task through a Plan → Execute → Verify workflow: the planning phase writes a task list and an implementation plan, the execution phase makes the changes, and the verification phase runs the checks and writes a walkthrough of what changed. It talks to Anthropic Claude and OpenAI (plus any OpenAI-compatible endpoint) through a resilient provider layer that fails over between them behind per-provider circuit breakers, remembers context across sessions through file, session and semantic memory, and wraps every task in a transaction so a failed run can be rolled back. The Python core is about 44,000 lines across 142 modules, covered by 827 test functions; the unit suite runs 496 passing tests in about 30 seconds.",
@@ -94,6 +97,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'anvil',
+    source: { label: 'Internal KPIT system · code not public' },
     name: 'Anvil',
     tagline: "The know-how layer of the company's AI harness: one package that gives every engineer the same 170 skills, 163 agents, 40 rules and 62 commands, in whichever of four AI coding hosts they use, wired into the tools the company actually runs.",
     summary: "Anvil is the middle layer of the AI harness: the shared skills and agents that every engineer's assistant works from. Instead of every team prompting a general-purpose assistant from scratch, Anvil ships a shared, versioned layer of company knowledge and workflow: 170 skills, 163 agents, 40 rules and 62 slash commands, covering code review, CI failure diagnosis, requirements traceability, test analysis, MISRA/ISO 26262/ASPICE compliance and automotive diagnostics. One canonical registry installs that layer into Claude Code, OpenCode, Beacon and GitHub Copilot, so a developer on any of the four hosts gets the same capabilities and the same guardrails. Through MCP servers, the agents read live evidence from GitLab, GitHub, Jenkins, Zuul, Jira, Confluence, Nexus, Artifactory, TestGuide, TRACE32, Grafana and Elastic, plus DLT traces, CAN logs and ARXML/A2L/ODX files, instead of guessing. Every push runs a three-stage GitLab CI pipeline (structural verification of every skill and agent, a 19-suite Node.js/Python test battery, tag-gated npm publishing), and the whole toolkit has zero npm runtime or dev dependencies.",
@@ -152,6 +156,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'ai-tools-library',
+    source: { label: 'Internal KPIT system · code not public' },
     name: 'ai-tools-library',
     tagline: '29 production MCP servers, 639 tools, built at KPIT and shipped through a 7-stage CI pipeline with tag-gated, dual-target publishing.',
     summary: "ai-tools-library is the tool layer of the AI harness, the part that lets agents reach real company systems. It is a monorepo of 29 independently installable MCP server packages — 639 tools spanning developer tooling, enterprise collaboration, observability, and automotive/embedded diagnostics — built on two shared foundation packages so every integration gets tool discovery, risk gating, retries, and a working MCP server with minimal added code. A 7-stage GitLab CI pipeline enforces lint, type, security, and per-package coverage gates before anything builds, and every release is tag-verified and published to both an external package index and a private package registry. Production concerns get the same engineering attention as the tools themselves: health/readiness endpoints, a gated compliance audit trail, risk-aware circuit breakers, and a real Docker Compose + Caddy deployment topology with per-service bearer tokens and rate limiting.",
@@ -210,11 +215,12 @@ export const projects: Project[] = [
   },
   {
     slug: 'opencode-autodev',
+    source: { label: 'Private repository · code not public' },
     name: 'opencode-autodev',
     tagline: 'An autonomous delivery team: it collects tickets and issues on its own, picks the right specialist agent for each one from the agents you configure (Anvil\'s or your own), lets that agent and a reviewer agent work it out with you in a shared squad channel, then waits for a human to approve the pull request before anything merges.',
-    summary: "opencode-autodev turns a backlog into merged changes without anyone assigning the work. It watches GitLab, GitHub, Jira and Microsoft To Do, picks up eligible tickets and issues on a schedule, and claims each one with a SQLite lease so no two runs ever work the same ticket. For each ticket it picks a specialist developer agent from the agents configured in OpenCode (Anvil's or a team's own), first through a routing table and then through an LLM classifier limited to those agents, and runs it in an isolated git worktree. Many tickets progress in parallel. The developer agent, a reviewer agent and the human operator share a per-ticket squad channel where they @-mention each other and ask questions mid-run, coordinated by a deterministic facilitator with hard budgets. The plugin then opens the merge request and stops until a human approves it: auto-merge is off by default, and config validation refuses to turn it on without at least one required human approval and passing checks. A fail-closed four-way gate blocks anything with a missing signal, a bounded-state invariant guarantees no ticket sits in any state forever, and every log line and notification is scrubbed of secrets. 669 tests pass with 96% line coverage behind an enforced 85% floor, across a hardened prerelease line now at 0.1.0-dev.17.",
-    role: "I designed, built, and hardened this alone — every commit in the repo's history is mine. It started as an internal tool and stayed one: the code lives in a company-hosted GitLab group rather than a personal namespace, so I'm the sole engineer on it but not the sole stakeholder in what it publishes to.",
-    ownership: 'Solo-built, on employer infrastructure',
+    summary: "opencode-autodev turns a backlog into merged changes without anyone assigning the work. It watches GitLab, GitHub, Jira and Microsoft To Do, picks up eligible tickets and issues on a schedule, and claims each one with a SQLite lease so no two runs ever work the same ticket. For each ticket it picks a specialist developer agent from the agents configured in OpenCode (Anvil's or a team's own), first through a routing table and then through an LLM classifier limited to those agents, and runs it in an isolated git worktree. Many tickets progress in parallel. The developer agent, a reviewer agent and the human operator share a per-ticket squad channel where they @-mention each other and ask questions mid-run, coordinated by a deterministic facilitator with hard budgets. The plugin then opens the merge request and stops until a human approves it: auto-merge is off by default, and config validation refuses to turn it on without at least one required human approval and passing checks. A fail-closed four-way gate blocks anything with a missing signal, a bounded-state invariant guarantees no ticket sits in any state forever, and every log line and notification is scrubbed of secrets. 740 tests pass with 96% line coverage behind an enforced 85% floor, across a hardened prerelease line now at 0.1.0-dev.17.",
+    role: "I designed, built, and hardened this alone — every commit in the repo's history is mine. It was built at KPIT as an internal tool and publishes to the company's GitLab package registry, so I'm the sole engineer on it but not the sole stakeholder in what it publishes to.",
+    ownership: 'Solo-built at KPIT',
     stack: [
       'TypeScript (strict, ESM, noUncheckedIndexedAccess, noImplicitOverride)',
       'Bun runtime (pinned 1.4.2)',
@@ -238,7 +244,7 @@ export const projects: Project[] = [
     stats: [
       { value: '4', label: 'ticket & code sources, collected automatically' },
       { value: '4-way', label: 'fail-closed merge gate' },
-      { value: '669', label: 'tests, 96% line coverage' },
+      { value: '740', label: 'tests, 96% line coverage' },
     ],
     valueProps: [
       { headline: 'The backlog feeds itself', body: 'Nobody assigns work. opencode-autodev watches GitLab, GitHub, Jira and Microsoft To Do, collects new tickets and issues as they appear, and claims each one with a lease so every ticket is worked exactly once, even with several runs going at the same time.' },
@@ -250,7 +256,7 @@ export const projects: Project[] = [
     ],
     highlights: [
       { headline: 'From ticket to approved merge in one loop', body: 'Intake, squad work, merge request, CI polling, waiting for human approval, merge and notification run as one loop. Each ticket moves through CLAIMED → IMPLEMENTING → VERIFYING → MR_OPEN → REVIEWING → IN_REVIEW → MERGED → DONE, driven by an I/O-free state machine that is tested on its own.' },
-      { headline: '669 tests, four vendors, one contract', body: '669 tests across 43 files, about 14,900 lines of test code against 12,600 lines of source, all passing with 96.2% line coverage. They include a shared Tracker/Forge contract suite that every one of the four vendor adapters has to pass, and a dedicated suite for the squad channel.' },
+      { headline: '740 tests, four vendors, one contract', body: '740 tests across 48 files, about 16,200 lines of test code against 13,600 lines of source, all passing with 96.5% line coverage. They include a shared Tracker/Forge contract suite that every one of the four vendor adapters has to pass, and a dedicated suite for the squad channel.' },
       { headline: '85% coverage, and the build fails without it', body: "Bun's own coverage gate enforces the floor directly: bun test --coverage --coverage-threshold=0.85. There's no separate reporting step to skip." },
       { headline: 'Every SDK call now has a ceiling', body: 'A shared withTimeout helper wraps every plugin-to-SDK call, including client.app.log itself, in a hard timeout. That closed all three production hangs — in the scheduler call, in config.get(), and in app.log() — that surfaced across dev.1 through dev.6.' },
       { headline: "A task store that doesn't need a babysitter process", body: 'The bun:sqlite task store runs in WAL journal mode with its file forced to permission 0600, and claims a ticket through a real BEGIN IMMEDIATE compare-and-set transaction — no separate reaper process watching for orphaned leases.' },
@@ -266,7 +272,7 @@ export const projects: Project[] = [
       "The prerelease sequence isn't cosmetic version-bumping: dev.1 through dev.6 each shipped a root-caused fix for a specific production hang, and the line has kept hardening through 0.1.0-dev.17, with multi-source intake and the squad channel added along the way.",
     ],
     architecture: [
-      'opencode-autodev is a TypeScript/Bun OpenCode plugin built around an I/O-free state machine (src/dispatch.ts) that drives each task through CLAIMED → IMPLEMENTING → VERIFYING → MR_OPEN → REVIEWING → IN_REVIEW → MERGED → DONE. State lives in a bun:sqlite task store — WAL mode, file permissions forced to 0600, leases acquired through a real BEGIN IMMEDIATE compare-and-set transaction, and a versioned v1 → v2 → v3 migration ladder underneath it.',
+      'opencode-autodev is a TypeScript/Bun OpenCode plugin built around an I/O-free state machine (src/dispatch.ts) that drives each task through CLAIMED → IMPLEMENTING → VERIFYING → MR_OPEN → REVIEWING → IN_REVIEW → MERGED → DONE. State lives in a bun:sqlite task store — WAL mode, file permissions forced to 0600, leases acquired through a real BEGIN IMMEDIATE compare-and-set transaction, and a versioned v1 → v6 migration ladder underneath it.',
       "Work arrives on its own: tracker adapters poll the configured sources on a daily discovery job and a five-minute sweep, and each new ticket is claimed through the lease before anything else happens. Agent selection (src/agentSelect.ts) resolves a specialist from the configured OpenCode agents and caches it on the task. With the squad enabled, the developer, the reviewer and the human share a channel stored in SQLite (src/squadChannel.ts); agents talk through team_post, team_ask and team_inbox, and the facilitator (src/facilitator.ts), plain code with no LLM, admits every wake-up through a single compare-and-set so budgets hold across processes and no live run is ever double-prompted.",
       "Where work comes from and where it gets merged are deliberately two different interfaces (ADR-007): GitLab and GitHub implement both Tracker and Forge, while Jira and Microsoft To Do implement Tracker only. The TypeScript compiler itself blocks a tracker-only source from being asked to gate, report on, or merge a change, and all four adapters run through the same contract-test suite (test/contract/tracker.ts, forge.ts) so no vendor's behavior can quietly drift from the spec.",
       "A load-time capability probe (ADR-005, src/caps.ts) resolves the real OpenCode SDK surface once at startup and wraps every call except session.prompt and app.log in a tested fallback chain. A shared withTimeout helper then bounds every one of those plugin-to-SDK calls, including app.log itself, after three separate production hangs made it clear that an unbounded call to anything is a hang waiting to happen.",
@@ -275,6 +281,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'testcase-generation-agents',
+    source: { label: 'Private repository · code not public' },
     name: 'Automotive Test Case Generation Agents',
     tagline: 'AI agents that read automotive specifications and write the test cases for them: grounded in the specs through RAG and a knowledge graph, equipped with MCP tools, and fanned out across parallel GitLab CI workers so a whole specification is covered in one pipeline run.',
     summary: "Writing test cases from automotive specifications is slow, repetitive expert work: every requirement has to be read, its signals, conditions and dependencies understood, and a traceable test case written for it. This project turns that into a pipeline of AI agents. Specifications are ingested and indexed twice: as embeddings for retrieval-augmented generation (RAG), so an agent always works from the actual requirement text, and as a knowledge graph that links requirements to the functions, signals, interfaces and other requirements they depend on, so an agent sees the context around a requirement and not just the paragraph itself. Generation agents then use tools, exposed through MCP servers, to look up what they need while they write: related requirements, signal and interface definitions, and existing test cases. The work is split into independent batches and run as parallel GitLab CI jobs, so the whole specification is processed at once instead of one requirement at a time, and the results are merged back into a single test suite where every test case traces to the requirement it verifies.",
@@ -329,6 +336,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'mtf-assistant',
+    source: { label: 'Internal KPIT system · code not public' },
     name: 'MTF Assistant',
     tagline: "Turns MTF's documentation into instant, cited answers — used by 600 testers and developers who'd rather ask than search.",
     summary: "MTF Assistant is a retrieval-augmented chatbot that answers questions about MTF — the company's internal automotive test framework — grounded in its own documentation, so testers and developers get sourced guidance on which methods to use and how to implement a test case without digging through docs or pulling a colleague away from their work. Built at KPIT, where I was the sole engineer on the project — a Django/React application with a LangChain RAG pipeline, CI, and local deployment — it's now used by around 600 people across the testing and development teams.",

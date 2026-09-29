@@ -110,22 +110,22 @@ CONTENT = {
             "and built the company's <b>AI harness</b>: 170 skills, 163 agents, 40 rules and 62 commands shared across four AI coding "
             "assistants, and a library of <b>639 MCP tools</b> across 29 servers that connects agents to CI, ALM, artifact and diagnostic systems. "
             "Hands-on with LLM integration (Claude, OpenAI), RAG, multi-agent orchestration and safe autonomy "
-            "(human approval, risk-gated tools). Owner of CI/CD from commit to production, and a trainer of 100+ engineers in "
-            "generative AI."
+            "(human approval, risk-gated tools). Owner of CI/CD from commit to production, trainer of ~100 engineers in "
+            "generative AI, and Python &amp; applied-AI instructor at the ENETCOM engineering school."
         ),
         "skills": [
-            ("Languages", "Python (expert), TypeScript, SQL, Bash"),
+            ("Languages", "Python, TypeScript, SQL, Bash"),
             ("AI Agents &amp; LLMs", "Agentic AI, multi-agent orchestration, Model Context Protocol (MCP) servers &amp; clients, tool/function calling, "
-             "RAG (LangChain, pgvector, OpenAI embeddings), prompt &amp; context engineering, Anthropic Claude, OpenAI, Claude Code, OpenCode, GitHub Copilot"),
+             "RAG (LangChain, pgvector, OpenAI embeddings), knowledge graphs, prompt &amp; context engineering, Anthropic Claude, OpenAI, Claude Code, OpenCode, GitHub Copilot"),
             ("AI Safety", "Human-in-the-loop approval, risk-tiered tool access, fail-closed merge gates, loop detection, secret redaction"),
             ("Back end", "Django, Starlette, REST APIs, asyncio, Pydantic, Node.js, Bun, Zod, React"),
             ("DevOps &amp; CI/CD", "GitLab CI/CD, GitHub Actions, Jenkins, Zuul, Docker, Docker Compose, Caddy, Nexus, JFrog Artifactory, "
-             "tag-gated releases, private package registries, AWS, Linux"),
+             "parallel CI jobs, tag-gated releases, private package registries, AWS, Linux"),
             ("Testing &amp; Quality", "pytest, Robot Framework, contract testing, E2E testing, coverage gates, ruff, mypy, ESLint, TestGuide"),
             ("Observability", "Grafana, Prometheus, Kibana, Elastic, OpenTelemetry, Plotly Dash"),
             ("Automotive", "CAN/CAN-FD, DBC, UDS over DoIP, ODX/PDX, AUTOSAR ARXML, A2L, DLT, MDF4, Lauterbach TRACE32, "
              "MISRA C:2012, ISO 26262, ASPICE, ECU validation"),
-            ("Data &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL, MongoDB, Oracle; machine learning, deep learning, computer vision"),
+            ("Data &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL; machine learning, deep learning (TensorFlow), computer vision"),
             ("Integrations", "GitLab, GitHub, Jira, Confluence, Microsoft Graph / 365, Slack, Microsoft Teams"),
         ],
         "jobs": [
@@ -148,7 +148,6 @@ CONTENT = {
                     "Reference engineer for Python ECU flashing and configuration tooling, enabling faster embedded-systems validation for automotive OEM programmes.",
                     "Automated build, test and deployment pipelines with Jenkins and Zuul (including Zuul on AWS), removing manual steps from the release process.",
                     "Built full-stack Python tools and dashboards adopted across engineering teams for data analysis and reporting.",
-                    "Prototyped the automation concepts that became the foundation for AI agent workflows now in production at KPIT.",
                     "Trained developers and testers in ~20-person cohorts on Python testing (pytest, Robot Framework).",
                 ],
             ),
@@ -156,11 +155,11 @@ CONTENT = {
         "projects": [
             (
                 "opencode-autodev: autonomous ticket-to-merge delivery with AI agents (solo, built at KPIT)",
-                "TypeScript · Bun · SQLite · OpenCode SDK · GitLab, GitHub, Jira, Microsoft To Do · 669 tests, 96% coverage",
+                "TypeScript · Bun · SQLite · OpenCode SDK · GitLab, GitHub, Jira, Microsoft To Do · 740 tests, 96% coverage",
                 [
                     "Collects eligible tickets from GitLab, GitHub, Jira and Microsoft To Do, picks a specialist developer agent per ticket (e.g. Anvil agents) and implements each one in an isolated git worktree, with many tickets in parallel under SQLite leases.",
                     "Developer agent, reviewer agent and the human operator share a per-ticket squad channel (@-mentions, questions mid-run) run by a deterministic facilitator with hard message and wake-up budgets.",
-                    "Merges only through a fail-closed four-way gate (reviewer verdict, <b>human approval</b>, pipeline, security jobs); config validation refuses auto-merge without at least one human approval. 12 ADRs, 85% coverage gate.",
+                    "Merges only through a fail-closed four-way gate (reviewer verdict, <b>human approval</b>, pipeline, security jobs); config validation refuses auto-merge without at least one human approval. 15 ADRs, 85% coverage gate.",
                 ],
             ),
             (
@@ -169,6 +168,14 @@ CONTENT = {
                 [
                     "Autonomous coding agent built from scratch with a Plan-Execute-Verify workflow, automatic failover between Claude and OpenAI behind circuit breakers, three-layer memory (project, session, semantic) and per-task transactions.",
                     "The same agent core powers a terminal UI, plus a desktop app and a VS Code extension built with two collaborators.",
+                ],
+            ),
+            (
+                "Automotive Test Case Generation Agents: from specification to traceable test suite",
+                "Python · LLM agents · RAG · knowledge graph · MCP · GitLab CI parallel jobs",
+                [
+                    "AI agents that turn automotive specifications into test cases, grounded through RAG over the requirement text and a knowledge graph linking each requirement to its signals, functions and dependencies.",
+                    "Agents call MCP tools for signal and interface definitions, related requirements and existing tests; generation fans out over parallel GitLab CI jobs, so a whole specification is covered in one pipeline run with every test traced to its requirement ID.",
                 ],
             ),
         ],
@@ -211,26 +218,26 @@ CONTENT = {
         "summary": (
             "Ingénieur Python senior, plus de 4 ans d'expérience à livrer des systèmes en production de bout en bout, de "
             "l'architecture au déploiement, sur les agents IA, le DevOps et le logiciel embarqué automobile. Chez KPIT, je pilote "
-            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise : 170 skills, "
+            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise : 170 skills (compétences), "
             "163 agents, 40 règles et 62 commandes partagés entre quatre assistants de code IA, et une bibliothèque de <b>639 outils MCP</b> répartis sur 29 serveurs "
             "qui connecte les agents aux systèmes de CI, d'ALM, d'artefacts et de diagnostic. Maîtrise de l'intégration de LLM "
             "(Claude, OpenAI), du RAG, de l'orchestration multi-agents et de l'autonomie encadrée (validation humaine, outils "
-            "filtrés par niveau de risque). Responsable de la CI/CD du commit à la production et formateur de plus de 100 "
-            "ingénieurs en IA générative."
+            "filtrés par niveau de risque). Responsable de la CI/CD du commit à la production, formateur d'environ 100 "
+            "ingénieurs en IA générative et enseignant Python &amp; IA appliquée à l'école d'ingénieurs ENETCOM."
         ),
         "skills": [
-            ("Langages", "Python (expert), TypeScript, SQL, Bash"),
+            ("Langages", "Python, TypeScript, SQL, Bash"),
             ("Agents IA &amp; LLM", "IA agentique, orchestration multi-agents, Model Context Protocol (MCP) serveurs &amp; clients, appel d'outils (function calling), "
-             "RAG (LangChain, pgvector, embeddings OpenAI), prompt &amp; context engineering, Anthropic Claude, OpenAI, Claude Code, OpenCode, GitHub Copilot"),
+             "RAG (LangChain, pgvector, embeddings OpenAI), graphes de connaissances, prompt &amp; context engineering, Anthropic Claude, OpenAI, Claude Code, OpenCode, GitHub Copilot"),
             ("Sécurité de l'IA", "Validation humaine (human-in-the-loop), accès aux outils par niveau de risque, contrôles de merge bloquants, détection de boucles, masquage des secrets"),
             ("Back-end", "Django, Starlette, API REST, asyncio, Pydantic, Node.js, Bun, Zod, React"),
             ("DevOps &amp; CI/CD", "GitLab CI/CD, GitHub Actions, Jenkins, Zuul, Docker, Docker Compose, Caddy, Nexus, JFrog Artifactory, "
-             "releases déclenchées par tag, registres de paquets privés, AWS, Linux"),
+             "jobs CI parallèles, releases déclenchées par tag, registres de paquets privés, AWS, Linux"),
             ("Tests &amp; qualité", "pytest, Robot Framework, tests de contrat, tests E2E, seuils de couverture, ruff, mypy, ESLint, TestGuide"),
             ("Observabilité", "Grafana, Prometheus, Kibana, Elastic, OpenTelemetry, Plotly Dash"),
             ("Automobile", "CAN/CAN-FD, DBC, UDS sur DoIP, ODX/PDX, AUTOSAR ARXML, A2L, DLT, MDF4, Lauterbach TRACE32, "
              "MISRA C:2012, ISO 26262, ASPICE, validation ECU"),
-            ("Données &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL, MongoDB, Oracle ; machine learning, deep learning, vision par ordinateur"),
+            ("Données &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL ; machine learning, deep learning (TensorFlow), vision par ordinateur"),
             ("Intégrations", "GitLab, GitHub, Jira, Confluence, Microsoft Graph / 365, Slack, Microsoft Teams"),
         ],
         "jobs": [
@@ -240,7 +247,7 @@ CONTENT = {
                 [
                     "Pilote la conception et la livraison de l'automatisation par agents IA en Python et définit la direction technique de l'équipe pour automatiser le travail d'ingénierie répétitif.",
                     "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>170 skills, 163 agents, 40 règles et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot, sans aucune dépendance npm, avec des releases déclenchées par tag.",
-                    "Architecture d'<b>ai-tools-library</b> : <b>29 serveurs MCP exposant 639 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98 %.",
+                    "Architecture d'<b>ai-tools-library</b> : <b>29 serveurs MCP exposant 639 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98&nbsp;%.",
                     "Conception de <b>MTF Assistant</b>, un chatbot RAG (Django, React, LangChain, pgvector) qui répond aux questions sur le framework de test interne, utilisé par <b>environ 600 testeurs et développeurs</b>.",
                     "Responsable de la CI/CD (Jenkins, Zuul, GitLab CI/CD) du commit à la production : gestion des artefacts Nexus/Artifactory, orchestration des tests TestGuide, déploiement Docker et AWS.",
                     "Travail direct avec les clients pour recueillir les besoins et présenter les solutions techniques ; animation d'un atelier IA générative pour tout le département de développement (environ 100 ingénieurs).",
@@ -253,7 +260,6 @@ CONTENT = {
                     "Ingénieur de référence pour l'outillage Python de flashage et de configuration des ECU, accélérant la validation des systèmes embarqués pour des constructeurs automobiles.",
                     "Automatisation des pipelines de build, de test et de déploiement avec Jenkins et Zuul (y compris Zuul sur AWS), supprimant les étapes manuelles du processus de release.",
                     "Développement d'outils Python full-stack et de tableaux de bord adoptés par les équipes d'ingénierie pour l'analyse de données et le reporting.",
-                    "Prototypage des concepts d'automatisation à l'origine des workflows par agents IA aujourd'hui en production chez KPIT.",
                     "Formation de développeurs et de testeurs par groupes d'environ 20 personnes aux tests Python (pytest, Robot Framework).",
                 ],
             ),
@@ -261,11 +267,11 @@ CONTENT = {
         "projects": [
             (
                 "opencode-autodev : livraison autonome du ticket au merge par agents IA (solo, réalisé chez KPIT)",
-                "TypeScript · Bun · SQLite · SDK OpenCode · GitLab, GitHub, Jira, Microsoft To Do · 669 tests, 96 % de couverture",
+                "TypeScript · Bun · SQLite · SDK OpenCode · GitLab, GitHub, Jira, Microsoft To Do · 740 tests, 96&nbsp;% de couverture",
                 [
                     "Collecte les tickets éligibles depuis GitLab, GitHub, Jira et Microsoft To Do, choisit un agent développeur spécialisé par ticket (par exemple les agents Anvil) et traite chaque ticket dans un worktree git isolé, avec de nombreux tickets en parallèle sous baux SQLite.",
                     "L'agent développeur, l'agent relecteur et l'opérateur humain partagent un canal d'équipe par ticket (@-mentions, questions en cours d'exécution), piloté par un facilitateur déterministe avec des budgets stricts de messages et de réveils.",
-                    "Ne fusionne qu'à travers un contrôle bloquant à quatre critères (avis du relecteur, <b>validation humaine</b>, pipeline, jobs de sécurité) ; la validation de configuration refuse l'auto-merge sans au moins une approbation humaine. 12 ADR, seuil de couverture de 85 %.",
+                    "Ne fusionne qu'à travers un contrôle bloquant à quatre critères (avis du relecteur, <b>validation humaine</b>, pipeline, jobs de sécurité) ; la validation de configuration refuse l'auto-merge sans au moins une approbation humaine. 15 ADR, seuil de couverture de 85&nbsp;%.",
                 ],
             ),
             (
@@ -276,9 +282,17 @@ CONTENT = {
                     "Le même cœur d'agent alimente une interface terminal, ainsi qu'une application de bureau et une extension VS Code réalisées avec deux collaborateurs.",
                 ],
             ),
+            (
+                "Agents de génération de cas de test automobile : de la spécification à une suite de tests traçable",
+                "Python · agents LLM · RAG · graphe de connaissances · MCP · jobs GitLab CI parallèles",
+                [
+                    "Agents IA qui transforment les spécifications automobiles en cas de test, ancrés par du RAG sur le texte des exigences et par un graphe de connaissances reliant chaque exigence à ses signaux, fonctions et dépendances.",
+                    "Les agents appellent des outils MCP (définitions de signaux et d'interfaces, exigences liées, tests existants) ; la génération est répartie sur des jobs GitLab CI parallèles, pour couvrir une spécification entière en un seul pipeline, chaque test étant tracé jusqu'à l'identifiant de son exigence.",
+                ],
+            ),
         ],
         "projects_more": f"Études de cas complètes, architecture et métriques : {link(PORTFOLIO, 'hamdijarboui.github.io/portfolio')}",
-        "teaching_intro": "5 ans de formation d'ingénieurs et d'étudiants en Python, IA générative et IA agentique : groupes de 20 personnes, programmes de 10 à 30 heures, <b>100 % de réussite à la certification PCEP</b>, étudiants primés 3 fois lors de compétitions nationales d'IA.",
+        "teaching_intro": "5 ans de formation d'ingénieurs et d'étudiants en Python, IA générative et IA agentique : groupes de 20 personnes, programmes de 10 à 30 heures, <b>100&nbsp;% de réussite à la certification PCEP</b>, étudiants classés 3 fois lors de compétitions nationales d'IA.",
         "teaching": [
             "<b>Formateur principal</b>, Python, IA générative &amp; vision par ordinateur · 2S Training and Consulting · 2021 – aujourd'hui",
             "<b>Enseignant Python &amp; IA appliquée</b> · École d'ingénieurs ENETCOM, Sfax · 2024 – aujourd'hui",
@@ -295,7 +309,7 @@ CONTENT = {
             "University of Washington (Coursera) : Machine Learning Specialization",
             "Microsoft MTA : Programming Using Python &amp; Java · Certiprof : Scrum Foundation (SFPC)",
         ],
-        "languages": "Arabe : langue maternelle · Français : courant (professionnel) · Anglais : professionnel",
+        "languages": "Arabe : langue maternelle · Français : courant, niveau professionnel complet · Anglais : compétence professionnelle de travail",
     },
 }
 

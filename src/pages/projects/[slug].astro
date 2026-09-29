@@ -24,7 +24,7 @@ const harnessLayers = projects
   .sort((a, b) => a.harnessLayer!.order - b.harnessLayer!.order);
 ---
 
-<Layout title={`${project.name} — Hamdi Jarboui`} description={project.tagline}>
+<Layout title={`${project.name} — Hamdi Jarboui`} description={project.tagline} type="article">
   <Header />
   <main>
     <section class="section hero-section">
@@ -55,6 +55,12 @@ const harnessLayers = projects
         <h1>{project.name}</h1>
         <p class="tagline">{project.tagline}</p>
         <p class="role-line">{project.role}</p>
+        <p class="source-line">
+          <span class="source-key">Source</span>
+          {project.source.href
+            ? <a href={project.source.href} target="_blank" rel="noopener noreferrer">{project.source.label}</a>
+            : <span>{project.source.label}</span>}
+        </p>
         <div class="hero-stats">
           {project.stats.map((stat) => (
             <div class="hero-stat">
@@ -287,13 +293,34 @@ const harnessLayers = projects
     margin-bottom: var(--space-sm);
   }
 
+  .source-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .source-key {
+    color: var(--color-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .source-line a {
+    color: var(--color-cyan);
+    text-decoration: underline;
+  }
+
   .role-line {
     font-family: var(--font-mono);
     color: var(--color-ink-faint);
     font-size: 0.85rem;
     line-height: 1.6;
     max-width: 68ch;
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-sm);
   }
 
   .hero-stats {
@@ -462,7 +489,7 @@ const harnessLayers = projects
 
   .rigor-row {
     display: grid;
-    grid-template-columns: 2.6rem 1fr;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
     gap: var(--space-sm);
     padding-block: var(--space-sm);
     border-top: 1px solid var(--color-line);
@@ -480,6 +507,7 @@ const harnessLayers = projects
   }
 
   .rigor-text {
+    overflow-wrap: anywhere;
     color: var(--color-ink-muted);
     font-size: 0.94rem;
     line-height: 1.65;

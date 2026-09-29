@@ -21,13 +21,13 @@ export interface SkillGroup {
 
 export const profile = {
   name: 'Hamdi Jarboui',
-  title: 'Senior Python Developer & DevOps Engineer · AI Agents',
+  title: 'Senior Python Engineer — AI Agents & DevOps',
   location: 'Sfax, Tunisia',
   email: 'jarbouihamdi9@gmail.com',
   github: 'https://github.com/hamdiJarboui',
   linkedin: 'https://linkedin.com/in/hamdi-jarboui',
   summary:
-    'Python software engineer with 4+ years delivering production systems end-to-end — architecture through deployment — across full-stack development, DevOps, and embedded automotive systems. Currently leads the design of AI agent-based automation at KPIT, embedding LLM-driven logic into live engineering workflows and owning CI/CD from commit to production.',
+    'Senior Python engineer with 4+ years shipping production systems end to end, across AI agents, DevOps and automotive software. At KPIT I lead AI-agent automation and own CI/CD from commit to production.',
   skills: [
     {
       category: 'Python Development',
@@ -142,7 +142,7 @@ export const profile = {
     },
     {
       category: 'Databases',
-      items: ['PostgreSQL + pgvector', 'SQLite (WAL, leased task stores)', 'MySQL', 'MSSQL', 'MongoDB', 'Oracle'],
+      items: ['PostgreSQL + pgvector', 'SQLite (WAL, leased task stores)', 'MySQL', 'MSSQL'],
     },
   ] satisfies SkillGroup[],
   experience: [
@@ -155,8 +155,7 @@ export const profile = {
       bullets: [
         'Lead the design and delivery of AI agent-based automation systems in Python, working with the team to automate repetitive engineering work.',
         'Architect full-stack Python applications end-to-end — back-end services and APIs through to internal tooling interfaces.',
-        'Own CI/CD pipelines (Jenkins, Zuul, GitLab CI/CD) from commit to production, with artifact management via Nexus and Artifactory and test orchestration through TestGuide and Jenkins.',
-        'Serve as DevOps engineer and Python developer on major automotive OEM programs — managing Zuul CI pipelines (including Zuul on AWS), writing Python automation scripts, driving test automation, and containerizing services with Docker.',
+        'Own CI/CD (Jenkins, Zuul including Zuul on AWS, GitLab CI/CD) from commit to production on major automotive OEM programs, with Nexus/Artifactory artifact management, TestGuide test orchestration, Python test automation and Docker containerization.',
         'Partner with cross-functional teams on containerization, cloud deployment (AWS), and monitoring, improving release reliability beyond individual project scope.',
         'Build Python dashboards and data-visualization tooling adopted by engineering leads across automotive client programs for day-to-day decisions.',
         'Work directly with customers to gather requirements, present technical solutions, and align deliverables.',
@@ -171,10 +170,8 @@ export const profile = {
       end: '2024-06',
       bullets: [
         'Became the reference engineer for Python ECU flashing and configuration tooling, enabling faster embedded systems validation.',
-        'Led automation of build, test, and deployment pipelines with Jenkins, removing manual steps from the release process.',
-        'Also worked as DevOps engineer and Python developer on automotive OEM client programs, managing Zuul CI (including Zuul on AWS), Python automation scripts, test automation, and Docker-based containerization.',
+        'Automated build, test and deployment pipelines with Jenkins and Zuul (including Zuul on AWS) for automotive OEM client programs, removing manual steps from the release process, with Python test automation and Docker-based containerization.',
         'Built full-stack Python tools and dashboards adopted across engineering teams for data analysis and reporting.',
-        'Prototyped automation concepts that became the foundation for AI agent-driven workflows now in production at KPIT.',
         'Worked directly with customers to gather requirements, present technical solutions, and align deliverables.',
         'Ran hands-on workshops training developers and testers in ~20-person cohorts on Python testing (pytest, Robot Framework).',
       ],
@@ -193,7 +190,7 @@ export const profile = {
       org: 'ENETCOM Engineering School, Sfax',
       period: '2024 – Present',
       description:
-        'Selected to teach Python, generative AI, prompt engineering, and agentic AI to engineering students at a national engineering school. Coached student teams to 3 national-level AI competition wins.',
+        'Selected to teach Python, generative AI, prompt engineering, and agentic AI to engineering students at a national engineering school. Coached student teams to 3 placements at national AI competitions.',
     },
     {
       role: 'Python & Generative AI Instructor',
@@ -230,7 +227,7 @@ export const profile = {
     'Certiprof — Scrum Foundation (SFPC)',
   ],
   achievements: [
-    'Trained 100+ engineers in a single department-wide generative AI workshop; ongoing 20-person cohorts across 10–30 hour programmes since 2022',
+    'Trained ~100 engineers in a single department-wide generative AI workshop; 20-person cohorts across 10–30 hour programmes since 2021',
     'Students placed 3 times at national AI competitions',
     '100% PCEP certification pass rate — every engineer trained through the in-company Python programme achieved Python Institute PCEP certification',
   ],
