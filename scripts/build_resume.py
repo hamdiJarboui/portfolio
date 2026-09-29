@@ -92,7 +92,7 @@ CONTENT = {
         "file": "hamdi-jarboui-resume-en.pdf",
         "title": "Hamdi Jarboui - Senior Python Engineer, AI Agents & DevOps - Resume",
         "headline": "Senior Python Engineer  |  AI Agents &amp; LLM Automation  |  DevOps &amp; CI/CD",
-        "location": "Sfax, Tunisia",
+        "location": "Sfax, Tunisia · Open to remote",
         "portfolio_label": "Portfolio",
         "h": {
             "summary": "Professional Summary",
@@ -107,11 +107,11 @@ CONTENT = {
         "summary": (
             "Senior Python engineer with 4+ years delivering production systems end to end, from architecture to deployment, "
             "across AI agents, DevOps and embedded automotive software. At KPIT I lead the design of AI agent automation "
-            "and built the company's <b>AI harness</b>: 170 skills, 163 agents, 40 rules and 62 commands shared across four AI coding "
+            "and built the company's <b>AI harness</b>, used by <b>500+ engineers</b>: 170 skills, 163 agents, 40 rules and 62 commands shared across four AI coding "
             "assistants, and a library of <b>639 MCP tools</b> across 29 servers that connects agents to CI, ALM, artifact and diagnostic systems. "
             "Hands-on with LLM integration (Claude, OpenAI), RAG, multi-agent orchestration and safe autonomy "
-            "(human approval, risk-gated tools). Owner of CI/CD from commit to production, trainer of ~100 engineers in "
-            "generative AI, and Python &amp; applied-AI instructor at the ENETCOM engineering school."
+            "(human approval, risk-gated tools). Owner of CI/CD from commit to production, speaker on AI-assisted development to 100+ engineers, "
+            "and Python &amp; applied-AI instructor at the ENETCOM engineering school."
         ),
         "skills": [
             ("Languages", "Python, TypeScript, SQL, Bash"),
@@ -125,7 +125,7 @@ CONTENT = {
             ("Observability", "Grafana, Prometheus, Kibana, Elastic, OpenTelemetry, Plotly Dash"),
             ("Automotive", "CAN/CAN-FD, DBC, UDS over DoIP, ODX/PDX, AUTOSAR ARXML, A2L, DLT, MDF4, Lauterbach TRACE32, "
              "MISRA C:2012, ISO 26262, ASPICE, ECU validation"),
-            ("Data &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL; machine learning, deep learning (TensorFlow), computer vision"),
+            ("Data &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL, Oracle, MongoDB; machine learning, deep learning (TensorFlow), computer vision"),
             ("Integrations", "GitLab, GitHub, Jira, Confluence, Microsoft Graph / 365, Slack, Microsoft Teams"),
         ],
         "jobs": [
@@ -134,11 +134,11 @@ CONTENT = {
                 "KPIT Technologies · Sfax, Tunisia · 07/2024 – Present",
                 [
                     "Lead the design and delivery of AI agent automation in Python, setting the technical direction for how the team automates repetitive engineering work.",
-                    "Built <b>Anvil</b>, the company-wide AI harness: <b>170 skills, 163 agents, 40 rules and 62 commands</b> installed from one registry into Claude Code, OpenCode, Beacon and GitHub Copilot, with zero npm dependencies and tag-gated releases.",
+                    "Built <b>Anvil</b>, the company-wide AI harness: <b>170 skills, 163 agents, 40 rules and 62 commands</b> installed from one registry into Claude Code, OpenCode, Beacon and GitHub Copilot and used by <b>500+ engineers</b>, with zero npm dependencies and tag-gated releases.",
                     "Architected <b>ai-tools-library</b>: <b>29 MCP servers exposing 639 tools</b> for GitLab, Jenkins, Jira, Confluence, Grafana and automotive diagnostics, shipped through a <b>7-stage CI pipeline</b> with per-package coverage gates up to 98%.",
                     "Built <b>MTF Assistant</b>, a RAG chatbot (Django, React, LangChain, pgvector) answering questions on the internal test framework, used by <b>~600 testers and developers</b>.",
-                    "Own CI/CD (Jenkins, Zuul, GitLab CI/CD) from commit to production, with Nexus/Artifactory artifact management, TestGuide test orchestration, Docker and AWS deployment.",
-                    "Work directly with customers to gather requirements and present technical solutions; delivered a generative AI workshop to the whole development department (~100 engineers).",
+                    "Own CI/CD (Jenkins, Zuul, GitLab CI/CD) from commit to production, with Nexus/Artifactory artifact management, TestGuide test orchestration, Oracle and MongoDB in daily CI work, Docker and AWS deployment.",
+                    "Work directly with customers to gather requirements and present technical solutions; gave a conference on AI-assisted development to the whole development department (<b>100+ engineers</b>).",
                 ],
             ),
             (
@@ -148,7 +148,7 @@ CONTENT = {
                     "Reference engineer for Python ECU flashing and configuration tooling, enabling faster embedded-systems validation for automotive OEM programmes.",
                     "Automated build, test and deployment pipelines with Jenkins and Zuul (including Zuul on AWS), removing manual steps from the release process.",
                     "Built full-stack Python tools and dashboards adopted across engineering teams for data analysis and reporting.",
-                    "Trained developers and testers in ~20-person cohorts on Python testing (pytest, Robot Framework).",
+                    "Led <b>10+ workshop sessions</b> on Python and testing (pytest, Robot Framework), each for ~20 developers and testers.",
                 ],
             ),
         ],
@@ -171,7 +171,7 @@ CONTENT = {
                 ],
             ),
             (
-                "Automotive Test Case Generation Agents: from specification to traceable test suite",
+                "Automotive Test Case Generation Agents: from specification to traceable test suite (built at KPIT)",
                 "Python · LLM agents · RAG · knowledge graph · MCP · GitLab CI parallel jobs",
                 [
                     "AI agents that turn automotive specifications into test cases, grounded through RAG over the requirement text and a knowledge graph linking each requirement to its signals, functions and dependencies.",
@@ -180,7 +180,7 @@ CONTENT = {
             ),
         ],
         "projects_more": f"Full case studies with architecture and metrics: {link(PORTFOLIO, 'hamdijarboui.github.io/portfolio')}",
-        "teaching_intro": "5 years training engineers and students in Python, generative AI and agentic AI: 20-person cohorts, 10–30 hour programmes, <b>100% PCEP pass rate</b>, students placing 3 times at national AI competitions.",
+        "teaching_intro": "5 years training engineers and students in Python, generative AI and agentic AI: 20-person cohorts, 10–30 hour programmes, <b>100% PCEP pass rate</b>, students <b>winning 3 national AI competitions</b>.",
         "teaching": [
             "<b>Lead Instructor</b>, Python, Generative AI &amp; Computer Vision · 2S Training and Consulting · 2021 – Present",
             "<b>Python &amp; Applied AI Instructor</b> · ENETCOM Engineering School, Sfax · 2024 – Present",
@@ -188,7 +188,7 @@ CONTENT = {
             "<b>Python Instructor</b> · Smart Skills Academy · 2022 – 2023",
         ],
         "education": [
-            "<b>Engineering Degree, Industrial Computer Engineering</b> · National School of Electronics and Telecommunications (ENETCOM), Sfax · 2019 – 2024",
+            "<b>Engineering Degree, Industrial Computer Engineering</b> · National School of Electronics and Telecommunications (ENETCOM), Sfax · 2019 – 2022",
             "<b>Preparatory Cycle, Physics &amp; Chemistry</b> · Faculty of Sciences, Sfax · 2017 – 2019",
         ],
         "certs": [
@@ -203,7 +203,7 @@ CONTENT = {
         "file": "hamdi-jarboui-cv-fr.pdf",
         "title": "Hamdi Jarboui - Ingénieur Python Senior, Agents IA & DevOps - CV",
         "headline": "Ingénieur Python Senior  |  Agents IA &amp; automatisation LLM  |  DevOps &amp; CI/CD",
-        "location": "Sfax, Tunisie",
+        "location": "Sfax, Tunisie · Ouvert au télétravail",
         "portfolio_label": "Portfolio",
         "h": {
             "summary": "Profil",
@@ -218,12 +218,12 @@ CONTENT = {
         "summary": (
             "Ingénieur Python senior, plus de 4 ans d'expérience à livrer des systèmes en production de bout en bout, de "
             "l'architecture au déploiement, sur les agents IA, le DevOps et le logiciel embarqué automobile. Chez KPIT, je pilote "
-            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise : 170 skills (compétences), "
+            "la conception de l'automatisation par agents IA et j'ai construit le <b>harnais IA</b> de l'entreprise, utilisé par <b>plus de 500 ingénieurs</b> : 170 skills (compétences), "
             "163 agents, 40 règles et 62 commandes partagés entre quatre assistants de code IA, et une bibliothèque de <b>639 outils MCP</b> répartis sur 29 serveurs "
             "qui connecte les agents aux systèmes de CI, d'ALM, d'artefacts et de diagnostic. Maîtrise de l'intégration de LLM "
             "(Claude, OpenAI), du RAG, de l'orchestration multi-agents et de l'autonomie encadrée (validation humaine, outils "
-            "filtrés par niveau de risque). Responsable de la CI/CD du commit à la production, formateur d'environ 100 "
-            "ingénieurs en IA générative et enseignant Python &amp; IA appliquée à l'école d'ingénieurs ENETCOM."
+            "filtrés par niveau de risque). Responsable de la CI/CD du commit à la production, conférencier sur le développement assisté par l'IA devant plus de 100 "
+            "ingénieurs et enseignant Python &amp; IA appliquée à l'école d'ingénieurs ENETCOM."
         ),
         "skills": [
             ("Langages", "Python, TypeScript, SQL, Bash"),
@@ -237,7 +237,7 @@ CONTENT = {
             ("Observabilité", "Grafana, Prometheus, Kibana, Elastic, OpenTelemetry, Plotly Dash"),
             ("Automobile", "CAN/CAN-FD, DBC, UDS sur DoIP, ODX/PDX, AUTOSAR ARXML, A2L, DLT, MDF4, Lauterbach TRACE32, "
              "MISRA C:2012, ISO 26262, ASPICE, validation ECU"),
-            ("Données &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL ; machine learning, deep learning (TensorFlow), vision par ordinateur"),
+            ("Données &amp; ML", "PostgreSQL, SQLite, MySQL, MSSQL, Oracle, MongoDB ; machine learning, deep learning (TensorFlow), vision par ordinateur"),
             ("Intégrations", "GitLab, GitHub, Jira, Confluence, Microsoft Graph / 365, Slack, Microsoft Teams"),
         ],
         "jobs": [
@@ -246,11 +246,11 @@ CONTENT = {
                 "KPIT Technologies · Sfax, Tunisie · 07/2024 – aujourd'hui",
                 [
                     "Pilote la conception et la livraison de l'automatisation par agents IA en Python et définit la direction technique de l'équipe pour automatiser le travail d'ingénierie répétitif.",
-                    "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>170 skills, 163 agents, 40 règles et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot, sans aucune dépendance npm, avec des releases déclenchées par tag.",
+                    "Conception d'<b>Anvil</b>, le harnais IA de toute l'entreprise : <b>170 skills, 163 agents, 40 règles et 62 commandes</b> installés depuis un registre unique dans Claude Code, OpenCode, Beacon et GitHub Copilot et utilisés par <b>plus de 500 ingénieurs</b>, sans aucune dépendance npm, avec des releases déclenchées par tag.",
                     "Architecture d'<b>ai-tools-library</b> : <b>29 serveurs MCP exposant 639 outils</b> pour GitLab, Jenkins, Jira, Confluence, Grafana et le diagnostic automobile, livrés via un <b>pipeline CI en 7 étapes</b> avec des seuils de couverture par paquet allant jusqu'à 98&nbsp;%.",
                     "Conception de <b>MTF Assistant</b>, un chatbot RAG (Django, React, LangChain, pgvector) qui répond aux questions sur le framework de test interne, utilisé par <b>environ 600 testeurs et développeurs</b>.",
-                    "Responsable de la CI/CD (Jenkins, Zuul, GitLab CI/CD) du commit à la production : gestion des artefacts Nexus/Artifactory, orchestration des tests TestGuide, déploiement Docker et AWS.",
-                    "Travail direct avec les clients pour recueillir les besoins et présenter les solutions techniques ; animation d'un atelier IA générative pour tout le département de développement (environ 100 ingénieurs).",
+                    "Responsable de la CI/CD (Jenkins, Zuul, GitLab CI/CD) du commit à la production : gestion des artefacts Nexus/Artifactory, orchestration des tests TestGuide, Oracle et MongoDB au quotidien dans la CI, déploiement Docker et AWS.",
+                    "Travail direct avec les clients pour recueillir les besoins et présenter les solutions techniques ; conférence sur le développement assisté par l'IA pour tout le département de développement (<b>plus de 100 ingénieurs</b>).",
                 ],
             ),
             (
@@ -260,7 +260,7 @@ CONTENT = {
                     "Ingénieur de référence pour l'outillage Python de flashage et de configuration des ECU, accélérant la validation des systèmes embarqués pour des constructeurs automobiles.",
                     "Automatisation des pipelines de build, de test et de déploiement avec Jenkins et Zuul (y compris Zuul sur AWS), supprimant les étapes manuelles du processus de release.",
                     "Développement d'outils Python full-stack et de tableaux de bord adoptés par les équipes d'ingénierie pour l'analyse de données et le reporting.",
-                    "Formation de développeurs et de testeurs par groupes d'environ 20 personnes aux tests Python (pytest, Robot Framework).",
+                    "Animation de <b>plus de 10 sessions d'ateliers</b> Python et tests (pytest, Robot Framework), chacune pour environ 20 développeurs et testeurs.",
                 ],
             ),
         ],
@@ -283,7 +283,7 @@ CONTENT = {
                 ],
             ),
             (
-                "Agents de génération de cas de test automobile : de la spécification à une suite de tests traçable",
+                "Agents de génération de cas de test automobile : de la spécification à une suite de tests traçable (KPIT)",
                 "Python · agents LLM · RAG · graphe de connaissances · MCP · jobs GitLab CI parallèles",
                 [
                     "Agents IA qui transforment les spécifications automobiles en cas de test, ancrés par du RAG sur le texte des exigences et par un graphe de connaissances reliant chaque exigence à ses signaux, fonctions et dépendances.",
@@ -292,7 +292,7 @@ CONTENT = {
             ),
         ],
         "projects_more": f"Études de cas complètes, architecture et métriques : {link(PORTFOLIO, 'hamdijarboui.github.io/portfolio')}",
-        "teaching_intro": "5 ans de formation d'ingénieurs et d'étudiants en Python, IA générative et IA agentique : groupes de 20 personnes, programmes de 10 à 30 heures, <b>100&nbsp;% de réussite à la certification PCEP</b>, étudiants classés 3 fois lors de compétitions nationales d'IA.",
+        "teaching_intro": "5 ans de formation d'ingénieurs et d'étudiants en Python, IA générative et IA agentique : groupes de 20 personnes, programmes de 10 à 30 heures, <b>100&nbsp;% de réussite à la certification PCEP</b>, étudiants <b>lauréats de 3 compétitions nationales d'IA</b>.",
         "teaching": [
             "<b>Formateur principal</b>, Python, IA générative &amp; vision par ordinateur · 2S Training and Consulting · 2021 – aujourd'hui",
             "<b>Enseignant Python &amp; IA appliquée</b> · École d'ingénieurs ENETCOM, Sfax · 2024 – aujourd'hui",
@@ -300,7 +300,7 @@ CONTENT = {
             "<b>Formateur Python</b> · Smart Skills Academy · 2022 – 2023",
         ],
         "education": [
-            "<b>Diplôme d'ingénieur en informatique industrielle</b> · École Nationale d'Électronique et des Télécommunications (ENETCOM), Sfax · 2019 – 2024",
+            "<b>Diplôme d'ingénieur en informatique industrielle</b> · École Nationale d'Électronique et des Télécommunications (ENETCOM), Sfax · 2019 – 2022",
             "<b>Cycle préparatoire, physique &amp; chimie</b> · Faculté des Sciences de Sfax · 2017 – 2019",
         ],
         "certs": [
@@ -309,7 +309,7 @@ CONTENT = {
             "University of Washington (Coursera) : Machine Learning Specialization",
             "Microsoft MTA : Programming Using Python &amp; Java · Certiprof : Scrum Foundation (SFPC)",
         ],
-        "languages": "Arabe : langue maternelle · Français : courant, niveau professionnel complet · Anglais : compétence professionnelle de travail",
+        "languages": "Arabe : langue maternelle · Français : courant, niveau professionnel complet · Anglais : compétence professionnelle",
     },
 }
 

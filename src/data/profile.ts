@@ -142,7 +142,7 @@ export const profile = {
     },
     {
       category: 'Databases',
-      items: ['PostgreSQL + pgvector', 'SQLite (WAL, leased task stores)', 'MySQL', 'MSSQL'],
+      items: ['PostgreSQL + pgvector', 'SQLite (WAL, leased task stores)', 'MySQL', 'MSSQL', 'Oracle', 'MongoDB'],
     },
   ] satisfies SkillGroup[],
   experience: [
@@ -155,11 +155,11 @@ export const profile = {
       bullets: [
         'Lead the design and delivery of AI agent-based automation systems in Python, working with the team to automate repetitive engineering work.',
         'Architect full-stack Python applications end-to-end — back-end services and APIs through to internal tooling interfaces.',
-        'Own CI/CD (Jenkins, Zuul including Zuul on AWS, GitLab CI/CD) from commit to production on major automotive OEM programs, with Nexus/Artifactory artifact management, TestGuide test orchestration, Python test automation and Docker containerization.',
+        'Own CI/CD (Jenkins, Zuul including Zuul on AWS, GitLab CI/CD) from commit to production on major automotive OEM programs, with Nexus/Artifactory artifact management, TestGuide test orchestration, Oracle and MongoDB in daily CI work, Python test automation and Docker containerization.',
         'Partner with cross-functional teams on containerization, cloud deployment (AWS), and monitoring, improving release reliability beyond individual project scope.',
         'Build Python dashboards and data-visualization tooling adopted by engineering leads across automotive client programs for day-to-day decisions.',
         'Work directly with customers to gather requirements, present technical solutions, and align deliverables.',
-        'Delivered a generative AI workshop to the entire development department (~100 engineers), plus recurring hands-on sessions training developers and QA testers in cohorts of ~20.',
+        'Gave a conference on AI-assisted development to the entire development department (100+ engineers).',
       ],
     },
     {
@@ -173,7 +173,7 @@ export const profile = {
         'Automated build, test and deployment pipelines with Jenkins and Zuul (including Zuul on AWS) for automotive OEM client programs, removing manual steps from the release process, with Python test automation and Docker-based containerization.',
         'Built full-stack Python tools and dashboards adopted across engineering teams for data analysis and reporting.',
         'Worked directly with customers to gather requirements, present technical solutions, and align deliverables.',
-        'Ran hands-on workshops training developers and testers in ~20-person cohorts on Python testing (pytest, Robot Framework).',
+        'Led 10+ hands-on workshop sessions on Python and testing (pytest, Robot Framework), each for ~20 developers and testers.',
       ],
     },
   ] satisfies ExperienceEntry[],
@@ -190,7 +190,7 @@ export const profile = {
       org: 'ENETCOM Engineering School, Sfax',
       period: '2024 – Present',
       description:
-        'Selected to teach Python, generative AI, prompt engineering, and agentic AI to engineering students at a national engineering school. Coached student teams to 3 placements at national AI competitions.',
+        'Selected to teach Python, generative AI, prompt engineering, and agentic AI to engineering students at a national engineering school. Coached student teams to 3 national AI competition wins.',
     },
     {
       role: 'Python & Generative AI Instructor',
@@ -214,7 +214,7 @@ export const profile = {
       role: 'Generative AI Instructor',
       org: 'KPIT Technologies',
       period: '2024 – Present',
-      description: 'Deliver generative AI training across the engineering department, including a flagship department-wide workshop and recurring hands-on sessions — internal upskilling delivered alongside full-time engineering work.',
+      description: 'Deliver generative AI training across the engineering department, including a department-wide conference on AI-assisted development (100+ engineers) — internal upskilling delivered alongside full-time engineering work.',
     },
   ] satisfies TeachingEntry[],
   certifications: [
@@ -227,8 +227,8 @@ export const profile = {
     'Certiprof — Scrum Foundation (SFPC)',
   ],
   achievements: [
-    'Trained ~100 engineers in a single department-wide generative AI workshop; 20-person cohorts across 10–30 hour programmes since 2021',
-    'Students placed 3 times at national AI competitions',
+    'Gave a conference on AI-assisted development to 100+ engineers; led 10+ Python and testing workshop sessions of ~20 engineers each; 20-person cohorts across 10–30 hour programmes since 2021',
+    'Students won 3 national AI competitions',
     '100% PCEP certification pass rate — every engineer trained through the in-company Python programme achieved Python Institute PCEP certification',
   ],
   languages: [
@@ -240,7 +240,7 @@ export const profile = {
     {
       degree: 'Engineering Degree, Industrial Computer Engineering',
       org: 'National School of Electronics and Telecommunications (ENETCOM), Sfax',
-      period: '2019 – 2024',
+      period: '2019 – 2022',
     },
     {
       degree: 'Preparatory Cycle, Physics & Chemistry',
