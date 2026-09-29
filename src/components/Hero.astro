@@ -2,22 +2,80 @@
 import { profile } from '../data/profile';
 import ResumeDownloads from './ResumeDownloads.astro';
 import NeuralField from './NeuralField.astro';
+import HeroOrbit from './HeroOrbit.astro';
+
+const metrics = [
+  { value: 500, suffix: '+', label: 'engineers use the AI harness' },
+  { value: 639, suffix: '', label: 'MCP tools across 26 servers' },
+  { value: 424, suffix: '', label: 'skills, agents, rules & commands' },
+  { value: 740, suffix: '', label: 'tests behind human-approved merges' },
+];
+
+const stack = [
+  'Claude Code', 'OpenCode', 'GitHub Copilot', 'Model Context Protocol', 'Python', 'TypeScript',
+  'GitLab CI', 'Jenkins', 'Zuul', 'Jira', 'Confluence', 'Docker', 'AWS', 'RAG', 'Multi-agent squads',
+];
 ---
 
 <section class="hero">
   <NeuralField />
+  <div class="hero-aurora" aria-hidden="true"></div>
+
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="sheet-label">Sfax, Tunisia — open to remote senior roles</p>
-      <h1>
-        Hamdi Jarboui builds <span class="ai-text">AI-agent systems</span> that ship real software, under human supervision.
-      </h1>
-      <p class="lede">{profile.summary}</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#work">See the work</a>
-        <a class="btn" href="#squad-demo">Watch the agent demo</a>
-        <ResumeDownloads />
+      <div class="status-row">
+        <span class="status-pill"><span class="status-dot" aria-hidden="true"></span>Open to remote senior roles</span>
+        <span class="status-meta">{profile.location}</span>
       </div>
+
+      <h1>
+        <span class="h1-name">Hamdi Jarboui</span>
+        builds <span class="ai-text">AI-agent systems</span> that ship real software,
+        <span class="h1-soft">under human supervision.</span>
+      </h1>
+
+      <p class="lede">{profile.summary}</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="#work">
+          See the work
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#squad-demo">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 12 12" width="9" height="9"><path d="M3 1.8v8.4L10 6z" fill="currentColor" /></svg></span>
+          Watch the agent demo
+        </a>
+      </div>
+
+      <div class="cv-row">
+        <span class="cv-label">Resume, 2 pages</span>
+        <ResumeDownloads variant="compact" />
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <HeroOrbit />
+    </div>
+  </div>
+
+  <div class="wrap">
+    <ul class="metrics" aria-label="Key numbers">
+      {metrics.map((m) => (
+        <li class="metric">
+          <span class="metric-value"><span data-count={m.value}>{m.value}</span>{m.suffix}</span>
+          <span class="metric-label">{m.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="ticker" aria-label="Tools and platforms I work with">
+    <div class="ticker-track">
+      {[0, 1].map((copy) => (
+        <ul class="ticker-list" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {stack.map((item) => <li>{item}</li>)}
+        </ul>
+      ))}
     </div>
   </div>
 </section>
@@ -26,7 +84,21 @@ import NeuralField from './NeuralField.astro';
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(3rem, 7vw, var(--space-2xl)) var(--space-xl);
+    padding-top: clamp(2rem, 4.5vw, 3.5rem);
+    padding-bottom: var(--space-lg);
+  }
+
+  /* Two slow-drifting light pools in the brand cyan and blue. */
+  .hero-aurora {
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 120%;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 42% at 72% 38%, rgba(61, 139, 255, 0.2), transparent 70%),
+      radial-gradient(30% 36% at 22% 18%, rgba(72, 215, 255, 0.13), transparent 70%);
+    filter: blur(10px);
+    animation: aurora 18s ease-in-out infinite alternate;
   }
 
   .hero-grid {
@@ -34,39 +106,340 @@ import NeuralField from './NeuralField.astro';
     z-index: 1;
     display: grid;
     gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .hero-copy,
+  .hero-visual {
+    min-width: 0;
+  }
+
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 0.9rem;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.4em 0.95em 0.4em 0.75em;
+    border-radius: 999px;
+    border: 1px solid rgba(94, 234, 212, 0.4);
+    background: rgba(94, 234, 212, 0.08);
+    color: #5eead4;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+  }
+
+  .status-dot {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #5eead4;
+  }
+
+  .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid #5eead4;
+    animation: ping 2s ease-out infinite;
+  }
+
+  .status-meta {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.04em;
   }
 
   .hero-copy h1 {
-    font-size: clamp(1.9rem, 4.6vw, 3.3rem);
-    margin-block: var(--space-sm) var(--space-md);
-    max-width: 19ch;
+    font-size: clamp(2rem, 7.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin-block: 1.4rem 1.2rem;
+    max-width: 20ch;
+  }
+
+  /* Keep the neural field quiet behind the orbit and the copy. */
+  .hero :global(.neural-field) {
+    opacity: 0.45;
+  }
+
+  .h1-name {
+    display: block;
+    width: fit-content;
+    margin-bottom: 0.1em;
+    background: linear-gradient(180deg, #ffffff 30%, #b9cde3 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .h1-soft {
+    color: var(--color-ink-muted);
   }
 
   .lede {
     color: var(--color-ink-muted);
-    font-size: 1.05rem;
-    max-width: 60ch;
+    font-size: 1.06rem;
+    max-width: 52ch;
   }
 
   .hero-actions {
     display: flex;
-    gap: var(--space-xs);
-    margin-top: var(--space-lg);
     flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-md);
   }
 
-  .hero-copy {
+  .btn-lg {
+    padding: 0.95em 1.5em;
+    border-radius: 999px;
+  }
+
+  .btn-ghost {
+    background: rgba(18, 32, 51, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .play {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gradient-ai);
+    color: #04161d;
+  }
+
+  .cv-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-md);
+  }
+
+  .cv-label {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .metrics {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: var(--space-md) 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(18, 32, 51, 0.72), rgba(11, 20, 32, 0.72));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+
+  /* A thin gradient edge along the top of the metrics panel. */
+  .metrics::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: var(--gradient-ai);
+    opacity: 0.8;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    padding: 1.2rem 1.4rem;
     min-width: 0;
   }
 
+  .metric + .metric {
+    border-left: 1px solid var(--color-line);
+  }
+
+  .metric-value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.1;
+    background: var(--gradient-ai);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .metric-label {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink-muted);
+  }
+
+  .ticker {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-md);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker 48s linear infinite;
+  }
+
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
+  }
+
+  .ticker-list {
+    display: flex;
+    gap: 2.4rem;
+    padding-right: 2.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+  }
+
+  .ticker-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.4rem;
+  }
+
+  .ticker-list li::after {
+    content: '◆';
+    font-size: 0.5rem;
+    color: var(--color-cyan-dim);
+  }
+
   @media (min-width: 1000px) {
-    .hero-copy h1 {
-      font-size: clamp(2.6rem, 4.2vw, 3.6rem);
-      max-width: 24ch;
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-md);
     }
 
-    .lede {
-      font-size: 1.1rem;
+    .hero-copy h1 {
+      font-size: clamp(2.5rem, 3.5vw, 3.25rem);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric:nth-child(3) {
+      border-left: none;
+    }
+
+    .metric:nth-child(n + 3) {
+      border-top: 1px solid var(--color-line);
+    }
+
+    .metric {
+      padding: 1rem 1.1rem;
+    }
+  }
+
+  @media (max-width: 999px) {
+    .hero-visual {
+      max-width: 460px;
+      width: 100%;
+      margin-inline: auto;
+    }
+  }
+
+  @keyframes ping {
+    from { transform: scale(0.6); opacity: 0.9; }
+    to { transform: scale(1.8); opacity: 0; }
+  }
+
+  @keyframes aurora {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(-3%, 4%, 0) scale(1.08); }
+  }
+
+  @keyframes ticker {
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-aurora,
+    .status-dot::after,
+    .ticker-track {
+      animation: none;
+    }
+
+    .ticker-track {
+      width: auto;
+      flex-wrap: wrap;
+    }
+
+    .ticker-list[aria-hidden='true'] {
+      display: none;
+    }
+
+    .ticker-list {
+      flex-wrap: wrap;
+      gap: 0.6rem 1.6rem;
+      white-space: normal;
     }
   }
 </style>
+
+<script>
+  // Count the metrics up from zero the first time they scroll into view.
+  // The real numbers are in the HTML, so no-JS and reduced motion show them as-is.
+  const counters = document.querySelectorAll<HTMLElement>('.metrics [data-count]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && counters.length && 'IntersectionObserver' in window) {
+    const run = (el: HTMLElement) => {
+      const target = Number(el.dataset.count);
+      if (!Number.isFinite(target)) return;
+      const start = performance.now();
+      const duration = 1400;
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = String(Math.round(target * eased));
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          run(entry.target as HTMLElement);
+          io.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    counters.forEach((el) => io.observe(el));
+  }
+</script>

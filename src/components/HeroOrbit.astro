@@ -1,0 +1,412 @@
+---
+/**
+ * Hero visual: the AI harness as an orbit. The core is the harness; the four
+ * systems around it are real links to their case studies. Rings turn, signals
+ * run along the spokes and a tool-call chip cycles through real MCP calls.
+ * Everything moving stops under prefers-reduced-motion.
+ */
+import { withBase } from '../utils/url';
+
+const nodes = [
+  { slug: 'hcode', tag: 'L1 · Agent', name: 'HCode', metric: 'Plans, codes, verifies', pos: 'n1', x: 108, y: 128 },
+  { slug: 'anvil', tag: 'L2 · Know-how', name: 'Anvil', metric: '424 components', pos: 'n2', x: 412, y: 124 },
+  { slug: 'ai-tools-library', tag: 'L3 · Tools', name: 'ai-tools-library', metric: '639 MCP tools', pos: 'n3', x: 414, y: 396 },
+  { slug: 'opencode-autodev', tag: 'Squad', name: 'opencode-autodev', metric: 'Human-approved merges', pos: 'n4', x: 106, y: 400 },
+];
+
+const toolCalls = [
+  'mcp__gitlab__get_pipeline',
+  'mcp__jira__get_issue',
+  'mcp__dbc__get_signal',
+  'mcp__jenkins__get_build_log',
+  'mcp__confluence__search',
+];
+---
+
+<div class="orbit" role="group" aria-label="The AI harness and the systems built around it">
+  <svg class="orbit-svg" viewBox="0 0 520 520" aria-hidden="true">
+    <defs>
+      <radialGradient id="orbit-halo" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#48d7ff" stop-opacity="0.22" />
+        <stop offset="45%" stop-color="#3d8bff" stop-opacity="0.08" />
+        <stop offset="100%" stop-color="#3d8bff" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="orbit-stroke" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#48d7ff" />
+        <stop offset="100%" stop-color="#3d8bff" />
+      </linearGradient>
+      <radialGradient id="orbit-core" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#16324d" />
+        <stop offset="100%" stop-color="#0b1420" />
+      </radialGradient>
+    </defs>
+
+    <circle cx="260" cy="260" r="256" fill="url(#orbit-halo)" />
+
+    <g class="ring ring-outer">
+      <circle cx="260" cy="260" r="232" class="ring-line dashed" />
+      <circle cx="492" cy="260" r="3.5" class="sat" />
+      <circle cx="28" cy="260" r="2.5" class="sat sat-blue" />
+      <circle cx="260" cy="28" r="2" class="sat" />
+    </g>
+    <g class="ring ring-mid">
+      <circle cx="260" cy="260" r="170" class="ring-line" />
+      <circle cx="260" cy="90" r="3" class="sat sat-blue" />
+      <circle cx="380" cy="380" r="2.5" class="sat" />
+    </g>
+    <g class="ring ring-inner">
+      <circle cx="260" cy="260" r="104" class="ring-line dashed fine" />
+    </g>
+
+    {nodes.map((n, i) => (
+      <g>
+        <line x1="260" y1="260" x2={n.x} y2={n.y} class="spoke" />
+        <line x1="260" y1="260" x2={n.x} y2={n.y} class="signal" style={`animation-delay: ${i * 0.7}s`} />
+        <circle cx={n.x} cy={n.y} r="4" class="anchor" />
+      </g>
+    ))}
+
+    <circle cx="260" cy="260" r="70" class="core-pulse" />
+    <circle cx="260" cy="260" r="62" fill="url(#orbit-core)" />
+    <circle cx="260" cy="260" r="62" class="core-ring" />
+  </svg>
+
+  <div class="core-label" aria-hidden="true">
+    <span class="core-kicker">AI harness</span>
+    <span class="core-main">[HJ]</span>
+  </div>
+
+  {nodes.map((n) => (
+    <a class={`node ${n.pos}`} href={withBase(`/projects/${n.slug}/`)} style={`left: ${(n.x / 520) * 100}%; top: ${(n.y / 520) * 100}%`}>
+      <span class="node-tag">{n.tag}</span>
+      <span class="node-name">{n.name}</span>
+      <span class="node-metric">{n.metric}</span>
+    </a>
+  ))}
+
+  <div class="chip chip-tool" aria-hidden="true">
+    <span class="chip-prompt">›</span>
+    <span class="chip-call" data-calls={JSON.stringify(toolCalls)}>{toolCalls[0]}</span>
+    <span class="chip-ok">✓</span>
+  </div>
+  <div class="chip chip-gate" aria-hidden="true">
+    <span class="gate-dot"></span>
+    merge waits for human approval
+  </div>
+</div>
+
+<style>
+  .orbit {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    container-type: inline-size;
+  }
+
+  .orbit-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ring {
+    transform-box: view-box;
+    transform-origin: 260px 260px;
+  }
+
+  .ring-outer {
+    animation: spin 70s linear infinite;
+  }
+
+  .ring-mid {
+    animation: spin 110s linear infinite reverse;
+  }
+
+  .ring-line {
+    fill: none;
+    stroke: rgba(148, 180, 214, 0.22);
+    stroke-width: 1;
+  }
+
+  .ring-line.dashed {
+    stroke-dasharray: 2 7;
+    stroke: rgba(72, 215, 255, 0.35);
+  }
+
+  .ring-line.fine {
+    stroke: rgba(148, 180, 214, 0.28);
+  }
+
+  .sat {
+    fill: #48d7ff;
+    filter: drop-shadow(0 0 6px rgba(72, 215, 255, 0.9));
+  }
+
+  .sat-blue {
+    fill: #3d8bff;
+    filter: drop-shadow(0 0 6px rgba(61, 139, 255, 0.9));
+  }
+
+  .spoke {
+    stroke: rgba(148, 180, 214, 0.22);
+    stroke-width: 1;
+  }
+
+  .signal {
+    stroke: url(#orbit-stroke);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 14 240;
+    stroke-dashoffset: 254;
+    animation: signal 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    filter: drop-shadow(0 0 4px rgba(72, 215, 255, 0.8));
+  }
+
+  .anchor {
+    fill: #0b1420;
+    stroke: #48d7ff;
+    stroke-width: 1.5;
+  }
+
+  .core-ring {
+    fill: none;
+    stroke: url(#orbit-stroke);
+    stroke-width: 1.6;
+  }
+
+  .core-pulse {
+    fill: none;
+    stroke: rgba(72, 215, 255, 0.55);
+    stroke-width: 1;
+    transform-box: view-box;
+    transform-origin: 260px 260px;
+    animation: pulse 3.2s ease-out infinite;
+  }
+
+  .core-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    pointer-events: none;
+  }
+
+  .core-kicker {
+    font-family: var(--font-mono);
+    font-size: clamp(0.5rem, 1.9cqw, 0.66rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .core-main {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: clamp(1rem, 4.6cqw, 1.6rem);
+    background: var(--gradient-ai);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    min-width: clamp(96px, 27cqw, 150px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 8px;
+    background: rgba(13, 26, 42, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    animation: float 7s ease-in-out infinite;
+  }
+
+  .n2 { animation-delay: -1.8s; }
+  .n3 { animation-delay: -3.6s; }
+  .n4 { animation-delay: -5.4s; }
+
+  .node:hover,
+  .node:focus-visible {
+    border-color: var(--color-cyan);
+    background: rgba(16, 36, 58, 0.95);
+    box-shadow: 0 0 0 1px rgba(72, 215, 255, 0.25), 0 12px 34px -10px rgba(61, 139, 255, 0.55);
+  }
+
+  .node-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(0.52rem, 1.9cqw, 0.64rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-cyan);
+  }
+
+  .node-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.66rem, 3cqw, 0.98rem);
+    color: var(--color-ink);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  .node-metric {
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 2cqw, 0.68rem);
+    color: var(--color-ink-muted);
+  }
+
+  .chip {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    white-space: nowrap;
+    padding: 0.35em 0.8em;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: clamp(0.56rem, 2.1cqw, 0.72rem);
+    background: rgba(11, 20, 32, 0.9);
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-ink-muted);
+  }
+
+  .chip-tool {
+    top: 1.5%;
+  }
+
+  .chip-gate {
+    bottom: 1.5%;
+    border-color: rgba(255, 180, 84, 0.4);
+    color: var(--color-amber);
+  }
+
+  .chip-prompt {
+    color: var(--color-cyan);
+  }
+
+  .chip-call {
+    color: var(--color-ink);
+    transition: opacity 0.3s ease;
+  }
+
+  .chip-call.is-swapping {
+    opacity: 0;
+  }
+
+  .chip-ok {
+    color: #5eead4;
+  }
+
+  .gate-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-amber);
+    box-shadow: 0 0 8px rgba(255, 180, 84, 0.9);
+    animation: blink 1.6s ease-in-out infinite;
+  }
+
+  @container (max-width: 400px) {
+    .node-metric {
+      display: none;
+    }
+
+    .node {
+      padding: 0.4rem 0.5rem;
+    }
+  }
+
+  @container (max-width: 300px) {
+    .node-name {
+      font-size: 0.6rem;
+    }
+
+    .node-tag {
+      font-size: 0.48rem;
+    }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes signal {
+    from { stroke-dashoffset: 254; opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    to { stroke-dashoffset: 0; opacity: 0; }
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); opacity: 0.8; }
+    to { transform: scale(1.55); opacity: 0; }
+  }
+
+  @keyframes float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -5px; }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring-outer,
+    .ring-mid,
+    .signal,
+    .core-pulse,
+    .node,
+    .gate-dot {
+      animation: none;
+    }
+
+    .signal {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  // Cycle the tool-call chip through real MCP calls (skipped for reduced motion).
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('.chip-call[data-calls]').forEach((el) => {
+    if (reduce) return;
+    let calls: string[] = [];
+    try {
+      calls = JSON.parse(el.dataset.calls ?? '[]') as string[];
+    } catch {
+      return;
+    }
+    if (calls.length < 2) return;
+    let i = 0;
+    window.setInterval(() => {
+      if (document.hidden) return;
+      el.classList.add('is-swapping');
+      window.setTimeout(() => {
+        i = (i + 1) % calls.length;
+        el.textContent = calls[i] ?? '';
+        el.classList.remove('is-swapping');
+      }, 300);
+    }, 2600);
+  });
+</script>
