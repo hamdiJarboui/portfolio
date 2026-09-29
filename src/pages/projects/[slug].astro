@@ -6,6 +6,7 @@ import CornerMarks from '../../components/CornerMarks.astro';
 import AnvilHarness from '../../components/AnvilHarness.astro';
 import NeuralField from '../../components/NeuralField.astro';
 import SquadRoom from '../../components/SquadRoom.astro';
+import CatalogProof from '../../components/CatalogProof.astro';
 import { projects } from '../../data/projects';
 import { harnessGroup } from '../../data/harness';
 import { withBase } from '../../utils/url';
@@ -92,6 +93,14 @@ const harnessLayers = projects
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+    )}
+
+    {project.catalogProof && (
+      <section class="section replay-section">
+        <div class="wrap">
+          <CatalogProof headingLevel="h2" />
         </div>
       </section>
     )}
