@@ -100,7 +100,7 @@ export const projects: Project[] = [
     source: { label: 'Internal KPIT system · code not public' },
     name: 'Anvil',
     tagline: "The know-how layer of the company's AI harness: one package that gives every engineer the same 170 skills, 163 agents, 40 rules and 62 commands, in whichever of four AI coding hosts they use, wired into the tools the company actually runs.",
-    summary: "Anvil is the middle layer of the AI harness: the shared skills and agents that every engineer's assistant works from. Instead of every team prompting a general-purpose assistant from scratch, Anvil ships a shared, versioned layer of company knowledge and workflow: 170 skills, 163 agents, 40 rules and 62 slash commands, covering code review, CI failure diagnosis, requirements traceability, test analysis, MISRA/ISO 26262/ASPICE compliance and automotive diagnostics. One canonical registry installs that layer into Claude Code, OpenCode, Beacon and GitHub Copilot, so a developer on any of the four hosts gets the same capabilities and the same guardrails. Through MCP servers, the agents read live evidence from GitLab, GitHub, Jenkins, Zuul, Jira, Confluence, Nexus, Artifactory, TestGuide, TRACE32, Grafana and Elastic, plus DLT traces, CAN logs and ARXML/A2L/ODX files, instead of guessing. Every push runs a three-stage GitLab CI pipeline (structural verification of every skill and agent, a 19-suite Node.js/Python test battery, tag-gated npm publishing), and the whole toolkit has zero npm runtime or dev dependencies.",
+    summary: "Anvil is the middle layer of the AI harness: the shared skills and agents that every engineer's assistant works from, used by more than 500 engineers. Instead of every team prompting a general-purpose assistant from scratch, Anvil ships a shared, versioned layer of company knowledge and workflow: 170 skills, 163 agents, 40 rules and 62 slash commands, covering code review, CI failure diagnosis, requirements traceability, test analysis, MISRA/ISO 26262/ASPICE compliance and automotive diagnostics. One canonical registry installs that layer into Claude Code, OpenCode, Beacon and GitHub Copilot, so a developer on any of the four hosts gets the same capabilities and the same guardrails. Through MCP servers, the agents read live evidence from GitLab, GitHub, Jenkins, Zuul, Jira, Confluence, Nexus, Artifactory, TestGuide, TRACE32, Grafana and Elastic, plus DLT traces, CAN logs and ARXML/A2L/ODX files, instead of guessing. Every push runs a three-stage GitLab CI pipeline (structural verification of every skill and agent, a 19-suite Node.js/Python test battery, tag-gated npm publishing), and the whole toolkit has zero npm runtime or dev dependencies.",
     role: "I'm the sole developer: every commit in the repo's history is mine. It was built at KPIT, lives on KPIT's internal GitLab, and grew from internal tooling into the shared AI layer described here. I designed and own the CLI, the host adapters, the CI/CD pipeline, the guardrail model and the component registry end to end, and I wrote the large majority of the 170 skills and 163 agents. 21 skills come from external skill packs; LICENSE-THIRD-PARTY.md tracks each one by exact origin commit and license status rather than passing them off as original work.",
     ownership: 'AI Harness · Layer 2 · solo author at KPIT',
     stack: [
@@ -118,7 +118,7 @@ export const projects: Project[] = [
       { value: '435', label: 'skills, agents, rules & commands' },
       { value: '4', label: 'AI hosts, one registry' },
       { value: '8', label: 'tool domains wired in' },
-      { value: '0', label: 'npm dependencies' },
+      { value: '500+', label: 'engineers using it' },
     ],
     valueProps: [
       { headline: 'One AI layer for the whole company', body: "Every engineer gets the same skills, agents and guardrails whether they work in Claude Code, OpenCode, Beacon or GitHub Copilot. A single registry, .claude-plugin/components.json, drives all four host adapters, so the company standardises its AI-assisted workflow once instead of each team maintaining its own prompts and toolchain." },
@@ -281,12 +281,12 @@ export const projects: Project[] = [
   },
   {
     slug: 'testcase-generation-agents',
-    source: { label: 'Private repository · code not public' },
+    source: { label: 'Internal KPIT system · code not public' },
     name: 'Automotive Test Case Generation Agents',
     tagline: 'AI agents that read automotive specifications and write the test cases for them: grounded in the specs through RAG and a knowledge graph, equipped with MCP tools, and fanned out across parallel GitLab CI workers so a whole specification is covered in one pipeline run.',
     summary: "Writing test cases from automotive specifications is slow, repetitive expert work: every requirement has to be read, its signals, conditions and dependencies understood, and a traceable test case written for it. This project turns that into a pipeline of AI agents. Specifications are ingested and indexed twice: as embeddings for retrieval-augmented generation (RAG), so an agent always works from the actual requirement text, and as a knowledge graph that links requirements to the functions, signals, interfaces and other requirements they depend on, so an agent sees the context around a requirement and not just the paragraph itself. Generation agents then use tools, exposed through MCP servers, to look up what they need while they write: related requirements, signal and interface definitions, and existing test cases. The work is split into independent batches and run as parallel GitLab CI jobs, so the whole specification is processed at once instead of one requirement at a time, and the results are merged back into a single test suite where every test case traces to the requirement it verifies.",
-    role: 'I designed and built the generation pipeline: specification ingestion, the RAG index and knowledge graph, the agents and their MCP tools, and the parallel GitLab CI orchestration.',
-    ownership: 'Automotive AI agents',
+    role: 'Built at KPIT. I designed and built the generation pipeline: specification ingestion, the RAG index and knowledge graph, the agents and their MCP tools, and the parallel GitLab CI orchestration.',
+    ownership: 'Automotive AI agents · built at KPIT',
     stack: [
       'Python',
       'LLM agents with tool / function calling',
