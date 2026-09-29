@@ -10,6 +10,7 @@ import TeachingList from '../components/TeachingList.astro';
 import Credentials from '../components/Credentials.astro';
 import HarnessStack from '../components/HarnessStack.astro';
 import SquadRoom from '../components/SquadRoom.astro';
+import CatalogProof from '../components/CatalogProof.astro';
 import { projects, type Project } from '../data/projects';
 
 const harnessLayers = projects
@@ -48,6 +49,9 @@ const figIndex = (project: Project) => projects.indexOf(project);
 
         <div class="group-slot">
           <HarnessStack layers={harnessLayers} figIndex={figIndex} />
+        </div>
+        <div class="group-slot">
+          <CatalogProof />
         </div>
 
         <div class="group-head">

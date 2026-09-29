@@ -1,0 +1,177 @@
+---
+/**
+ * Proof from production: a screenshot of the Anvil catalog as engineers see
+ * it, with the numbers it reports. Keep these figures in step with the
+ * catalog (source of truth for the Anvil and ai-tools-library counts).
+ */
+import CornerMarks from './CornerMarks.astro';
+import { withBase } from '../utils/url';
+
+interface Props {
+  /** Heading level inside the page outline. */
+  headingLevel?: 'h3' | 'h2';
+}
+
+const { headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+
+const stats = [
+  { value: '994', label: 'components indexed in one search' },
+  { value: '160', label: 'skills' },
+  { value: '162', label: 'agents' },
+  { value: '26', label: 'MCP servers' },
+  { value: '639', label: 'MCP tools' },
+  { value: '22', label: 'standards' },
+  { value: '42', label: 'collections' },
+  { value: '197', label: 'tool references checked every build' },
+];
+const src = withBase('/anvil-catalog.webp');
+---
+
+<figure class="catalog-proof blueprint-panel" aria-labelledby="catalog-proof-title">
+  <CornerMarks />
+  <div class="proof-head">
+    <span class="proof-chip">
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5" /></svg>
+      Live in production
+    </span>
+    <span class="proof-where">The Anvil catalog, as engineers see it</span>
+  </div>
+  <Heading class="proof-title" id="catalog-proof-title">One catalog for every skill, agent and MCP tool, always in sync with the code</Heading>
+  <a class="shot" href={src} target="_blank" rel="noopener">
+    <img
+      src={src}
+      width="1721"
+      height="908"
+      loading="lazy"
+      decoding="async"
+      alt="Screenshot of the Anvil catalog: 160 skills, 162 agents, 26 MCP servers, 639 tools, 22 standards and 42 collections, with a dependency graph of 26 servers and 20 wired agents, 197 tool references checked on every build and 994 components searchable in one place."
+    />
+  </a>
+  <ul class="proof-stats">
+    {stats.map((s) => (
+      <li><span class="v">{s.value}</span><span class="l">{s.label}</span></li>
+    ))}
+  </ul>
+  <figcaption>
+    The catalog reads the Anvil and ai-tools-library repositories on every build, resolves every
+    <code>mcp__server__tool</code> reference an agent makes (dead references are published, not hidden),
+    and generates each install command from what the component actually declares. Its dependency graph
+    shows 20 agents wired to the 26 MCP servers.
+  </figcaption>
+</figure>
+
+<style>
+  .catalog-proof {
+    margin: 0;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+
+  .proof-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink-muted);
+  }
+
+  .proof-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em;
+    border: 1px solid rgba(94, 234, 212, 0.45);
+    border-radius: 999px;
+    color: #5eead4;
+    background: rgba(94, 234, 212, 0.08);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem;
+  }
+
+  .proof-title {
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    max-width: 48ch;
+  }
+
+  .shot {
+    display: block;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #131210;
+  }
+
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.4s ease;
+  }
+
+  .shot:hover img,
+  .shot:focus-visible img {
+    transform: scale(1.01);
+  }
+
+  .proof-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .proof-stats li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.8rem 0.9rem;
+    background: var(--color-bg, #0b1420);
+    min-width: 0;
+  }
+
+  .v {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .l {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-ink-muted);
+    overflow-wrap: anywhere;
+  }
+
+  figcaption {
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+    max-width: 80ch;
+  }
+
+  figcaption code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    color: var(--color-cyan);
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 640px) {
+    .proof-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
